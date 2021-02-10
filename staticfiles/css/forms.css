@@ -1,0 +1,37 @@
+/* Isabel, Victoria: 8/2/21 */
+
+body {
+    background-color: #ece0d1;
+    font-family: 'Inter', sans-serif;
+}
+
+.top_bar {
+    background-color: #dbc1ac;
+    padding-left: 10px;
+    padding-top: 9px;
+    padding-bottom: 0.1px;
+    box-shadow: 0px 2.5px 5px #888888;
+}
+
+.main {
+    background-color: #dbc1ac;
+    text-align: center;
+    width: 35%;
+    margin-top: 1.5%;
+    margin-left: 32.5%;
+    padding: 15px;
+}
+
+input {
+    margin: 2px;
+}
+
+input[type=button], input[type=submit] {
+    background-color: #967259;
+    color: whitesmoke;
+}
+
+button{
+  background-color: #967259;
+  color: whitesmoke;
+}
