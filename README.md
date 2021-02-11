@@ -12,7 +12,7 @@ The group members are:
 5. Victoria Schneider
 6. Isabel Sebire
 
-## Presentation
+## Overview
 
 This is a our developement github page for our group project.
 
