@@ -5,6 +5,11 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+.ibm-cloud {
+    display: block;
+    width: 100%;
+}
+
 .top_bar {
     background-color: #dbc1ac;
     padding-left: 10px;
