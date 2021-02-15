@@ -1,6 +1,5 @@
 <! -- Isabel, Victoria: 8/2/21 -->
 
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,29 +8,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-
   <title>Sign Up</title>
-  <link rel="stylesheet" href="{% static 'css/forms.css' %}">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/forms.css' %}"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
 
 <body>
   <div class="top_bar">
-    <h6>CoffeeClique</h6>
+    <h6 class="app_name">CoffeeClique</h6>
   </div>
 
   <div class="main">
     <h2>Sign Up</h2>
 
     <form class="signupform">
-      <input type="text" placeholder="First name" required="required" name="fname" id="fname"><br>
-      <input type="text" placeholder="Last name" required="required" name="lname" id="lname"><br><br>
-      <input type="email" placeholder="University email" required="required" name="email" id="email"><br>
-      <input type="password" placeholder="Password" required="required" name="psw" id="psw"><br>
-      <input type="password" placeholder="Confirm password" required="required" name="pswconf" id="pswconf"><br><br>
+      <input type="text" placeholder="First name" required="required" size="34" name="fname" id="fname"><br>
+      <input type="text" placeholder="Last name" required="required" size="34" name="lname" id="lname"><br><br>
+      <input type="email" placeholder="University email" required="required" size="34" name="email" id="email"><br>
+      <input type="password" placeholder="Password" required="required" size="34" name="psw" id="psw"><br>
+      <input type="password" placeholder="Confirm password" required="required" size="34" name="pswconf" id="pswconf"><br><br>
 
       <label for="uni">Select your University:</label>
       <select id="uni" name="uni" required="required">
