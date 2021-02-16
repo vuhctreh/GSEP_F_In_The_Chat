@@ -29,6 +29,7 @@ class Task(models.Model):
     completed_by = models.ManyToManyField(CoffeeUser)
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
+    points = models.PositiveIntegerField(default=0)
 
 
 # 1st normal form redundant due to Django db implementation
