@@ -7,6 +7,10 @@ def index(request):
     return render(request, 'login.html')
 
 
+def signup(request):
+    return render(request, 'sign_up.html')
+
+
 def health(request):
     state = {"status": "UP"}
     return JsonResponse(state)
