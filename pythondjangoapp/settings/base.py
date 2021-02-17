@@ -51,6 +51,8 @@ TEMPLATES = [
     }
 ]
 
+AUTH_USER_MODEL = 'app.CoffeeUser'
+
 WSGI_APPLICATION = 'pythondjangoapp.wsgi.application'
 
 # Password validation

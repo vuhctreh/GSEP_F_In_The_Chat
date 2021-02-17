@@ -23,26 +23,11 @@
   <div class="main">
     <h2>Sign Up</h2>
 
-    <form class="signupform">
-      <input type="text" placeholder="First name" required="required" size="34" name="fname" id="fname"><br>
-      <input type="text" placeholder="Last name" required="required" size="34" name="lname" id="lname"><br><br>
-      <input type="email" placeholder="University email" required="required" size="34" name="email" id="email"><br>
-      <input type="password" placeholder="Password" required="required" size="34" name="psw" id="psw"><br>
-      <input type="password" placeholder="Confirm password" required="required" size="34" name="pswconf" id="pswconf"><br><br>
+    <form method="post">
+      {% csrf_token %}  <!-- security item required for django forms !! -->
+      {{ form.as_p }}
 
-      <label for="uni">Select your University:</label>
-      <select id="uni" name="uni" required="required">
-        <option value="exeter">Exeter</option>
-        <!-- Add more options as system expands / pull from db -->
-      </select><br><br>
-
-      <label for="student"> Select staff or student: </label><br>
-      <input type="radio" id="student" name="role" value="student">
-      <label for="student">Student</label>
-      <input type="radio" id="staff" name="role" value="staff">
-      <label for="staff">Staff</label><br><br>
-
-      <input type="submit" value="Sign Up" id="submit">
+      <button type="submit"> Sign Up </button>
     </form><br>
 
     <button onclick="document.location='/'" id="login">Login</button><br>

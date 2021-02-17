@@ -1,23 +1,96 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-# Isabel & Victoria - 16/2/21
+# Isabel & Victoria - 16/2/21, Isabel 17/2/21
+
 
 class CafeTable(models.Model):
     table_id = models.CharField(max_length=50)  # name of the table
-    # members = models.ManyToManyField(CoffeeUser)
 
 
-class CoffeeUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # username, password, email, first_name, last_name included here
-    university = models.CharField(max_length=50)
-    role = models.CharField(max_length=10)
-    year = models.PositiveIntegerField()
+# required for custom user model
+class CoffeeUserManager(BaseUserManager):
+    def create_user(self, email, first_name, last_name, university, is_staff,
+                    password=None):
+        if not email:
+            raise ValueError("Users must have an email address")
+        if not first_name:
+            raise ValueError("Users must give their first name")
+        if not last_name:
+            raise ValueError("Users must give their last name")
+        if not university:
+            raise ValueError("Users must supply their University")
+        if not is_staff:
+            raise ValueError("Users must say if staff or student")
+        user = self.model(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            university=university,
+            is_staff=is_staff
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, first_name, last_name, university,
+                         is_staff, password):
+        user = self.create_user(
+            email=self.normalize_email(email),
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            university=university,
+            is_staff=is_staff
+        )
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+
+class CoffeeUser(AbstractBaseUser):
+    AVAILABLE_UNIS = (
+        ("1", "University of Exeter"),
+        ("2", "Test uni")
+    )
+
+    email = models.EmailField(verbose_name="email", unique=True)
+    # The following are required as extending AbstractBaseUser
+    # and creating custom user model
+    date_joined = models.DateTimeField(verbose_name="date_joined",
+                                       auto_now_add=True)
+    last_login = models.DateTimeField(verbose_name="last_login", auto_now=True)
+    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    #
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    university = models.CharField(max_length=50, choices=AVAILABLE_UNIS)
+    is_staff = models.BooleanField(default=False)
+    year = models.PositiveIntegerField(null=True)
     course = models.CharField(max_length=50)
     avatar_url = models.FilePathField(path="/img")
     cafe_table_ids = models.ManyToManyField(CafeTable)
     points = models.PositiveIntegerField(default=0)
+
+    USERNAME_FIELD = "email"  # users log in user their email
+    REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]
+
+    objects = CoffeeUserManager()
+
+    # Required functions for custom user model
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return True
 
 
 class Task(models.Model):
