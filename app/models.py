@@ -11,7 +11,7 @@ class CafeTable(models.Model):
 # required for custom user model
 class CoffeeUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, university, is_staff,
-                    password=None):
+                    accept_terms, password=None):
         if not email:
             raise ValueError("Users must have an email address")
         if not first_name:
@@ -22,6 +22,8 @@ class CoffeeUserManager(BaseUserManager):
             raise ValueError("Users must supply their University")
         if not is_staff:
             raise ValueError("Users must say if staff or student")
+        if not accept_terms:
+            raise ValueError("Must accept privacy policy and terms of use")
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,

@@ -40,3 +40,11 @@ def handler404(request):
 
 def handler500(request):
     return render(request, '500.html', status=500)
+
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
+
+def terms(request):
+    return render(request, 'terms.html')

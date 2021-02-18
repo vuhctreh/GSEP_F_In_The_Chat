@@ -9,6 +9,7 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=50)
     is_staff = forms.BooleanField(required=False)
     university = forms.CharField(widget=forms.Select(choices=CoffeeUser.AVAILABLE_UNIS))
+    accept_terms = forms.BooleanField(required=True)
 
     class Meta:
         model = CoffeeUser
