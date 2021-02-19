@@ -7,7 +7,7 @@ body {
 .top_bar {
     background-color: #dbc1ac;
     box-shadow: 0px 2.5px 5px #888888;
-    padding-left: 10px;
+    padding-left: 1%;
 }
 
 .app_name {

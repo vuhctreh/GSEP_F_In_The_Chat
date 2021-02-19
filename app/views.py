@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth.decorators import login_required
@@ -33,6 +33,11 @@ def index(request):
         form = LoginForm()
         context['login_form'] = form
     return render(request, 'login.html', context)
+
+
+def log_out(request):
+    logout(request)
+    return redirect('/')
 
 
 # Isabel: 18/2/21
