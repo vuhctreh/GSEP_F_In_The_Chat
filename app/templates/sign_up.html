@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<! -- Isabel, Victoria: 8/2/21 -->
+<!-- Isabel, Victoria: 8/2/21, Isabel 18/2/21-->
 <html lang="en">
 
 <head>
@@ -25,8 +25,10 @@
     <form method="post">
       {% csrf_token %}  <!-- security item required for django forms !! -->
       {{ form.as_p }}
-      Under GDPR, we are required to ask for your express permission to collect and process your data. By clicking 'Sign Up', you agree to our <a href="privacy" target="_blank">Privacy Policy </a> and <a href="terms" target="_blank">Terms of Use</a>.
-      <br> <br>
+
+      Under GDPR, we are required to ask for your express permission to collect and process your data. By clicking 'Sign Up', you agree to our <a href="privacy" target="_blank">Privacy Policy </a> and<a href="terms" target="_blank">Terms of Use</a>.
+      <br><br>
+
       <button type="submit"> Sign Up </button>
     </form><br>
 
