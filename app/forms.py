@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth import authenticate
 from app.models import CoffeeUser
 
 
+# Isabel 18/2/21
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=50)
@@ -17,6 +19,24 @@ class SignUpForm(UserCreationForm):
                   'password1', 'password2')
 
 
+# Victoria: 18/2/21
+class LoginForm(forms.ModelForm):
+    email = forms.EmailField()
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+    class Meta:
+        model = CoffeeUser
+        fields = ('email', 'password')
+
+    def clean(self):
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
+
+        if not authenticate(email=email, password=password):
+            raise forms.ValidationError("Invalid login")
+
+
+# Isabel 19/2/21
 class CUserEditForm(UserChangeForm):
 
     class Meta:
