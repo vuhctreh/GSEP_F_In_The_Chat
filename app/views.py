@@ -64,6 +64,8 @@ def signup(request):
 def cafe_home(request):
     return render(request, 'cafe_home.html')
 
+def tasks(request):
+    return render(request, 'tasks.html')
 
 def health(request):
     state = {"status": "UP"}

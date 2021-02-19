@@ -12,4 +12,5 @@ urlpatterns = [
                path('500', views.handler500, name='500'),
                path('privacy', views.privacy, name='privacy'),
                path('terms', views.terms, name='terms'),
+               path('tasks', views.tasks, name='tasks'),
                ]
