@@ -43,20 +43,3 @@ class CUserEditForm(UserChangeForm):
         model = CoffeeUser
         fields = ('first_name', 'last_name', 'year', 'course',
                   'cafe_table_ids')
-
-
-# Victoria: 18/2/21
-class LoginForm(forms.ModelForm):
-    email = forms.EmailField()
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-
-    class Meta:
-        model = CoffeeUser
-        fields = ('email', 'password')
-
-    def clean(self):
-        email = self.cleaned_data['email']
-        password = self.cleaned_data['password']
-
-        if not authenticate(email=email, password=password):
-            raise forms.ValidationError("Invalid login")
