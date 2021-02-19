@@ -5,7 +5,13 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CafeTable(models.Model):
+    # please note Django implicitly gives an auto incrementing primary
+    # key field id = models.AutoField(primary_key=True)
     table_id = models.CharField(max_length=50)  # name of the table
+    university = university = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.university + ":" + self.table_name
 
 
 # required for custom user model
@@ -73,10 +79,10 @@ class CoffeeUser(AbstractBaseUser):
     last_name = models.CharField(max_length=50)
     university = models.CharField(max_length=50, choices=AVAILABLE_UNIS)
     is_staff = models.BooleanField(default=False)
-    year = models.PositiveIntegerField(null=True)
-    course = models.CharField(max_length=50)
+    year = models.PositiveIntegerField(null=True, blank=True)
+    course = models.CharField(max_length=50, blank=True)
     avatar_url = models.FilePathField(path="/img")
-    cafe_table_ids = models.ManyToManyField(CafeTable)
+    cafe_table_ids = models.ManyToManyField(CafeTable, blank=True)
     points = models.PositiveIntegerField(default=0)
 
     USERNAME_FIELD = "email"  # users log in using their email

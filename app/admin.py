@@ -1,18 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import SignUpForm, CUserEditForm
+from .forms import AdminSignUpForm, CUserEditForm
 from .models import CafeTable, CoffeeUser, Task, Message
 
 
 class CoffeeUserAdmin(UserAdmin):
-    add_form = SignUpForm
+    add_form = AdminSignUpForm
     form = CUserEditForm
-    model = CoffeeUser
     list_display = ('email', 'first_name', 'last_name', 'university',
                     'is_staff', 'year', 'course')
     list_filter = ('email', 'first_name', 'last_name', 'university',
-                   'is_staff', 'year', 'course')
+                   'is_staff', 'year', 'course', 'cafe_table_ids')
     fieldsets = (
         (None, {'fields': ('email', 'password', 'first_name', 'last_name',
                 'year', 'course', 'cafe_table_ids')}),
