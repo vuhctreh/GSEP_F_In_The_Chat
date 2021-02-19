@@ -110,7 +110,6 @@ class Task(models.Model):
     completed_by = models.ManyToManyField(CoffeeUser)
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
-    completed = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=0)
 
 
