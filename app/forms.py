@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from app.models import CoffeeUser
 
 
-# Isabel 18/2/21
+# Isabel: 18/2/21
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=50)
