@@ -79,7 +79,7 @@ class CoffeeUser(AbstractBaseUser):
     cafe_table_ids = models.ManyToManyField(CafeTable)
     points = models.PositiveIntegerField(default=0)
 
-    USERNAME_FIELD = "email"  # users log in user their email
+    USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]
 
     objects = CoffeeUserManager()
