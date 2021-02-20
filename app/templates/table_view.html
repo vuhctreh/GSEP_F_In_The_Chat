@@ -7,10 +7,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Table View</title>
+  <title>Cafe</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/table_view.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
@@ -20,10 +20,17 @@
     <h6 class="app_name">CoffeeClique</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  {% for table in tables %}
-    <a href="{% url 'table_chat' table.pk %}"> {{table.table_id}} </a>
-      <br>
-  {% endfor %}
+  <ul>
+    <div class="tables">
+      {% for table in tables %}
+      <li>
+        <a href="{% url 'table_chat' table.pk %}">
+        <img alt="Table" src="{% static 'images/table.png' %}" width=200" height="200"></a>
+        <p class="table_names">{{table.table_id}}</p>
+      </li>
+      {% endfor %}
+    </div>
+  </ul>
 </body>
 
 </html>

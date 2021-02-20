@@ -16,7 +16,7 @@ def index(request):
     # whenever they try to access /login until they logout
     user = request.user
     if user.is_authenticated:
-        return redirect('home')
+        return redirect('table_view')
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
