@@ -27,7 +27,7 @@ class CoffeeUserManager(BaseUserManager):
         if not university:
             raise ValueError("Users must supply their University")
         if not is_staff:
-            raise ValueError("Users must say if staff or student")
+            is_staff = False
         if not accept_terms:
             raise ValueError("Must accept privacy policy and terms of use")
         user = self.model(

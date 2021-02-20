@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable
+from django.http import Http404
 
 
 # Victoria: 18/2/21
@@ -80,7 +81,16 @@ def table_view(request):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_chat(request, pk):
-    table = CafeTable.objects.get(pk=pk)
+    try:
+        table = CafeTable.objects.get(pk=pk)
+        # make sure user can only access their tables
+        current_user = request.user
+        if ((current_user.university != table.university) or
+           (table.table_id not in
+           current_user.cafe_table_ids.values_list('table_id', flat=True))):
+            return render(request, 'denied.html')
+    except CafeTable.DoesNotExist:
+        return render(request, 'denied.html')
     context = {
         "table": table,
     }
