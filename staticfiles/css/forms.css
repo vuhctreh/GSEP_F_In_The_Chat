@@ -1,6 +1,6 @@
 body {
     background-color: #ece0d1;
-    margin: 0px;
+    margin: 0%;
     font-family: 'Inter', sans-serif;
 }
 
@@ -42,4 +42,33 @@ input[type=button], input[type=submit] {
 button{
   background-color: #967259;
   color: whitesmoke;
+}
+
+@media only screen and (max-width: 850px) {
+    body {
+        background-color: #ffe4e1;
+        color: #fffaf0;
+    }
+
+    .main {
+        background-color: #f08080;
+        width: 83%;
+        margin: auto;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
+
+    .top_bar {
+        background-color: #f08080;
+    }
+
+    input[type=button], input[type=submit] {
+        background-color: #ffe4e1;
+        color: black;
+    }
+    
+    button{
+      background-color: #ffe4e1;
+      color: black;
+    }
 }
