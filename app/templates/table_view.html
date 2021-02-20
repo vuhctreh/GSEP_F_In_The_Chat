@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Victoria: 18/2/21 -->
+<!-- Isabel: 20/2/21 -->
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Cafe</title>
+  <title>Table View</title>
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
@@ -19,8 +19,10 @@
     <h6 class="app_name">CoffeeClique</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  <br>
-  This is a placeholder table view home page.
+  {% for table in tables %}
+    <a href="{% url 'table_chat' table.pk %}"> {{table.table_id}} </a>
+      <br>
+  {% endfor %}
 </body>
 
 </html>

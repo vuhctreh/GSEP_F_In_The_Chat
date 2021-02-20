@@ -8,7 +8,7 @@ class CafeTable(models.Model):
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.CharField(max_length=50)  # name of the table
-    university = university = models.CharField(max_length=50)
+    university = models.CharField(max_length=50)
 
     def __str__(self):
         return self.university + ":" + self.table_id
@@ -60,8 +60,8 @@ class CoffeeUserManager(BaseUserManager):
 
 class CoffeeUser(AbstractBaseUser):
     AVAILABLE_UNIS = (
-        ("1", "University of Exeter"),
-        ("2", "Test uni")
+        ("University of Exeter", "University of Exeter"),
+        ("Test uni", "Test uni")
     )
 
     email = models.EmailField(verbose_name="email", unique=True)

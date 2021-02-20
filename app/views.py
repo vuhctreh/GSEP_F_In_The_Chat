@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth.decorators import login_required
+from .models import CoffeeUser, CafeTable
 
 
 # Victoria: 18/2/21
@@ -24,7 +25,7 @@ def index(request):
             user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
-                return redirect('home')
+                return redirect('table_view')
 
         else:
             context['login_form'] = form
@@ -43,7 +44,7 @@ def log_out(request):
 # Isabel: 18/2/21
 def signup(request):
     context = {}
-    if request.method == 'POST':  # change to if request.POST    ??
+    if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
@@ -51,7 +52,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('table_view')
         else:
             context['form'] = form
     else:  # get request
@@ -60,9 +61,30 @@ def signup(request):
     return render(request, 'sign_up.html', context)
 
 
+# Isabel: 18/2/21
 @login_required(login_url='/')
-def cafe_home(request):
-    return render(request, 'cafe_home.html')
+def table_view(request):
+    current_user = request.user
+    # tables with correct interests and university for user
+    tables = CafeTable.objects.filter(
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+    context = {
+        'tables': tables
+    }
+    return render(request, "table_view.html", context)
+
+
+# Isabel: 18/2/21
+@login_required(login_url='/')
+def table_chat(request, pk):
+    table = CafeTable.objects.get(pk=pk)
+    context = {
+        "table": table,
+    }
+    return render(request, "table_chat.html", context)
 
 
 def health(request):
