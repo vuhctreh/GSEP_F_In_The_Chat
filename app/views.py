@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, createTaskForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -60,12 +60,33 @@ def signup(request):
     return render(request, 'sign_up.html', context)
 
 
+@login_required(login_url="/")
+def set_tasks(request):
+    user = request.user
+    form = createTaskForm()
+
+    if not user.is_staff:
+        return redirect("home")
+
+    context = {'form': form}
+    if request.method == 'POST':
+        form = createTaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+        else:
+            context["createTaskForm"] = form
+    return render(request, 'set_tasks.html', context)
+
+
 @login_required(login_url='/')
 def cafe_home(request):
     return render(request, 'cafe_home.html')
 
+
 def tasks(request):
     return render(request, 'tasks.html')
+
 
 def health(request):
     state = {"status": "UP"}

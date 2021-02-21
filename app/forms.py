@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
-from app.models import CoffeeUser
+from app.models import CoffeeUser, Task
+
 
 
 # Isabel: 18/2/21
@@ -56,3 +57,10 @@ class CUserEditForm(UserChangeForm):
         model = CoffeeUser
         fields = ('first_name', 'last_name', 'year', 'course',
                   'cafe_table_ids')
+
+
+class createTaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = "__all__"

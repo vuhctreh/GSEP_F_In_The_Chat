@@ -108,9 +108,13 @@ class Task(models.Model):
     created_by = models.ForeignKey(CoffeeUser, related_name="created_tasks",
                                    on_delete=models.CASCADE)
     completed_by = models.ManyToManyField(CoffeeUser)
+    # is task date date to be completed by or date set?
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.task_id
 
 
 # 1st normal form redundant due to Django db implementation
