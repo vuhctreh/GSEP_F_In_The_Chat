@@ -38,6 +38,7 @@
   {% for task in tasks %}
   <li>
     {{task.task_content}} <!-- Should link to the tasks here when we know what task link is -->
+    set by {{task.created_by}}
   </li>
   {% endfor %}
   <br>

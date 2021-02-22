@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.test import SimpleTestCase, TestCase, Client
-from .models import CafeTable, CoffeeUser
+from .models import CafeTable, CoffeeUser, Message
 from django.template.loader import render_to_string
 
 
@@ -19,11 +19,19 @@ class LogInTests(TestCase):
         response = self.client.get('')  # login page
         self.assertEquals(response.status_code, 200)
 
+    def test_csrf(self):
+        response = self.client.get('')
+        self.assertContains(response, 'csrfmiddlewaretoken')
+
 
 class SignUpTests(TestCase):
     def test_signup_view_status_code(self):
         response = self.client.get('/signup')
         self.assertEquals(response.status_code, 200)
+
+    def test_csrf(self):
+        response = self.client.get('/signup')
+        self.assertContains(response, 'csrfmiddlewaretoken')
 
 
 class PrivacyPolicyTests(TestCase):
@@ -83,6 +91,27 @@ class InTableTests(TestCase):
         response_html = response.content.decode()
         self.assertEquals(response.status_code, 200)
         self.assertNotEquals(response_html, render_to_string('denied.html'))
+        self.assertTrue('testf testl' in response_html)  # names
+
+    def test_csrf(self):
+        response = self.client.get('/tables/1')
+        self.assertContains(response, 'csrfmiddlewaretoken')
+
+    def test_new_topic_valid_post_data(self):
+        data = {
+            'message_content': 'Test msg',
+        }
+        response = self.client.post('/tables/1', data)
+        response_html = response.content.decode()
+        self.assertTrue(Message.objects.exists())
+        self.assertTrue('Test msg' in response_html)
+
+    def test_new_topic_empty_post_data(self):
+        data = {
+            'message_content': '',
+        }
+        response = self.client.post('/tables/1', data)
+        self.assertFalse(Message.objects.exists())
 
     def test_in_table_view_not_part_table(self):
         response = self.client.get('/tables/2')

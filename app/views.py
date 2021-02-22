@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
-from django.http import Http404
 
 
 # Victoria: 18/2/21
@@ -104,9 +103,9 @@ def table_chat(request, pk):
     else:
         form = PostMessageForm()
     # show the existing messages by querying db
-    messages = Message.objects.filter(table_id=table).order_by('message_date')[:20]
-    #added bc we probs should not be loading every msg ever, need a feature
-    #to load more
+    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    #IMPORTANT: we probs should not be loading every msg ever, later we should
+    # add a feature to load more when required
     # get the tasks for the table
     tasks = Task.objects.filter(table_id=table).order_by('task_date')
     # get all the users in the table
