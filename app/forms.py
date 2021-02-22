@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
-from app.models import CoffeeUser
+from app.models import CoffeeUser, Message
 
 
 # Isabel: 18/2/21
@@ -56,3 +56,11 @@ class CUserEditForm(UserChangeForm):
         model = CoffeeUser
         fields = ('first_name', 'last_name', 'year', 'course',
                   'cafe_table_ids')
+
+
+# Isabel 22/2/21
+class PostMessageForm(forms.ModelForm):
+
+    class Meta:
+        model = Message
+        fields = ('message_content',)

@@ -2,9 +2,9 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable
+from .models import CoffeeUser, CafeTable, Message, Task
 from django.http import Http404
 
 
@@ -83,16 +83,41 @@ def table_view(request):
 def table_chat(request, pk):
     try:
         table = CafeTable.objects.get(pk=pk)
-        # make sure user can only access their tables
-        current_user = request.user
-        if ((current_user.university != table.university) or
-           (table.table_id not in
-           current_user.cafe_table_ids.values_list('table_id', flat=True))):
-            return render(request, 'denied.html')
     except CafeTable.DoesNotExist:
         return render(request, 'denied.html')
+    # make sure user can only access their tables
+    current_user = request.user
+    if ((current_user.university != table.university) or
+       (table.table_id not in
+       current_user.cafe_table_ids.values_list('table_id', flat=True))):
+        return render(request, 'denied.html')
+    # if post req, use the form to add the msg
+    if request.method == 'POST':
+        form = PostMessageForm(request.POST)
+        if form.is_valid():
+            message_content = form.cleaned_data.get('message_content')
+            msg = Message.objects.create(
+                table_id=table,
+                created_by=current_user,
+                message_content=message_content,
+            )
+    else:
+        form = PostMessageForm()
+    # show the existing messages by querying db
+    messages = Message.objects.filter(table_id=table).order_by('message_date')[:20]
+    #added bc we probs should not be loading every msg ever, need a feature
+    #to load more
+    # get the tasks for the table
+    tasks = Task.objects.filter(table_id=table).order_by('task_date')
+    # get all the users in the table
+    users = table.coffeeuser_set.all()
+    # final
     context = {
         "table": table,
+        "form": form,
+        "messages": messages,
+        "users": users,
+        "tasks": tasks
     }
     return render(request, "table_chat.html", context)
 

@@ -118,7 +118,8 @@ class Task(models.Model):
 
 
 class Message(models.Model):
-    message_id = models.PositiveIntegerField()
+    # please note Django implicitly gives an auto incrementing primary
+    # key field id = models.AutoField(primary_key=True)
     table_id = models.ForeignKey(CafeTable, related_name="messages",
                                  on_delete=models.CASCADE)
     created_by = models.ForeignKey(CoffeeUser, related_name="messages",

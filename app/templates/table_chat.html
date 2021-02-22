@@ -20,7 +20,42 @@
     <h6 class="app_name">CoffeeClique</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
+  <button onclick="document.location='{% url 'table_view' %}'" id="table_view">Back to tables</button><br>
+
   Placeholder to show you are in table {{ table }}
+
+  <br>
+  Users:
+  {% for user in users %}
+  <li>
+    {{user.first_name}} {{user.last_name}}
+  </li>
+  {% endfor %}
+  <br>
+
+  <br>
+  Tasks:
+  {% for task in tasks %}
+  <li>
+    {{task.task_content}} <!-- Should link to the tasks here when we know what task link is -->
+  </li>
+  {% endfor %}
+  <br>
+
+  <br>
+  Messages:
+  {% for msg in messages %}
+  <li>
+    {{msg.created_by.first_name}} {{msg.created_by.last_name}} <br>
+    {{msg.message_date}} <br> {{msg.message_content}} <br><br>
+  </li>
+  {% endfor %}
+
+  <form method="post">
+    {% csrf_token %}  <!-- security item required for django forms !! -->
+    {{ form.as_p }}
+    <button type="submit"> Post </button>
+  </form><br>
 </body>
 
 </html>
