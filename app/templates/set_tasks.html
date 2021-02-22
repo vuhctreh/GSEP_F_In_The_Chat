@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cafe</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+</head>
+
+<body>
+  <div class="top_bar">
+    <h6 class="app_name">CoffeeClique</h6>
+    <a class="logout" href="{% url 'logout' %}">Logout</a>
+  </div>
+  <br>
+
+  <div class="main">
+    <h2>Set Task</h2>
+    <form method="post">
+      {% csrf_token %}  <!-- security item required for django forms !! -->
+      {% for field in form %}
+        <p>
+          {{field.label_tag}}<br>
+          {{field}}
+        </p>
+      {% endfor %}
+      <button type="submit">Set task</button>
+    </form><br>
+    <button onclick="document.location='home'" id="signup">Home</button><br>
+  </div>
+</body>
+
+</html>
