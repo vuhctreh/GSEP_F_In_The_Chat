@@ -97,6 +97,9 @@ def view_tasks(request):
         return redirect("viewtasks")
     return render(request, 'view_tasks.html', context)
 
+def completed_pressed(request, pk):
+    required_task = Task.objects.get(pk=pk)
+    return redirect("viewtasks")
 
 
 @login_required(login_url='/')

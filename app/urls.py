@@ -15,4 +15,5 @@ urlpatterns = [
                path('tasks', views.tasks, name='tasks'),
                path('settasks', views.set_tasks, name='settasks'),
                path('viewtasks', views.view_tasks, name='viewtasks'),
+               path('viewtasks/<task_id>', views.completed_pressed, name='completed'),
                ]
