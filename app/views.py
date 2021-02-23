@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
+import datetime
 
 
 # Victoria: 18/2/21
@@ -106,8 +107,10 @@ def table_chat(request, pk):
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
     #IMPORTANT: we probs should not be loading every msg ever, later we should
     # add a feature to load more when required
-    # get the tasks for the table
-    tasks = Task.objects.filter(table_id=table).order_by('task_date')
+    # get the tasks for the table - new: only notified of tasks set in last 24h
+    date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+    tasks = Task.objects.filter(table_id=table,
+                                task_date__gte=date_from).order_by('task_date')
     # get all the users in the table
     users = table.coffeeuser_set.all()
     # final
