@@ -79,11 +79,23 @@ def set_tasks(request):
             context["createTaskForm"] = form
     return render(request, 'set_tasks.html', context)
 
+
+
 @login_required(login_url="/")
 def view_tasks(request):
-    viewing_tasks = Task.objects.all()
+
+    #viewing_tasks = Task.objects.all()
+
+    current_user = request.user
+
+    tables = CafeTable.objects.filter(
+        university = current_user.university,
+        table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
+    )
+    tasks = Task.objects.filter(table_id__in=tables)
+
     context = {
-        'tasks':viewing_tasks
+        'tasks':tasks
     }
     if request.method == 'POST':
         return redirect("viewtasks")
