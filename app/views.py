@@ -97,6 +97,19 @@ def view_tasks(request):
     return render(request, 'view_tasks.html', context)
 
 
+# @login_required(login_url='/')
+def dashboard(request):
+    user = CoffeeUser.objects.get(id=request.user.id)
+    context = {
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+        'email': user.email,
+        'university': user.university,
+        'dateJoined': user.date_joined,
+        'points': user.points,
+    }
+    return render(request, "dashboard.html", context)
+
 
 @login_required(login_url='/')
 def cafe_home(request):

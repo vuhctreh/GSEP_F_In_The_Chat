@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cafe</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com"></link>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+</head>
+
+<body>
+  <div class="top_bar">
+    <h6 class="app_name">CoffeeClique</h6>
+    <a class="logout" href="{% url 'logout' %}">Logout</a>
+  </div>
+  <br>
+
+  <div class="main">
+    <h2>Dashboard</h2>
+      <p>
+          <h1> First Name: </h1>
+          <h3> {{ firstName }} </h3>
+      </p>
+      <p>
+          <h1> Last Name: </h1>
+          <h3> {{ lastName }} </h3>
+      </p>
+      <p>
+          <h1> Email: </h1>
+          <h3> {{ email }} </h3>
+      </p>
+      <p>
+          <h1> University: </h1>
+          <h3> {{ university }} </h3>
+      </p>
+      <p>
+          <h1> Points: </h1>
+          <h3> {{ points }} </h3>
+      </p>
+      <p>
+          <h1> Date Joined: </h1>
+          <h3> {{ dateJoined }} </h3>
+      </p>
+
+    <button onclick="document.location='home'" id="signup">Home</button><br>
+  </div>
+</body>
+
+</html>

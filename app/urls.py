@@ -15,4 +15,5 @@ urlpatterns = [
                path('tasks', views.tasks, name='tasks'),
                path('set_tasks', views.set_tasks, name='set_tasks'),
                path('viewtasks', views.view_tasks, name='viewtasks'),
+               path('dashboard', views.dashboard, name='dashboard'),
                ]
