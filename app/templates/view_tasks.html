@@ -38,8 +38,8 @@
             <td> {{task.task_content}} </td>
           </tr>
           <tr>
-            <form method="post">
-              <td><a href="{% url 'completed' task.task_id %}"><center>Completed</center> </a></td>
+            <form action= "{% url 'completed' pk=task.task_id %}" method="post">
+              <td>><button type="submit"><center>Completed</center></button></td>
             </form>
           </tr>
     </table>
