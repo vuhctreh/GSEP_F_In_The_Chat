@@ -74,7 +74,6 @@ def set_tasks(request):
         form = createTaskForm(request.POST)
         if form.is_valid():
             form.save()
-
         else:
             context["createTaskForm"] = form
     return render(request, 'set_tasks.html', context)
