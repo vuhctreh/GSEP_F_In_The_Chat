@@ -23,10 +23,8 @@
   {% for task in tasks %}
   <div class="main">
     <h2>Task {{task.task_id}}</h2>
-    <form method="post">
       {% csrf_token %}  <!-- security item required for django forms !! -->
       <table class="tasks">
-        
           <tr>
             <td><h4>Set By:</h4></td>
             <td> {{task.created_by}}</td>
@@ -40,11 +38,11 @@
             <td> {{task.task_content}} </td>
           </tr>
           <tr>
-            <td><button onclick=""> Completed </button></td>
+            <form method="post">
+              <td><button onclick=""> Completed </button></td>
+            </form>
           </tr>
-        
     </table>
-    </form>
   </div>
   {% endfor %}
 </body>

@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, createTaskForm
 from django.contrib.auth.decorators import login_required
-from .models import *
+from .models import CoffeeUser, CafeTable, Message, Task
 
 
 # Victoria: 18/2/21
@@ -83,21 +83,17 @@ def set_tasks(request):
 
 @login_required(login_url="/")
 def view_tasks(request):
-
-    #viewing_tasks = Task.objects.all()
-
     current_user = request.user
-
     tables = CafeTable.objects.filter(
         university = current_user.university,
         table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
     )
     tasks = Task.objects.filter(table_id__in=tables)
-
     context = {
         'tasks':tasks
     }
     if request.method == 'POST':
+        
         return redirect("viewtasks")
     return render(request, 'view_tasks.html', context)
 
