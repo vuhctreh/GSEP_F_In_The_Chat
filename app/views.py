@@ -101,6 +101,7 @@ def table_chat(request, pk):
                 created_by=current_user,
                 message_content=message_content,
             )
+            form = PostMessageForm()
     else:
         form = PostMessageForm()
     # show the existing messages by querying db

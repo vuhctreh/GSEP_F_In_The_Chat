@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
 from app.models import CoffeeUser, Message
+from django.utils.translation import ugettext_lazy
 
 
 # Isabel: 18/2/21
@@ -64,3 +65,6 @@ class PostMessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ('message_content',)
+        labels = {
+            'message_content': ugettext_lazy('Enter message:'),
+        }
