@@ -12,8 +12,7 @@ urlpatterns = [
                path('500', views.handler500, name='500'),
                path('privacy', views.privacy, name='privacy'),
                path('terms', views.terms, name='terms'),
-               path('tasks', views.tasks, name='tasks'),
+               path('tasks', views.view_tasks, name='viewtasks'),
                path('set_tasks', views.set_tasks, name='set_tasks'),
-               path('viewtasks', views.view_tasks, name='viewtasks'),
-               path('viewtasks/<task_id>', views.completed_pressed, name='completed'),
+               path('tasks/<task_id>', views.completed_pressed, name='completed'),
                ]
