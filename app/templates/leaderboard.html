@@ -21,32 +21,11 @@
   <br>
 
   <div class="main">
-    <h2>Dashboard</h2>
-      <p>
-          <h1> First Name: </h1>
-          <h3> {{ firstName }} </h3>
-      </p>
-      <p>
-          <h1> Last Name: </h1>
-          <h3> {{ lastName }} </h3>
-      </p>
-      <p>
-          <h1> Email: </h1>
-          <h3> {{ email }} </h3>
-      </p>
-      <p>
-          <h1> University: </h1>
-          <h3> {{ university }} </h3>
-      </p>
-      <p>
-          <h1> Points: </h1>
-          <h3> {{ points }} </h3>
-      </p>
-      <p>
-          <h1> Date Joined: </h1>
-          <h3> {{ dateJoined }} </h3>
-      </p>
-
+    <h2>Leaderboard</h2>
+      {% for user in users %}
+          <h1> Rank {{ forloop.counter }}:  {{ user.first_name }} {{ user.last_name }}</h1>
+          <p>Points: {{ user.points }}</p>
+      {% endfor %}
     <button onclick="document.location='home'" id="home">Home</button><br>
   </div>
 </body>

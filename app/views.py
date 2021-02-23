@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, createTaskForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
+from operator import attrgetter
 
 
 # Victoria: 18/2/21
@@ -109,6 +110,17 @@ def dashboard(request):
         'points': user.points,
     }
     return render(request, "dashboard.html", context)
+
+
+def leaderboard(request):
+    users = CoffeeUser.objects.all()
+    if len(users) > 10:
+        users = users[:9]
+    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    context = {
+        'users': sorted_users,
+    }
+    return render(request, "leaderboard.html", context)
 
 
 @login_required(login_url='/')
