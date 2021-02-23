@@ -1,0 +1,29 @@
+ul {
+    padding-inline-start: 0;
+}
+
+.tables {
+    margin-top: 3.5%;
+    margin-bottom: 3.5%;
+    margin-left: 7.5%;
+}
+
+li {
+    display: block;
+    width: 200px;
+    float: left;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 1.5%;
+    margin-bottom:1.5%;
+}
+
+.table_names {
+    text-align: center;
+}
+
+@media only screen and (max-width: 850px) {
+    .tables {
+        margin-left: 21%;
+    }
+}

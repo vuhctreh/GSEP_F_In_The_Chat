@@ -1,6 +1,6 @@
 body {
     background-color: #ece0d1;
-    margin: 0px;
+    margin: 0%;
     font-family: 'Inter', sans-serif;  
 }
 
@@ -42,4 +42,13 @@ input[type=button], input[type=submit] {
 button{
   background-color: #967259;
   color: whitesmoke;
+}
+
+@media only screen and (max-width: 850px) {
+    .main {
+        width: 83%;
+        margin: auto;
+        margin-top: 4%;
+        margin-bottom: 4%;
+    }
 }

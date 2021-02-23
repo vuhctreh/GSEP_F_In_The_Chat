@@ -3,9 +3,12 @@ from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, createTaskForm
+from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 from operator import attrgetter
+from .models import CoffeeUser, CafeTable, Message, Task
+import datetime
 
 
 # Victoria: 18/2/21
@@ -16,7 +19,7 @@ def index(request):
     # whenever they try to access /login until they logout
     user = request.user
     if user.is_authenticated:
-        return redirect('home')
+        return redirect('table_view')
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -26,7 +29,7 @@ def index(request):
             user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
-                return redirect('home')
+                return redirect('table_view')
 
         else:
             context['login_form'] = form
@@ -45,7 +48,7 @@ def log_out(request):
 # Isabel: 18/2/21
 def signup(request):
     context = {}
-    if request.method == 'POST':  # change to if request.POST    ??
+    if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
@@ -53,7 +56,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('table_view')
         else:
             context['form'] = form
     else:  # get request
@@ -61,6 +64,68 @@ def signup(request):
         context['form'] = form
     return render(request, 'sign_up.html', context)
 
+
+# Isabel: 18/2/21
+@login_required(login_url='/')
+def table_view(request):
+    current_user = request.user
+    # tables with correct interests and university for user
+    tables = CafeTable.objects.filter(
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+    context = {
+        'tables': tables
+    }
+    return render(request, "table_view.html", context)
+
+
+# Isabel: 18/2/21
+@login_required(login_url='/')
+def table_chat(request, pk):
+    try:
+        table = CafeTable.objects.get(pk=pk)
+    except CafeTable.DoesNotExist:
+        return render(request, 'denied.html')
+    # make sure user can only access their tables
+    current_user = request.user
+    if ((current_user.university != table.university) or
+       (table.table_id not in
+       current_user.cafe_table_ids.values_list('table_id', flat=True))):
+        return render(request, 'denied.html')
+    # if post req, use the form to add the msg
+    if request.method == 'POST':
+        form = PostMessageForm(request.POST)
+        if form.is_valid():
+            message_content = form.cleaned_data.get('message_content')
+            msg = Message.objects.create(
+                table_id=table,
+                created_by=current_user,
+                message_content=message_content,
+            )
+            form = PostMessageForm()
+    else:
+        form = PostMessageForm()
+    # show the existing messages by querying db
+    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    #IMPORTANT: we probs should not be loading every msg ever, later we should
+    # add a feature to load more when required
+    # get the tasks for the table - new: only notified of tasks set in last 24h
+    date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+    tasks = Task.objects.filter(table_id=table,
+                                task_date__gte=date_from).order_by('task_date')
+    # get all the users in the table
+    users = table.coffeeuser_set.all()
+    # final
+    context = {
+        "table": table,
+        "form": form,
+        "messages": messages,
+        "users": users,
+        "tasks": tasks
+    }
+    return render(request, "table_chat.html", context)
 
 @login_required(login_url="/")
 def set_tasks(request):
@@ -93,7 +158,7 @@ def view_tasks(request):
         'tasks':tasks
     }
     if request.method == 'POST':
-        
+
         return redirect("viewtasks")
     return render(request, 'view_tasks.html', context)
 
@@ -124,9 +189,8 @@ def leaderboard(request):
 
 
 @login_required(login_url='/')
-def cafe_home(request):
-    return render(request, 'cafe_home.html')
-
+def edit_info(request):
+    return render(request, "edit_info.html")
 
 def tasks(request):
     return render(request, 'tasks.html')

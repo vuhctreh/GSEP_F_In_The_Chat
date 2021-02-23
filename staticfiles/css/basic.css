@@ -1,6 +1,6 @@
 body {
     background-color: #ece0d1;
-    margin: 0px;
+    margin: 0%;
     font-family: 'Inter', sans-serif;  
 }
 
@@ -26,4 +26,10 @@ body {
     width: 49.5%;
     text-align: right;
     font-size: small;
+}
+
+@media only screen and (max-width: 850px) {
+    .logout {
+        width: 48%;
+    }
 }

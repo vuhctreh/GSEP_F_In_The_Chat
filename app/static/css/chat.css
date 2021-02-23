@@ -1,0 +1,95 @@
+html, body {
+    height: 100%;
+}
+
+.navigation {
+    display: inline-flex;
+    margin-left: 1%;
+    width: 100%;
+    margin-top: 2.5%;
+    margin-bottom: 1%;
+    align-items: center;
+}
+
+#table_view {
+    height: fit-content;
+    width: fit-content;
+}
+
+.table_name {
+    margin-block-end: 0;
+    margin-block-start: 0;
+    padding-left: 1.5%;
+}
+
+.tasks {
+    background-color: #967259;
+    height: 50%;
+    overflow: scroll;
+    padding: 2%;
+    margin-top: 4%;
+}
+
+.users {
+    background-color: #967259;
+    height: 48%;
+    overflow: scroll;
+    padding: 2%;
+}
+
+.messages li {
+    display: block;
+    border: 1px solid black;
+    background-color: whitesmoke;
+    margin-bottom: 1%;
+    padding: 0.2%;
+}
+
+b {
+    text-transform: uppercase;
+    color: #967259;
+}
+
+i {
+    color: darkgray;
+    font-size: x-small;
+}
+
+.msg {
+    padding-top: 0.5%;
+    padding-bottom: 0.5%;
+    margin: 0;
+}
+
+.messages {
+    width: 70%;
+    float: right;
+    margin-right: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    overflow: scroll;
+}
+
+.other {
+    display: inline-block;
+    width: 27%;
+    margin: 1%;
+    overflow: hidden;
+}
+
+.row {
+    display: flex;
+    height: 86%;
+}
+
+#id_message_content {
+    width: -webkit-fill-available;
+    height: 35px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    display: block;
+}
+
+label {
+    width: fit-content;
+}
