@@ -81,9 +81,7 @@ def set_tasks(request):
 
 @login_required(login_url="/")
 def view_tasks(request):
-    cafeTable = CafeTable.object.all()
-    viewing_tasks = Task.objects.all().filter(table_id = cafeTable.table_id)
-
+    viewing_tasks = Task.objects.all()
     return render(request, 'view_tasks.html', {'tasks': viewing_tasks} )
 
 
