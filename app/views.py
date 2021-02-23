@@ -88,6 +88,7 @@ def tasks(request):
         table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
     )
     tasks = Task.objects.filter(table_id__in=tables)
+
     context = {
         'tasks':tasks
     }
