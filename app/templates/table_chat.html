@@ -11,6 +11,7 @@
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
@@ -20,7 +21,52 @@
     <h6 class="app_name">CoffeeClique</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  Placeholder to show you are in table {{ table }}
+
+  <div class="navigation">
+    <button onclick="document.location='/table_view'" id="table_view" inline="true">Back to Cafe</button><br>
+    <h2 class="table_name">{{ table }}</h2>
+  </div>
+  
+  <div class="row">
+    <div class="other">
+
+    <div class="users">
+    Group members
+    {% for user in users %}
+    <li>
+      {{user.first_name}} {{user.last_name}}
+    </li>
+    {% endfor %}
+    </div>
+
+    <div class="tasks">
+      Tasks
+      {% for task in tasks %}
+      <li>
+        {{task.task_content}} <!-- Should link to the tasks here when we know what task link is -->
+        set by {{task.created_by}}
+      </li>
+      {% endfor %}
+    </div>
+
+    </div>
+
+    <div class="messages">
+      {% for msg in messages %}
+      <li>
+        <b>{{msg.created_by.first_name}} {{msg.created_by.last_name}}</b> <i>{{msg.message_date}}</i><br>
+        <p class="msg">{{msg.message_content}}</p>
+      </li>
+      {% endfor %}
+    
+
+      <form method="post">
+        {% csrf_token %}  <!-- security item required for django forms !! -->
+        {{ form.as_p }}<button type="submit"> Post </button>  
+      </form><br>
+    </div>
+</div>
+
 </body>
 
 </html>
