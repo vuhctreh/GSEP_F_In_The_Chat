@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, createTaskForm
 from django.contrib.auth.decorators import login_required
+from .models import Task
 
 
 # Victoria: 18/2/21
@@ -77,6 +78,12 @@ def set_tasks(request):
         else:
             context["createTaskForm"] = form
     return render(request, 'set_tasks.html', context)
+
+@login_required(login_url="/")
+def view_tasks(request):
+    viewing_tasks = Task.objects.all()
+    return render(request, 'view_tasks.html', {'tasks': viewing_tasks} )
+
 
 
 @login_required(login_url='/')
