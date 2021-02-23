@@ -67,8 +67,8 @@ def set_tasks(request):
     form = createTaskForm()
 
     if not user.is_staff:
-        return redirect("home")
-
+        return redirect("tasks")
+    
     context = {'form': form}
     if request.method == 'POST':
         form = createTaskForm(request.POST)
@@ -92,14 +92,13 @@ def tasks(request):
         'tasks':tasks
     }
     if request.method == 'POST':
-        
-        return redirect("viewtasks")
+        return redirect("tasks")
+    
     return render(request, 'tasks.html', context)
 
 def completed_pressed(request, pk):
     required_task = Task.objects.get(pk=pk)
-    return redirect("viewtasks")
-
+    return redirect("tasks")
 
 @login_required(login_url='/')
 def cafe_home(request):
