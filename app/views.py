@@ -124,6 +124,9 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
+@login_required(login_url='/')
+def edit_info(request):
+    return render(request, "edit_info.html")
 
 def health(request):
     state = {"status": "UP"}
