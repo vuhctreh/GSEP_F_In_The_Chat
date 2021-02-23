@@ -20,24 +20,24 @@
   </div>
   <br>
 
-  {% for i in tasks %}
+  {% for task in tasks %}
   <div class="main">
-    <h2>Task {{i.task_id}}</h2>
+    <h2>Task {{task.task_id}}</h2>
     <form method="post">
       {% csrf_token %}  <!-- security item required for django forms !! -->
       <table class="tasks">
         
           <tr>
             <td><h4>Set By:</h4></td>
-            <td> {{i.created_by}}</td>
+            <td> {{task.created_by}}</td>
           </tr>  
           <tr> 
             <td><h4>Points:</h4></td>
-            <td> {{i.points}} </td>
+            <td> {{task.points}} </td>
           </tr>
           <tr>
             <td><h4>Description:</h4></td> 
-            <td> {{i.task_content}} </td>
+            <td> {{task.task_content}} </td>
           </tr>
           <tr>
             <td><button onclick=""> Completed </button></td>

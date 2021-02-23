@@ -82,7 +82,12 @@ def set_tasks(request):
 @login_required(login_url="/")
 def view_tasks(request):
     viewing_tasks = Task.objects.all()
-    return render(request, 'view_tasks.html', {'tasks': viewing_tasks} )
+    context = {
+        'tasks':viewing_tasks
+    }
+    if request.method == 'POST':
+        return redirect("viewtasks")
+    return render(request, 'view_tasks.html', context)
 
 
 
