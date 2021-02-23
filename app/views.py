@@ -81,7 +81,7 @@ def set_tasks(request):
 
 
 @login_required(login_url="/")
-def view_tasks(request):
+def tasks(request):
     current_user = request.user
     tables = CafeTable.objects.filter(
         university = current_user.university,
@@ -94,7 +94,7 @@ def view_tasks(request):
     if request.method == 'POST':
         
         return redirect("viewtasks")
-    return render(request, 'view_tasks.html', context)
+    return render(request, 'tasks.html', context)
 
 def completed_pressed(request, pk):
     required_task = Task.objects.get(pk=pk)
@@ -104,11 +104,6 @@ def completed_pressed(request, pk):
 @login_required(login_url='/')
 def cafe_home(request):
     return render(request, 'cafe_home.html')
-
-
-def tasks(request):
-    return render(request, 'tasks.html')
-
 
 def health(request):
     state = {"status": "UP"}
