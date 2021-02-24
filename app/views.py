@@ -77,8 +77,15 @@ def table_view(request):
         'tables': tables
     }
     return render(request, "table_view.html", context)
+
+
+@login_required(login_url='/')
 def dashboard(request):
     user = CoffeeUser.objects.get(id=request.user.id)
+    users = CoffeeUser.objects.all()
+    if len(users) > 10:
+        users = users[:9]
+    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
@@ -86,20 +93,9 @@ def dashboard(request):
         'university': user.get_university_display(),
         'dateJoined': user.date_joined,
         'points': user.points,
-    }
-    return render(request, "dashboard.html", context)
-
-
-@login_required(login_url='/')
-def leaderboard(request):
-    users = CoffeeUser.objects.all()
-    if len(users) > 10:
-        users = users[:9]
-    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
-    context = {
         'users': sorted_users,
     }
-    return render(request, "leaderboard.html", context)
+    return render(request, "dashboard.html", context)
 
 
 # Isabel: 18/2/21
@@ -148,9 +144,11 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
+
 @login_required(login_url='/')
 def edit_info(request):
     return render(request, "edit_info.html")
+
 
 def health(request):
     state = {"status": "UP"}

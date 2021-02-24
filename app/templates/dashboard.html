@@ -31,6 +31,14 @@
 
     <button onclick="document.location='home'" id="home">To Cafe</button><br>
   </div>
+
+  <h2>Leaderboard</h2>
+      {% for student in users %}
+          <h1> Rank {{ forloop.counter }}:  {{ student.first_name }} {{ student.last_name }}</h1>
+          <p>Points: {{ student.points }}</p>
+      {% endfor %}
+
+
 </body>
 
 </html>

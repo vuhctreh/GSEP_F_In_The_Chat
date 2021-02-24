@@ -21,6 +21,5 @@ urlpatterns = [
                     RedirectView.as_view(
                         url=staticfiles_storage.url('static/images/favicon.ico'))
                     ),
-               path('dashboard', views.dashboard, name='dashboard'),
-               path('leaderboard', views.leaderboard, name='leaderboard')
+               path('dashboard', views.dashboard, name='dashboard')
                ]
