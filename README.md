@@ -1,4 +1,4 @@
-![plot](./app/static/images/favicon.png)
+![plot](./app/static/images/favicon.png =250x250)
 # Welcome To CoffeeClique
 Student Engagement Tool For Blended Learning.
 
