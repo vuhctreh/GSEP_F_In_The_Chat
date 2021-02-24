@@ -1,22 +1,61 @@
-.uni {
-    text-transform: capitalize;
+.main {
+    display: flex;
+    margin: 2%;
+}
+
+.user_info {
+    background-color: #dbc1ac;
+    width: 25%;
+    margin-right: 1%;
+    padding: 1%;
+}
+
+.leaderboard {
+    background-color: #dbc1ac;
+    width: 72%;
+}
+
+.person {
+    background-color: #967259;
+    color: whitesmoke;
+    padding: 5%;
 }
 
 .name {
     text-transform: capitalize;
     text-align: center;
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .email {
     text-align: center;
-    margin-top: 0;
+    margin: 0;
+    font-size: small;
+    font-weight: lighter;
 }
 
-.main {
-    background-color: #dbc1ac;
-    margin-left: 1%;
-    margin-bottom: 2%;
-    margin-top: 2%;
-    width: 20%;
+.uni {
+    text-transform: capitalize;
+}
+
+.board_title {
+    text-align: center;
+}
+
+li {
+    display: block;
+    background-color: #967259;
+    color: whitesmoke;
+    margin: 1.5%;
+    padding: 1.5%;
+}
+
+.student {
+    text-transform: capitalize;
+    display: inline;
+}
+
+.points {
+    float: right;
+    padding-right: 2.5%;
 }

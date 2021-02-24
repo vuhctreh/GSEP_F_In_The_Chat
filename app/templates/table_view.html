@@ -19,7 +19,11 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
-    <a class="logout" href="{% url 'logout' %}">Logout</a>
+    <div class="navigation">
+      <a class="dashboard" href="{% url 'dashboard' %}">Dashboard</a>
+      <a class="logout" href="{% url 'logout' %}">Logout</a>
+    </div>
+    
   </div>
   <ul>
     <div class="tables">
