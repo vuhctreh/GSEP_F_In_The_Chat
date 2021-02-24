@@ -6,6 +6,7 @@ from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
+from operator import attrgetter
 
 
 # Victoria: 18/2/21
@@ -76,6 +77,29 @@ def table_view(request):
         'tables': tables
     }
     return render(request, "table_view.html", context)
+def dashboard(request):
+    user = CoffeeUser.objects.get(id=request.user.id)
+    context = {
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+        'email': user.email,
+        'university': user.get_university_display(),
+        'dateJoined': user.date_joined,
+        'points': user.points,
+    }
+    return render(request, "dashboard.html", context)
+
+
+@login_required(login_url='/')
+def leaderboard(request):
+    users = CoffeeUser.objects.all()
+    if len(users) > 10:
+        users = users[:9]
+    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    context = {
+        'users': sorted_users,
+    }
+    return render(request, "leaderboard.html", context)
 
 
 # Isabel: 18/2/21
