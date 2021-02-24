@@ -50,7 +50,7 @@ def signup(request):
     context = {}
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and form.cleaned_data.get('accept_terms'):
             form.save()
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')
@@ -73,7 +73,7 @@ def table_view(request):
     tables = CafeTable.objects.filter(
         university=current_user.university,
         table_id__in=current_user.cafe_table_ids.values_list('table_id',
-                                                             flat=True)
+                                                               flat=True)
     )
     context = {
         'tables': tables
