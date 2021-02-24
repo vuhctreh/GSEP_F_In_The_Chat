@@ -1,5 +1,3 @@
-<img src="https://github.com/vuhctreh/GSEP_F_In_The_Chat/tree/main/app/static/images/favicon.png" width="250"/>
-
 # Welcome To CoffeeClique
 Student Engagement Tool For Blended Learning.
 
