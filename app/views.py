@@ -80,38 +80,37 @@ def set_tasks(request):
     return render(request, 'set_tasks.html', context)
 
 
-
 @login_required(login_url="/")
 def view_tasks(request):
     current_user = request.user
     tables = CafeTable.objects.filter(
-        university = current_user.university,
-        table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id', flat=True)
     )
     tasks = Task.objects.filter(table_id__in=tables)
     context = {
-        'tasks':tasks
+        'tasks': tasks
     }
     if request.method == 'POST':
-        
         return redirect("viewtasks")
     return render(request, 'view_tasks.html', context)
 
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def dashboard(request):
     user = CoffeeUser.objects.get(id=request.user.id)
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
         'email': user.email,
-        'university': user.university,
+        'university': user.get_university_display(),
         'dateJoined': user.date_joined,
         'points': user.points,
     }
     return render(request, "dashboard.html", context)
 
 
+@login_required(login_url='/')
 def leaderboard(request):
     users = CoffeeUser.objects.all()
     if len(users) > 10:
