@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class CafeTable(models.Model):
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
-    table_id = models.CharField(max_length=50)  # name of the table
+    table_id = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
 
     def __str__(self):
@@ -17,7 +17,7 @@ class CafeTable(models.Model):
 # required for custom user model
 class CoffeeUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, university, is_staff,
-                    accept_terms, password=None):
+                    password=None):
         if not email:
             raise ValueError("Users must have an email address")
         if not first_name:
@@ -28,8 +28,6 @@ class CoffeeUserManager(BaseUserManager):
             raise ValueError("Users must supply their University")
         if not is_staff:
             is_staff = False
-        if not accept_terms:
-            raise ValueError("Must accept privacy policy and terms of use")
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
@@ -102,15 +100,16 @@ class CoffeeUser(AbstractBaseUser):
 
 
 class Task(models.Model):
-    task_id = models.PositiveIntegerField()
+    # please note Django implicitly gives an auto incrementing primary
+    # key field id = models.AutoField(primary_key=True)
+    task_name = models.CharField(max_length=50)
     table_id = models.ForeignKey(CafeTable, related_name="tasks",
                                  on_delete=models.CASCADE)
     created_by = models.ForeignKey(CoffeeUser, related_name="created_tasks",
                                    on_delete=models.CASCADE)
-    completed_by = models.ManyToManyField(CoffeeUser)
+    completed_by = models.ManyToManyField(CoffeeUser, blank=True)
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
-    completed = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=0)
 
 
