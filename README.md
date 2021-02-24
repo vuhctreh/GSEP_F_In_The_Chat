@@ -1,3 +1,4 @@
+![plot](./app/static/images/logo.png)
 # Welcome To CoffeeClique
 Student Engagement Tool For Blended Learning.
 
