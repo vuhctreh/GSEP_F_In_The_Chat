@@ -22,7 +22,7 @@
 
   {% for task in tasks %}
   <div class="main">
-    <h2>Task {{task.task_id}}</h2>
+    <h2>Task {{task.task_name}}</h2>
       {% csrf_token %}  <!-- security item required for django forms !! -->
       <table class="tasks">
           <tr>
