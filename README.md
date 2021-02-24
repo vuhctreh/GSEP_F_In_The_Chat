@@ -1,4 +1,5 @@
-![plot](./app/static/images/favicon.png){:height="100px" width="100px"}
+<img src="https://github.com/vuhctreh/GSEP_F_In_The_Chat/app/static/images/favicon.png" width="250"/>
+
 # Welcome To CoffeeClique
 Student Engagement Tool For Blended Learning.
 
