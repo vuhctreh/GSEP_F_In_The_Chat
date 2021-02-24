@@ -1,4 +1,4 @@
-![plot](./app/static/images/favicon.png =250x250)
+![plot](./app/static/images/favicon.png){:height="100px" width="100px"}
 # Welcome To CoffeeClique
 Student Engagement Tool For Blended Learning.
 
