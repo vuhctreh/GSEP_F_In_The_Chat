@@ -57,10 +57,3 @@ class CUserEditForm(UserChangeForm):
         model = CoffeeUser
         fields = ('first_name', 'last_name', 'year', 'course',
                   'cafe_table_ids')
-
-
-class createTaskForm(forms.ModelForm):
-
-    class Meta:
-        model = Task
-        fields = "__all__"

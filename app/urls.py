@@ -12,9 +12,6 @@ urlpatterns = [
                path('500', views.handler500, name='500'),
                path('privacy', views.privacy, name='privacy'),
                path('terms', views.terms, name='terms'),
-               path('tasks', views.tasks, name='tasks'),
-               path('set_tasks', views.set_tasks, name='set_tasks'),
-               path('viewtasks', views.view_tasks, name='viewtasks'),
                path('dashboard', views.dashboard, name='dashboard'),
                path('leaderboard', views.leaderboard, name='leaderboard')
                ]
