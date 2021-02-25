@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import AdminSignUpForm, CUserEditForm
+from .forms import AdminSignUpForm, AdminCUserEditForm
 from .models import CafeTable, CoffeeUser, Task, Message
 
 
 class CoffeeUserAdmin(UserAdmin):
     add_form = AdminSignUpForm
-    form = CUserEditForm
+    form = AdminCUserEditForm
     list_display = ('email', 'first_name', 'last_name', 'university',
                     'is_staff', 'year', 'course')
     list_filter = ('email', 'first_name', 'last_name', 'university',
