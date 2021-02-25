@@ -6,9 +6,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Cafe</title>
+  <title>Dashboard</title>
   {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
@@ -18,36 +19,30 @@
     <h6 class="app_name">CoffeeClique</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  <br>
 
   <div class="main">
-    <h2>Dashboard</h2>
-      <p>
-          <h1> First Name: </h1>
-          <h3> {{ firstName }} </h3>
-      </p>
-      <p>
-          <h1> Last Name: </h1>
-          <h3> {{ lastName }} </h3>
-      </p>
-      <p>
-          <h1> Email: </h1>
-          <h3> {{ email }} </h3>
-      </p>
-      <p>
-          <h1> University: </h1>
-          <h3> {{ university }} </h3>
-      </p>
-      <p>
-          <h1> Points: </h1>
-          <h3> {{ points }} </h3>
-      </p>
-      <p>
-          <h1> Date Joined: </h1>
-          <h3> {{ dateJoined }} </h3>
-      </p>
-
-    <button onclick="document.location='table_view'" id="home">Home</button><br>
+    <div class="user_info">
+      <div class="person">
+        <h3 class="name"> {{ firstName }} {{ lastName }} </h3>
+        <p class="email"> {{ email }} </p>
+      </div>
+      
+      <p> Date Joined:
+        {{ dateJoined }} </p>
+      <p class="uni"> University: {{ university }} </p>
+      <p> Points: {{ points }} </p>
+      <div class="buttons">
+        <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
+        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
+      </div>
+    </div>
+      
+    <div class="leaderboard">
+      <h2 class="board_title">LEADERBOARD</h2>
+    {% for student in users %}
+      <li>{{ forloop.counter }}. <div class="student">{{ student.first_name }} {{ student.last_name }}</div> <div class="points">Points: {{ student.points }}</div></li>
+    {% endfor %}
+    </div>
   </div>
 </body>
 
