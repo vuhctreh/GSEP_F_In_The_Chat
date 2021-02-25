@@ -163,7 +163,7 @@ class EditInfoTests(TestCase):
         response = self.client.get('/dashboard/edit_info')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
-"""
+
 class SetTaskTests(TestCase):
     def setUp(self):
         table = CafeTable.objects.create(table_id='Test',
@@ -184,7 +184,6 @@ class SetTaskTests(TestCase):
     def test_csrf(self):
         response = self.client.get('/set_tasks')
         self.assertContains(response, 'csrfmiddlewaretoken')
-"""
 
 
 class ViewTaskTests(TestCase):
@@ -206,26 +205,3 @@ class ViewTaskTests(TestCase):
     def test_status_code(self):
         response = self.client.get('/view_tasks')
         self.assertEquals(response.status_code, 200)
-
-
-"""
-class CompleteTaskTests(TestCase):
-    def setUp(self):
-        table = CafeTable.objects.create(table_id='Test',
-                                         university='Test uni')
-        table2 = CafeTable.objects.create(table_id='Test 2',
-                                          university='Test uni')
-        user = CoffeeUser.objects.create_user(
-            email='test@test.com', first_name='testf', last_name='testl',
-            university='Test uni', is_staff=False, password='123'
-        )
-        user.cafe_table_ids.add(table)
-        self.client.login(email='test@test.com', password='123')
-        task = Task.objects.create(task_name="tasktest", table_id=table,
-                                   created_by=user, task_content="lol",
-                                   points=1)
-
-    def test_status_code(self):
-        response = self.client.get('/complete/0')
-        self.assertEquals(response.status_code, 200)
-"""

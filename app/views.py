@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm
+from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, createTaskForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
