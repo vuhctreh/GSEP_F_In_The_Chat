@@ -38,6 +38,10 @@
     text-transform: capitalize;
 }
 
+.buttons {
+    display: inline-flex;
+}
+
 .board_title {
     text-align: center;
 }

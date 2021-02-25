@@ -5,7 +5,7 @@ ul {
 .tables {
     margin-top: 3.5%;
     margin-bottom: 3.5%;
-    margin-left: 7.5%;
+    margin-left: 7%;
 }
 
 li {
@@ -20,6 +20,12 @@ li {
 
 .table_names {
     text-align: center;
+}
+
+#dashboard {
+    width: 8%;
+    margin-left: 46%;
+    margin-top: 2.5%;
 }
 
 @media only screen and (max-width: 850px) {

@@ -31,7 +31,10 @@
         {{ dateJoined }} </p>
       <p class="uni"> University: {{ university }} </p>
       <p> Points: {{ points }} </p>
-      <button onclick="document.location='table_view'" id="table_view">To Cafe</button><br>
+      <div class="buttons">
+        <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
+        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
+      </div>
     </div>
       
     <div class="leaderboard">

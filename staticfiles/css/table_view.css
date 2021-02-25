@@ -22,6 +22,12 @@ li {
     text-align: center;
 }
 
+#dashboard {
+    width: 8%;
+    margin-left: 46%;
+    margin-top: 2.5%;
+}
+
 @media only screen and (max-width: 850px) {
     .tables {
         margin-left: 21%;
