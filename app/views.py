@@ -161,6 +161,18 @@ def dashboard(request):
     return render(request, "dashboard.html", context)
 
 
+@login_required(login_url='/')
+def leaderboard(request):
+    users = CoffeeUser.objects.all()
+    if len(users) > 10:
+        users = users[:9]
+    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    context = {
+        'users': sorted_users,
+    }
+    return render(request, "leaderboard.html", context)
+
+
 @login_required(login_url="/")
 def set_tasks(request):
     user = request.user
