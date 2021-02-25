@@ -72,7 +72,7 @@ class createTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ('task_name', 'created_by', 'task_content', 'points', 'table_id')
+        fields = ('task_name', 'task_content', 'points', 'table_id')
 
 
 # Isabel 22/2/21
