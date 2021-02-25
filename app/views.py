@@ -73,7 +73,7 @@ def table_view(request):
     tables = CafeTable.objects.filter(
         university=current_user.university,
         table_id__in=current_user.cafe_table_ids.values_list('table_id',
-                                                               flat=True)
+                                                             flat=True)
     )
     context = {
         'tables': tables
@@ -127,6 +127,7 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
+
 @login_required(login_url="/")
 def set_tasks(request):
     user = request.user
@@ -145,45 +146,40 @@ def set_tasks(request):
     return render(request, 'set_tasks.html', context)
 
 
-
 @login_required(login_url="/")
 def view_tasks(request):
     current_user = request.user
+    # get the tables the current user is part of
     tables = CafeTable.objects.filter(
-        university = current_user.university,
-        table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
     )
-    tasks = Task.objects.filter(table_id__in=tables)
-    
-    #for this_task in tasks:
-    #    print(current_user.id)
-    #    new = Task.objects.filter(user_id__in = this_task.completed_by.values_list('task', flat=True))
-    #    for i in new:
-    #        print(i.email)
-    #    if(this_task.completed_by == current_user):
-    #        print(this_task.completed_by)
-    
+    # get the tasks corresponding to these tables that the user hasn't done
+    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
     context = {
-        'tasks':tasks
+        'tasks': tasks
     }
     return render(request, 'view_tasks.html', context)
 
+
+@login_required(login_url='/')
 def completeTask(request, pk):
-    #Get the current user logged in
+    # Get the current user logged in
     current_user = request.user
-    #Get the task for which the button is pressed
+    # Get the task for which the button is pressed
     completedTask = Task.objects.get(pk=pk)
-    #Add user to completed by field in database
+    # Add user to completed by field in database
     completedTask.completed_by.add(current_user)
-    #Increment points field by respective amount
+    # Increment points field by respective amount
     current_user.points += completedTask.points
     current_user.save()
     print("SUCCESS!")
     return redirect('/view_tasks')
-    #return render(request, 'view_tasks.html')
+    # return render(request, 'view_tasks.html')
 
 
-# @login_required(login_url='/')
+@login_required(login_url='/')
 def dashboard(request):
     user = CoffeeUser.objects.get(id=request.user.id)
     context = {
@@ -197,6 +193,7 @@ def dashboard(request):
     return render(request, "dashboard.html", context)
 
 
+@login_required(login_url='/')
 def leaderboard(request):
     users = CoffeeUser.objects.all()
     if len(users) > 10:
@@ -211,6 +208,7 @@ def leaderboard(request):
 @login_required(login_url='/')
 def edit_info(request):
     return render(request, "edit_info.html")
+
 
 def tasks(request):
     return render(request, 'tasks.html')
