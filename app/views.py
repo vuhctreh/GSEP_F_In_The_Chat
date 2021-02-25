@@ -140,10 +140,11 @@ def set_tasks(request):
     if request.method == 'POST':
         form = createTaskForm(request.POST)
         if form.is_valid():
-            task_name = form.cleaned_data.get('task_name'),
-            table_id = form.cleaned_data.get('table_id'),
-            task_content = form.cleaned_data.get('task_content'),
-            points = form.cleaned_data.get('points'),
+            task_name = form.cleaned_data.get('task_name')
+            table_id = form.cleaned_data.get('table_id')
+            # input(type(table_id))
+            task_content = form.cleaned_data.get('task_content')
+            points = form.cleaned_data.get('points')
             task = Task.objects.create(
                 task_name=task_name,
                 created_by=user,
