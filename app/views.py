@@ -145,9 +145,10 @@ def table_chat(request, pk):
     return render(request, "table_chat.html", context)
 
 
+# will
 @login_required(login_url='/')
-def edit_info(request):
-    return render(request, "edit_info.html")
+def edit(request):
+    return render(request, "edit.html")
 
 
 def health(request):
