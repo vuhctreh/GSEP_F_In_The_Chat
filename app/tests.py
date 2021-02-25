@@ -54,8 +54,7 @@ class TablesViewTests(TestCase):
                                           university='Test uni')
         user = CoffeeUser.objects.create_user(
             email='test@test.com', first_name='testf', last_name='testl',
-            university='Test uni', is_staff=False, accept_terms=True,
-            password='123'
+            university='Test uni', is_staff=False, password='123'
         )
         user.cafe_table_ids.add(table)
         self.client.login(email='test@test.com', password='123')
@@ -80,8 +79,7 @@ class InTableTests(TestCase):
                                           university='Test uni')
         user = CoffeeUser.objects.create_user(
             email='test@test.com', first_name='testf', last_name='testl',
-            university='Test uni', is_staff=False, accept_terms=True,
-            password='123'
+            university='Test uni', is_staff=False, password='123'
         )
         user.cafe_table_ids.add(table)
         self.client.login(email='test@test.com', password='123')
@@ -124,3 +122,43 @@ class InTableTests(TestCase):
         response_html = response.content.decode()
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response_html, render_to_string('denied.html'))
+
+
+class DashboardTests(TestCase):
+    def setUp(self):
+        table = CafeTable.objects.create(table_id='Test',
+                                         university='Test uni')
+        table2 = CafeTable.objects.create(table_id='Test 2',
+                                          university='Test uni')
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
+        user.cafe_table_ids.add(table)
+        self.client.login(email='test@test.com', password='123')
+
+    def test_status_code(self):
+        response = self.client.get('/dashboard')
+        self.assertEquals(response.status_code, 200)
+
+
+class EditInfoTests(TestCase):
+    def setUp(self):
+        table = CafeTable.objects.create(table_id='Test',
+                                         university='Test uni')
+        table2 = CafeTable.objects.create(table_id='Test 2',
+                                          university='Test uni')
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
+        user.cafe_table_ids.add(table)
+        self.client.login(email='test@test.com', password='123')
+
+    def test_status_code(self):
+        response = self.client.get('/dashboard/edit_info')
+        self.assertEquals(response.status_code, 200)
+
+    def test_csrf(self):
+        response = self.client.get('/dashboard/edit_info')
+        self.assertContains(response, 'csrfmiddlewaretoken')
