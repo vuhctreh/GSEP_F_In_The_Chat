@@ -154,13 +154,33 @@ def view_tasks(request):
         table_id__in = current_user.cafe_table_ids.values_list('table_id', flat=True)
     )
     tasks = Task.objects.filter(table_id__in=tables)
+    
+    #for this_task in tasks:
+    #    print(current_user.id)
+    #    new = Task.objects.filter(user_id__in = this_task.completed_by.values_list('task', flat=True))
+    #    for i in new:
+    #        print(i.email)
+    #    if(this_task.completed_by == current_user):
+    #        print(this_task.completed_by)
+    
     context = {
         'tasks':tasks
     }
-    if request.method == 'POST':
-
-        return redirect("viewtasks")
     return render(request, 'view_tasks.html', context)
+
+def completeTask(request, pk):
+    #Get the current user logged in
+    current_user = request.user
+    #Get the task for which the button is pressed
+    completedTask = Task.objects.get(pk=pk)
+    #Add user to completed by field in database
+    completedTask.completed_by.add(current_user)
+    #Increment points field by respective amount
+    current_user.points += completedTask.points
+    current_user.save()
+    print("SUCCESS!")
+    return redirect('/view_tasks')
+    #return render(request, 'view_tasks.html')
 
 
 # @login_required(login_url='/')

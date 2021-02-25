@@ -8,6 +8,7 @@
 
   <title>Cafe</title>
   {% load static %}
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
@@ -37,7 +38,7 @@
             <td> {{task.task_content}} </td>
           </tr>
           <tr>
-            <form method="post">
+            <form action = "{% url 'complete' task.id %}" method="post">
               {% csrf_token %}  <!-- security item required for django forms !! -->
               <td><button type="submit"> Completed </button></td>
             </form>
