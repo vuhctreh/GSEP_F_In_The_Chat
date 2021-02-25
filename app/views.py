@@ -179,7 +179,7 @@ def set_tasks(request):
     form = createTaskForm()
 
     if not user.is_staff:
-        return redirect("home")
+        return redirect("dashboard")
 
     context = {'form': form}
     if request.method == 'POST':
