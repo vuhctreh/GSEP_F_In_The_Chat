@@ -147,8 +147,8 @@ def table_chat(request, pk):
 
 # will
 @login_required(login_url='/')
-def edit(request):
-    return render(request, "edit.html")
+def edit_info(request):
+    return render(request, "edit_info.html")
 
 
 def health(request):

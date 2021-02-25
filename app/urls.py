@@ -22,5 +22,5 @@ urlpatterns = [
                         url=staticfiles_storage.url('static/images/favicon.ico'))
                     ),
                path('dashboard', views.dashboard, name='dashboard'),
-               path('edit', views.edit, name='edit')
+               path('edit_info', views.edit_info, name='edit_info')
                ]
