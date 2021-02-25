@@ -2,11 +2,9 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, createTaskForm
-from .forms import SignUpForm, LoginForm, PostMessageForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task
 from operator import attrgetter
+from .forms import SignUpForm, LoginForm, PostMessageForm, createTaskForm
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
 
@@ -142,7 +140,6 @@ def set_tasks(request):
         if form.is_valid():
             task_name = form.cleaned_data.get('task_name')
             table_id = form.cleaned_data.get('table_id')
-            # input(type(table_id))
             task_content = form.cleaned_data.get('task_content')
             points = form.cleaned_data.get('points')
             task = Task.objects.create(

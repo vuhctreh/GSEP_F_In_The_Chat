@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy
 from app.models import CoffeeUser, Task
 
 
-
 # Isabel: 18/2/21
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
@@ -65,7 +64,7 @@ class createTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ('task_name', 'table_id', 'task_content', 'points')
+        fields = ('task_name', 'created_by', 'task_content', 'points', 'table_id')
 
 
 # Isabel 22/2/21
