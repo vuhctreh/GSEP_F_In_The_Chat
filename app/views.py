@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, PostMessageForm
+from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
@@ -71,7 +71,7 @@ def table_view(request):
     tables = CafeTable.objects.filter(
         university=current_user.university,
         table_id__in=current_user.cafe_table_ids.values_list('table_id',
-                                                               flat=True)
+                                                             flat=True)
     )
     context = {
         'tables': tables
@@ -145,14 +145,89 @@ def table_chat(request, pk):
     return render(request, "table_chat.html", context)
 
 
-# will
+# will and izzy
 @login_required(login_url='/')
 def edit_info(request):
+    user = request.user
+    if request.method == 'POST':
+        form = CUserEditForm(request.POST)
+        if form.is_valid():
+            # save what is entered and validate
+            if form.cleaned_data['first_name']:
+                user.first_name = form.cleaned_data['first_name']
+
+            if form.cleaned_data['last_name']:
+                user.last_name = form.cleaned_data['last_name']
+
+            if form.cleaned_data['year']:
+                if form.cleaned_data['year'] >= 1:
+                    user.year = form.cleaned_data['year']
+
+            if form.cleaned_data['course']:
+                if user.course:
+                    old_course = user.course
+                    # if already on a course, remove from old course table
+                    old_table_name = "COURSE: " + old_course
+                    table = user.cafe_table_ids.get(table_id=old_table_name)
+                    user.cafe_table_ids.remove(table)
+
+                new_course = form.cleaned_data['course'].lower()
+                user.course = new_course
+                # upper case throughout so not duplicates with different casing
+                new_course_table_name = "COURSE: " + new_course
+                # see if a table for this course exists
+                try:
+                    table = CafeTable.objects.get(
+                        university=user.university,
+                        table_id=new_course_table_name
+                    )
+                except CafeTable.DoesNotExist:
+                    # if that table does not exist, create it
+                    table = CafeTable.objects.create(
+                        table_id=new_course_table_name,
+                        university=user.university
+                    )
+                # add the user to the table
+                user.cafe_table_ids.add(table)
+
+            if form.cleaned_data['add_table_id']:
+                add_table_id = form.cleaned_data['add_table_id'].lower()
+                if not add_table_id.startswith("course:"):
+                    # can't be sneaky and add urself to a course this way
+                    # see if table already exists
+                    try:
+                        table = CafeTable.objects.get(
+                            university=user.university,
+                            table_id=add_table_id
+                        )
+                    except CafeTable.DoesNotExist:
+                        # if that table does not exist, create it
+                        table = CafeTable.objects.create(
+                            table_id=add_table_id,
+                            university=user.university
+                        )
+                    # add the user to the table
+                    user.cafe_table_ids.add(table)
+
+            if form.cleaned_data['remove_table_id']:
+                # if it is actually in their list of tables, remove
+                table_name_to_rm = form.cleaned_data['remove_table_id']
+                #make lower again
+                try:
+                    table = user.cafe_table_ids.get(table_id=table_name_to_rm)
+                    user.cafe_table_ids.remove(table)
+                except CafeTable.DoesNotExist:
+                    pass
+            # end
+            user.save()
+            form = CUserEditForm()
+    else:
+        form = CUserEditForm()
+    tables = user.cafe_table_ids.values_list('table_id', flat=True)
     context = {
-        'firstName': user.first_name,
-        'lastName': user.last_name,
-        'email': user.email,
-        'university': user.get_university_display(),
+        'user': user,
+        'form': form,
+        'tables': tables
     }
     return render(request, "edit_info.html", context)
 

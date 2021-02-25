@@ -51,12 +51,21 @@ class LoginForm(forms.ModelForm):
 
 
 # Isabel 19/2/21
-class CUserEditForm(UserChangeForm):
+class AdminCUserEditForm(UserChangeForm):
 
     class Meta:
         model = CoffeeUser
         fields = ('first_name', 'last_name', 'year', 'course',
                   'cafe_table_ids')
+
+
+class CUserEditForm(forms.Form):
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(required=False)
+    year = forms.IntegerField(required=False)
+    course = forms.CharField(max_length=50, required=False)
+    add_table_id = forms.CharField(max_length=50, required=False)
+    remove_table_id = forms.CharField(max_length=50, required=False)
 
 
 # Isabel 22/2/21
