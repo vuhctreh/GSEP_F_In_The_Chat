@@ -79,6 +79,69 @@ def table_view(request):
     return render(request, "table_view.html", context)
 
 
+@login_required(login_url="/")
+def set_tasks(request):
+    user = request.user
+    form = createTaskForm()
+
+    if not user.is_staff:
+        return redirect("home")
+
+    context = {'form': form}
+    if request.method == 'POST':
+        form = createTaskForm(request.POST)
+        if form.is_valid():
+            task_name = form.cleaned_data.get('task_name')
+            table_id = form.cleaned_data.get('table_id')
+            task_content = form.cleaned_data.get('task_content')
+            points = form.cleaned_data.get('points')
+            task = Task.objects.create(
+                task_name=task_name,
+                created_by=user,
+                table_id=table_id,
+                task_content=task_content,
+                points=points,
+            )
+        else:
+            context["createTaskForm"] = form
+    else:
+        context["createTaskForm"] = form
+    return render(request, 'set_tasks.html', context)
+
+
+@login_required(login_url="/")
+def view_tasks(request):
+    current_user = request.user
+    # get the tables the current user is part of
+    tables = CafeTable.objects.filter(
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+    # get the tasks corresponding to these tables that the user hasn't done
+    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
+    context = {
+        'tasks': tasks
+    }
+    return render(request, 'view_tasks.html', context)
+
+
+@login_required(login_url='/')
+def completeTask(request, pk):
+    # Get the current user logged in
+    current_user = request.user
+    # Get the task for which the button is pressed
+    completedTask = Task.objects.get(pk=pk)
+    # Add user to completed by field in database
+    completedTask.completed_by.add(current_user)
+    # Increment points field by respective amount
+    current_user.points += completedTask.points
+    current_user.save()
+    print("SUCCESS!")
+    return redirect('/view_tasks')
+    # return render(request, 'view_tasks.html')
+
+
 @login_required(login_url='/')
 def dashboard(request):
     user = CoffeeUser.objects.get(id=request.user.id)
@@ -96,6 +159,69 @@ def dashboard(request):
         'users': sorted_users,
     }
     return render(request, "dashboard.html", context)
+
+
+@login_required(login_url="/")
+def set_tasks(request):
+    user = request.user
+    form = createTaskForm()
+
+    if not user.is_staff:
+        return redirect("home")
+
+    context = {'form': form}
+    if request.method == 'POST':
+        form = createTaskForm(request.POST)
+        if form.is_valid():
+            task_name = form.cleaned_data.get('task_name')
+            table_id = form.cleaned_data.get('table_id')
+            task_content = form.cleaned_data.get('task_content')
+            points = form.cleaned_data.get('points')
+            task = Task.objects.create(
+                task_name=task_name,
+                created_by=user,
+                table_id=table_id,
+                task_content=task_content,
+                points=points,
+            )
+        else:
+            context["createTaskForm"] = form
+    else:
+        context["createTaskForm"] = form
+    return render(request, 'set_tasks.html', context)
+
+
+@login_required(login_url="/")
+def view_tasks(request):
+    current_user = request.user
+    # get the tables the current user is part of
+    tables = CafeTable.objects.filter(
+        university=current_user.university,
+        table_id__in=current_user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+    # get the tasks corresponding to these tables that the user hasn't done
+    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
+    context = {
+        'tasks': tasks
+    }
+    return render(request, 'view_tasks.html', context)
+
+
+@login_required(login_url='/')
+def completeTask(request, pk):
+    # Get the current user logged in
+    current_user = request.user
+    # Get the task for which the button is pressed
+    completedTask = Task.objects.get(pk=pk)
+    # Add user to completed by field in database
+    completedTask.completed_by.add(current_user)
+    # Increment points field by respective amount
+    current_user.points += completedTask.points
+    current_user.save()
+    print("SUCCESS!")
+    return redirect('/view_tasks')
+    # return render(request, 'view_tasks.html')
 
 
 # Isabel: 18/2/21

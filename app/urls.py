@@ -17,9 +17,13 @@ urlpatterns = [
                path('500', views.handler500, name='500'),
                path('privacy', views.privacy, name='privacy'),
                path('terms', views.terms, name='terms'),
+               path('set_tasks', views.set_tasks, name='set_tasks'),
+               path('view_tasks', views.view_tasks, name='viewtasks'),
+               path('complete/<pk>', views.completeTask, name='complete'),
+               path('dashboard', views.dashboard, name='dashboard'),
+               path('leaderboard', views.leaderboard, name='leaderboard'),
                path('favicon.ico',
                     RedirectView.as_view(
                         url=staticfiles_storage.url('static/images/favicon.ico'))
                     ),
-               path('dashboard', views.dashboard, name='dashboard')
                ]

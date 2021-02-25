@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
-from app.models import CoffeeUser, Message
+from app.models import CoffeeUser, Message, Task
 from django.utils.translation import ugettext_lazy
 
 
@@ -66,6 +66,13 @@ class CUserEditForm(forms.Form):
     course = forms.CharField(max_length=50, required=False)
     add_table_id = forms.CharField(max_length=50, required=False)
     remove_table_id = forms.CharField(max_length=50, required=False)
+
+
+class createTaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ('task_name', 'created_by', 'task_content', 'points', 'table_id')
 
 
 # Isabel 22/2/21
