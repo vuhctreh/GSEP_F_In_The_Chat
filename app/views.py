@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
 from operator import attrgetter
+from .small_scripts_def import check_points_treshold
 
 
 # Victoria: 18/2/21
@@ -148,6 +149,13 @@ def dashboard(request):
     users = CoffeeUser.objects.all()
     if len(users) > 10:
         users = users[:9]
+
+    # this derives an int from the points earned by the user,
+    # the int corresponds to the name of the collectable's picture in the files
+    # it then concatenates together: the int returned and the link to the image
+    # which in the end gives a link to the collectable's image corresponding to the number of points
+    img = "images/" + str(int(check_points_treshold(user.points))) + ".png"
+
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     context = {
         'firstName': user.first_name,
@@ -157,6 +165,7 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
+        'collectable': img
     }
     return render(request, "dashboard.html", context)
 
