@@ -9,6 +9,7 @@ import datetime
 from operator import attrgetter
 from .small_scripts_def import check_points_treshold, how_much_to_go
 
+list_coffee = ["espresso", "americano", "cappuccino", "hot_chocolate", "latte", "mocha", "matcha", "frappuccino", "ice_tea", "bubble_tea"]
 
 # Victoria: 18/2/21
 def index(request):
@@ -156,9 +157,12 @@ def dashboard(request):
     # which in the end gives a link to the collectable's image corresponding to the number of points
     current_user_points = user.points
     pointsLevel = check_points_treshold(current_user_points)
-    img = "images/" + str(int(pointsLevel)) + ".png"
+    # getting the name from the list_coffee with the index
+    name_coffee = list_coffee[int(pointsLevel)]
+    img = "images/" + name_coffee + ".PNG"
 
-    points_to_go_next_collectable = how_much_to_go(pointsLevel)
+    # calculating how many points to reach next collectable
+    points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
 
 
 
@@ -172,7 +176,8 @@ def dashboard(request):
         'points': user.points,
         'users': sorted_users,
         'collectable': img,
-        'pointsToGo' : points_to_go_next_collectable
+        'pointsToGo' : points_to_go_next_collectable,
+        'nameCollectable' : name_coffee
     }
     return render(request, "dashboard.html", context)
 

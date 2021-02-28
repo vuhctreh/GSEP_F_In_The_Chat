@@ -1,12 +1,13 @@
 #william
 def check_points_treshold(total_points):
+
     # This is just a very easy function to mesure the level obtained, proof of concept. to be changed later TODO
 
     #this will give an experience treshold
     level = total_points/50
 
-    if (level >= 10):
-        return 10
+    if (level >= 9):
+        return list_coffee[9]
 
     else:
         return level

@@ -33,7 +33,10 @@
       <p> Points: {{ points }} </p>
       <p> Points to go before next collectable: {{ pointsToGo }} </p>
 
-      <img src='{% static collectable %}'>
+      <div class="Collectable">
+        <img src='{% static collectable %}' style="width: 200px; height: auto;">
+        <p style=" text-align: center "> {{nameCollectable}} </p>
+      </div>
 
 
       <div class="buttons">
