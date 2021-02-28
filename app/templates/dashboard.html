@@ -31,7 +31,10 @@
         {{ dateJoined }} </p>
       <p class="uni"> University: {{ university }} </p>
       <p> Points: {{ points }} </p>
+      <p> Points to go before next collectable: {{ pointsToGo }} </p>
+
       <img src='{% static collectable %}'>
+
 
       <div class="buttons">
         <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
