@@ -56,6 +56,10 @@
       <li>
         <b>{{msg.created_by.first_name}} {{msg.created_by.last_name}}</b> <i>{{msg.message_date}}</i><br>
         <p class="msg">{{msg.message_content}}</p>
+        <form action= "{% url 'upvote_message' msg.id%}" method="POST">
+            {% csrf_token %}
+            <button type="submit", name="message_upvote", value="{{ msg.id }}">Like</button> - {{msg.total_upvotes}} Likes
+        </form>
       </li>
       {% endfor %}
     
