@@ -11,6 +11,7 @@ urlpatterns = [
                path('table_view', views.table_view, name='table_view'),
                path('tables/<pk>', views.table_chat,
                     name='table_chat'),
+               path('upvote/<pk>', views.upvote, name='upvote_message'),
                path('dashboard/edit_info', views.edit_info, name='edit_info'),
                path('health', views.health, name='health'),
                path('404', views.handler404, name='404'),

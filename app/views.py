@@ -272,6 +272,7 @@ def table_chat(request, pk):
                                 task_date__gte=date_from).order_by('task_date')
     # get all the users in the table
     users = table.coffeeuser_set.all()
+
     # final
     context = {
         "table": table,
@@ -281,6 +282,17 @@ def table_chat(request, pk):
         "tasks": tasks
     }
     return render(request, "table_chat.html", context)
+
+def upvote(request, pk):
+    current_user = request.user
+    message = Message.objects.get(id=pk)
+    if current_user not in message.message_upvote.all():
+        message.message_upvote.add(current_user)
+        message.total_upvotes += 1
+        message.save()
+    
+    current_table = message.table_id.id
+    return redirect('table_chat', pk = current_table)
 
 
 # will and izzy

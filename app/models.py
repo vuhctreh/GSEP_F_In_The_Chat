@@ -129,6 +129,11 @@ class Message(models.Model):
                                    on_delete=models.CASCADE)
     message_date = models.DateTimeField(auto_now_add=True)
     message_content = models.TextField(max_length=4000)
+    message_upvote = models.ManyToManyField(CoffeeUser, related_name="message_upvote")
+    total_upvotes = models.PositiveIntegerField(default=0)
+    
+    #def total_upvotes(self):
+    #    return self.message_upvote.count()
 
 
 # leaderboard class redundant - simply sort user table by points and only
