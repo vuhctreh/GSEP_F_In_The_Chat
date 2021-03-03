@@ -46,7 +46,17 @@
       <li>{{ forloop.counter }}. <div class="student">{{ student.first_name }} {{ student.last_name }}</div> <div class="points">Points: {{ student.points }}</div></li>
     {% endfor %}
     </div>
+
+    <div class="set_study_break">
+      {% if studying == False %}
+      <form method="post">
+        {% csrf_token %}  <!-- security item required for django forms !! -->
+        {{ break_form.as_p }}<button type="submit"> Study! </button>
+      </form>
+      {% endif %}
   </div>
+
+</div>
 </body>
 
 </html>

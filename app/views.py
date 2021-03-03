@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, createTaskForm
+from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
+                   createTaskForm, StudyBreaksForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
@@ -96,11 +97,31 @@ def table_view(request):
 
 @login_required(login_url='/')
 def dashboard(request):
-    user = CoffeeUser.objects.get(id=request.user.id)
+    user = request.user
+    # setting study breaks feature
+    if request.method == 'POST':
+        form = StudyBreaksForm(request.POST)
+        if form.is_valid():
+            mins = form.cleaned_data.get('minutes_studying_for')
+            break_time = datetime.datetime.now() + \
+                datetime.timedelta(minutes=mins)
+            user.studying_until = break_time
+            user.save()
     users = CoffeeUser.objects.all()
-    if len(users) > 10:
-        users = users[:9]
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    if len(sorted_users) > 10:
+        sorted_users = sorted_users[:9]
+    # see if the user is currently studying
+    if user.studying_until:
+        if user.studying_until <= datetime.datetime.now():
+            # they are not studying anymore
+            user.studying_until = None
+            user.save()
+            studying = False
+        else:
+            studying = True
+    else:
+        studying = False
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
@@ -109,7 +130,9 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
-        'num_users': get_number_current_users()
+        'num_users': get_number_current_users(),
+        'break_form': StudyBreaksForm(),
+        'studying': studying
     }
     return render(request, "dashboard.html", context)
 
@@ -117,9 +140,9 @@ def dashboard(request):
 @login_required(login_url='/')
 def leaderboard(request):
     users = CoffeeUser.objects.all()
-    if len(users) > 10:
-        users = users[:9]
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    if len(sorted_users) > 10:
+        sorted_users = sorted_users[:9]
     context = {
         'users': sorted_users,
         'num_users': get_number_current_users()
@@ -148,7 +171,7 @@ def set_tasks(request):
                 created_by=user,
                 table_id=table_id,
                 task_content=task_content,
-                points=points,
+                points=points
             )
         else:
             context["createTaskForm"] = form
@@ -193,6 +216,7 @@ def completeTask(request, pk):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_chat(request, pk):
+    # deal with if the requested table doesn't exist
     try:
         table = CafeTable.objects.get(pk=pk)
     except CafeTable.DoesNotExist:
@@ -218,21 +242,36 @@ def table_chat(request, pk):
         form = PostMessageForm()
     # show the existing messages by querying db
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
-    #IMPORTANT: we probs should not be loading every msg ever, later we should
-    # add a feature to load more when required
     # get the tasks for the table - new: only notified of tasks set in last 24h
     date_from = datetime.datetime.now() - datetime.timedelta(days=1)
     tasks = Task.objects.filter(table_id=table,
                                 task_date__gte=date_from).order_by('task_date')
     # get all the users in the table
     users = table.coffeeuser_set.all()
-
+    # see if currently studying
+    users_studying = []
+    other_users = []
+    for user in users:
+        if user.studying_until:
+            # if the user set a time to study until
+            if user.studying_until <= datetime.datetime.now():
+                # they are not studying anymore
+                user.studying_until = None
+                user.save()
+                other_users.append(user)
+            else:
+                users_studying.append(user)
+        else:
+            other_users.append(user)
+    users_studying = sorted(users_studying, key=attrgetter("studying_until"),
+                            reverse=True)
     # final
     context = {
         "table": table,
         "form": form,
         "messages": messages,
-        "users": users,
+        "users_studying": users_studying,
+        "other_users": other_users,
         "tasks": tasks,
         'num_users': get_number_current_users()
     }

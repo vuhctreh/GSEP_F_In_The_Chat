@@ -84,3 +84,8 @@ class PostMessageForm(forms.ModelForm):
         labels = {
             'message_content': ugettext_lazy('Enter message:'),
         }
+
+
+# Isabel 3/3/21
+class StudyBreaksForm(forms.Form):
+    minutes_studying_for = forms.IntegerField(min_value=5, max_value=300)

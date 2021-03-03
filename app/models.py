@@ -82,6 +82,7 @@ class CoffeeUser(AbstractBaseUser):
     avatar_url = models.FilePathField(path="/img")
     cafe_table_ids = models.ManyToManyField(CafeTable, blank=True)
     points = models.PositiveIntegerField(default=0)
+    studying_until = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]
@@ -117,9 +118,6 @@ class Task(models.Model):
         return self.task_id
 
 
-# 1st normal form redundant due to Django db implementation
-
-
 class Message(models.Model):
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
@@ -131,10 +129,3 @@ class Message(models.Model):
     message_content = models.TextField(max_length=4000)
     message_upvote = models.ManyToManyField(CoffeeUser, related_name="message_upvote")
     total_upvotes = models.PositiveIntegerField(default=0)
-    
-    #def total_upvotes(self):
-    #    return self.message_upvote.count()
-
-
-# leaderboard class redundant - simply sort user table by points and only
-# display top xxx people
