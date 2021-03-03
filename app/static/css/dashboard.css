@@ -42,6 +42,15 @@
     display: inline-flex;
 }
 
+.set_study_break {
+    padding-top: 5%;
+}
+
+#id_minutes_studying_for {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
 .board_title {
     text-align: center;
 }

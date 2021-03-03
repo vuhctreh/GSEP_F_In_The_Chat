@@ -11,25 +11,39 @@ body {
 }
 
 .app_name {
-    margin-block-start: 0px;
-    margin-block-end: 0px;
+    margin: 0;
     padding-top: 9px;
     padding-bottom: 8px;
     font-size: small;
     font-weight:lighter;
-    width: 49%;
     display: inline-block;
+    width: 32%;
+}
+
+.user_count {
+    margin: 0;
+    padding-top: 9px;
+    padding-bottom: 8px;
+    font-size: small;
+    font-weight:lighter;
+    width: 34%;
+    display: inline-block;
+    text-align: center;
 }
 
 .logout {
     display: inline-block;
-    width: 49.5%;
+    width: 32%;
     text-align: right;
     font-size: small;
 }
 
 @media only screen and (max-width: 850px) {
+    .user_count {
+        width: 35%;
+    }
+
     .logout {
-        width: 48%;
+        width: 29%;
     }
 }

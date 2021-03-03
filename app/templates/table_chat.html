@@ -19,7 +19,7 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
-    Users in cafe: {{ num_users }}
+    <h6 class="user_count">Users in Cafe: {{ num_users }}</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
 
@@ -33,7 +33,12 @@
 
     <div class="users">
     Group members
-    {% for user in users %}
+    {% for user in users_studying %}
+    <li>
+      {{user.first_name}} {{user.last_name}} studying until {{user.studying_until}}
+    </li>
+    {% endfor %}
+    {% for user in other_users %}
     <li>
       {{user.first_name}} {{user.last_name}}
     </li>

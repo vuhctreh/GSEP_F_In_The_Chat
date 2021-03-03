@@ -7,6 +7,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Refresh every minute -->
+  <meta http-equiv="refresh" content="60">
+
   <title>Cafe</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
@@ -19,7 +22,7 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
-    Users in cafe: {{ num_users }}
+    <h6 class="user_count">Users in Cafe: {{ num_users }}</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
 
