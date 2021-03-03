@@ -20,12 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'livereload',
     'app',
-    'corsheaders',
     'rest_framework',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
