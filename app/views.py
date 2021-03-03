@@ -7,6 +7,20 @@ from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
 from operator import attrgetter
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+
+
+# Isabel 3/3/21
+def get_number_current_users():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    active = 0
+    for session in active_sessions:
+        data = session.get_decoded()
+        if data != {}:
+            active += 1
+    return active
 
 
 # Victoria: 18/2/21
@@ -74,72 +88,10 @@ def table_view(request):
                                                              flat=True)
     )
     context = {
-        'tables': tables
+        'tables': tables,
+        'num_users': get_number_current_users()
     }
     return render(request, "table_view.html", context)
-
-
-@login_required(login_url="/")
-def set_tasks(request):
-    user = request.user
-    form = createTaskForm()
-
-    if not user.is_staff:
-        return redirect("home")
-
-    context = {'form': form}
-    if request.method == 'POST':
-        form = createTaskForm(request.POST)
-        if form.is_valid():
-            task_name = form.cleaned_data.get('task_name')
-            table_id = form.cleaned_data.get('table_id')
-            task_content = form.cleaned_data.get('task_content')
-            points = form.cleaned_data.get('points')
-            task = Task.objects.create(
-                task_name=task_name,
-                created_by=user,
-                table_id=table_id,
-                task_content=task_content,
-                points=points,
-            )
-        else:
-            context["createTaskForm"] = form
-    else:
-        context["createTaskForm"] = form
-    return render(request, 'set_tasks.html', context)
-
-
-@login_required(login_url="/")
-def view_tasks(request):
-    current_user = request.user
-    # get the tables the current user is part of
-    tables = CafeTable.objects.filter(
-        university=current_user.university,
-        table_id__in=current_user.cafe_table_ids.values_list('table_id',
-                                                             flat=True)
-    )
-    # get the tasks corresponding to these tables that the user hasn't done
-    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
-    context = {
-        'tasks': tasks
-    }
-    return render(request, 'view_tasks.html', context)
-
-
-@login_required(login_url='/')
-def completeTask(request, pk):
-    # Get the current user logged in
-    current_user = request.user
-    # Get the task for which the button is pressed
-    completedTask = Task.objects.get(pk=pk)
-    # Add user to completed by field in database
-    completedTask.completed_by.add(current_user)
-    # Increment points field by respective amount
-    current_user.points += completedTask.points
-    current_user.save()
-    print("SUCCESS!")
-    return redirect('/view_tasks')
-    # return render(request, 'view_tasks.html')
 
 
 @login_required(login_url='/')
@@ -157,6 +109,7 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
+        'num_users': get_number_current_users()
     }
     return render(request, "dashboard.html", context)
 
@@ -169,6 +122,7 @@ def leaderboard(request):
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     context = {
         'users': sorted_users,
+        'num_users': get_number_current_users()
     }
     return render(request, "leaderboard.html", context)
 
@@ -181,7 +135,7 @@ def set_tasks(request):
     if not user.is_staff:
         return redirect("dashboard")
 
-    context = {'form': form}
+    context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
         form = createTaskForm(request.POST)
         if form.is_valid():
@@ -215,7 +169,8 @@ def view_tasks(request):
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
     context = {
-        'tasks': tasks
+        'tasks': tasks,
+        'num_users': get_number_current_users()
     }
     return render(request, 'view_tasks.html', context)
 
@@ -231,7 +186,6 @@ def completeTask(request, pk):
     # Increment points field by respective amount
     current_user.points += completedTask.points
     current_user.save()
-    print("SUCCESS!")
     return redirect('/view_tasks')
     # return render(request, 'view_tasks.html')
 
@@ -279,9 +233,11 @@ def table_chat(request, pk):
         "form": form,
         "messages": messages,
         "users": users,
-        "tasks": tasks
+        "tasks": tasks,
+        'num_users': get_number_current_users()
     }
     return render(request, "table_chat.html", context)
+
 
 def upvote(request, pk):
     current_user = request.user
@@ -290,7 +246,7 @@ def upvote(request, pk):
         message.message_upvote.add(current_user)
         message.total_upvotes += 1
         message.save()
-    
+
     current_table = message.table_id.id
     return redirect('table_chat', pk = current_table)
 
@@ -377,7 +333,8 @@ def edit_info(request):
     context = {
         'user': user,
         'form': form,
-        'tables': tables
+        'tables': tables,
+        'num_users': get_number_current_users()
     }
     return render(request, "edit_info.html", context)
 

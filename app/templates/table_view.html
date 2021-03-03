@@ -19,11 +19,12 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
+    Users in cafe: {{ num_users }}
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
 
   <button onclick="document.location='dashboard'" id="dashboard">Dashboard</button>
-    
+
   <ul>
     <div class="tables">
       {% for table in tables %}

@@ -19,15 +19,16 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
+    Users in cafe: {{ num_users }}
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  
+
   <div class="message">
     <h1>Table Not Found</h1>
     <p>This table either doesn't exist, or you don't have access to it. Click <a href="{% url 'edit_info' %}">here</a> to join tables.</p>
     <button onclick="document.location='/table_view'" id="table_view" inline="true">Back to Cafe</button><br>
   </div>
-  
+
 </body>
 
 </html>
