@@ -6,7 +6,6 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title> {{ table.table_id }}</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
@@ -14,6 +13,27 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script>
+
+  <script>
+  function message_update(){
+    $(document).ready(function() {
+            $.ajax({
+                async: true,
+                type: "GET",
+                url: "/get_msgs/{{ table.id }}",
+                success: function(data) {
+                  $('#fetched_msgs').html(data);
+                  var chatBox = document.getElementById("messages");
+                  chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            });
+          },);
+        };
+    message_update();
+    var i = setInterval(message_update, 3000);
+  </script>
+
 </head>
 
 <body>
@@ -57,24 +77,17 @@
 
     </div>
 
-    <div class="messages">
-      {% for msg in messages %}
-      <li>
-        <b>{{msg.created_by.first_name}} {{msg.created_by.last_name}}</b> <i>{{msg.message_date}}</i><br>
-        <p class="msg">{{msg.message_content}}</p>
-        <form action= "{% url 'upvote_message' msg.id%}" method="POST">
-            {% csrf_token %}
-            <button type="submit", name="message_upvote", value="{{ msg.id }}">Like</button> - {{msg.total_upvotes}} Likes
-        </form>
-      </li>
-      {% endfor %}
+    <div class="messages" id="messages">
+    <div class="fetched_msgs" id="fetched_msgs"> </div>
 
-
+    <div class="form">
       <form method="post">
         {% csrf_token %}  <!-- security item required for django forms !! -->
         {{ form.as_p }}<button type="submit"> Post </button>
       </form><br>
     </div>
+  </div>
+
 </div>
 
 </body>
