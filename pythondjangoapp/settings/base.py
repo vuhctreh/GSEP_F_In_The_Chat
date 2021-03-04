@@ -4,7 +4,7 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# NOTE: Set the below value for 'SECRET_KEY' to a unique key for production deploys
+# Set the below value for 'SECRET_KEY' to a unique key for production deploys
 # Reference: https://docs.djangoproject.com/en/3.1/ref/settings/#secret-key
 SECRET_KEY = get_random_secret_key()
 
@@ -19,9 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'livereload',
-    'app',
-    'corsheaders',
-    'rest_framework',
+    'app'
 ]
 
 MIDDLEWARE = [
@@ -85,13 +83,11 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = os.path.join(os.path.abspath(BASE_DIR), "staticfiles")
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-)
