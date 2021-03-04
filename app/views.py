@@ -150,12 +150,16 @@ def leaderboard(request):
     return render(request, "leaderboard.html", context)
 
 
+# Victoria 04/03/21
 @login_required(login_url="/")
 def set_tasks(request):
     user = request.user
     form = createTaskForm()
 
-    if not user.is_staff:
+    if user.next_possible_set == datetime.date.today():
+        user.tasks_set_today == 0
+
+    if user.tasks_set_today >= 2 and not user.is_staff:
         return redirect("dashboard")
 
     context = {'form': form, 'num_users': get_number_current_users()}
@@ -173,6 +177,14 @@ def set_tasks(request):
                 task_content=task_content,
                 points=points
             )
+            user.tasks_set_today += 1
+            user.save()
+
+            if user.tasks_set_today >= 2 and not user.is_staff:
+                user.next_possible_set = datetime.date.today() + datetime.timedelta(days=1)
+                user.save()
+                return redirect("dashboard")
+
         else:
             context["createTaskForm"] = form
     else:
@@ -287,7 +299,7 @@ def upvote(request, pk):
         message.save()
 
     current_table = message.table_id.id
-    return redirect('table_chat', pk = current_table)
+    return redirect('table_chat', pk=current_table)
 
 
 # will and izzy
