@@ -71,6 +71,7 @@ li {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(6, 5vw);
     grid-gap: 15px;
+}
 
 .grid_collectables img {
   width: 80px;
