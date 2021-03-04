@@ -103,6 +103,18 @@ class CoffeeUser(AbstractBaseUser):
 
 
 class Task(models.Model):
+    POINTS = (
+        (1, "1"),
+        (2, "2"),
+        (3, "3"),
+        (4, "4"),
+        (5, "5"),
+        (10, "10"),
+        (15, "15"),
+        (20, "20"),
+        (25, "25"),
+        (30, "30")
+    )
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     task_name = models.CharField(max_length=50)
@@ -114,7 +126,7 @@ class Task(models.Model):
     # is task date date to be completed by or date set?
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
-    points = models.PositiveIntegerField(default=0)
+    points = models.PositiveIntegerField(default=0, choices=POINTS)
 
     def __str__(self):
         return self.task_id
