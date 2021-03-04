@@ -6,11 +6,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Cafe</title>
+  <title>Tasks</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/view_tasks.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
@@ -21,35 +21,26 @@
     <h6 class="user_count">Users in Cafe: {{ num_users }}</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
-  <br>
 
   <button onclick="document.location='dashboard'" id="dashboard">Dashboard</button>
 
-  {% for task in tasks %}
-  <div class="main">
-    <h2>Task {{task.task_name}}</h2>
-      <table class="tasks">
-          <tr>
-            <td><h4>Set By:</h4></td>
-            <td> {{task.created_by}}</td>
-          </tr>
-          <tr>
-            <td><h4>Points:</h4></td>
-            <td> {{task.points}} </td>
-          </tr>
-          <tr>
-            <td><h4>Description:</h4></td>
-            <td> {{task.task_content}} </td>
-          </tr>
-          <tr>
-            <form action = "{% url 'complete' task.id %}" method="post">
-              {% csrf_token %}  <!-- security item required for django forms !! -->
-              <td><button type="submit"> Completed </button></td>
-            </form>
-          </tr>
-    </table>
-  </div>
-  {% endfor %}
+  <ul>
+      {% for task in tasks %}
+      <li>
+        <h3 class="task_name">{{task.task_name}}</h3>
+        <div class="task_info">
+          <h4>Set By: </h4><div class="creator">{{task.created_by}}</div>
+          <h4>Points: </h4>{{task.points}}
+          <h4>Description:</h4>
+          <div class="descrip">{{task.task_content}}</div>
+          <form action = "{% url 'complete' task.id %}" method="post">
+            {% csrf_token %}  <!-- security item required for django forms !! -->
+            <br><button type="submit"> Completed </button>
+          </form>
+        </div>
+      </li>  
+      {% endfor %}
+    </ul>
 </body>
 
 </html>
