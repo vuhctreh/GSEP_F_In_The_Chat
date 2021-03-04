@@ -9,7 +9,9 @@ import datetime
 from operator import attrgetter
 from .small_scripts_def import check_points_treshold, how_much_to_go
 
-list_coffee = ["espresso", "americano", "cappuccino", "hot_chocolate", "latte", "mocha", "matcha", "frappuccino", "ice_tea", "bubble_tea"]
+list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
+list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
+
 
 # Victoria: 18/2/21
 def index(request):
@@ -157,12 +159,20 @@ def dashboard(request):
     # which in the end gives a link to the collectable's image corresponding to the number of points
     current_user_points = user.points
     pointsLevel = check_points_treshold(current_user_points)
-    # getting the name from the list_coffee with the index
-    name_coffee = list_coffee[int(pointsLevel)]
-    img = "images/" + name_coffee + ".PNG"
+    # getting the name from the list_coffee with the index for the current max collectable
+    link_img = list_coffee_link[int(pointsLevel)]
+    name_coffee = list_coffee_name[int(pointsLevel)]
+
+    #creating the list for the previous collectables
+    previous_collectables = []
+    index_list = 0
+    while (index_list < int(pointsLevel)):
+        previous_collectables.append(list_coffee_link[index_list])
+        index_list += 1
 
     # calculating how many points to reach next collectable
     points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+
 
 
 
@@ -175,9 +185,11 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
-        'collectable': img,
+        'collectable': link_img,
         'pointsToGo' : points_to_go_next_collectable,
-        'nameCollectable' : name_coffee
+        'nameCollectable' : name_coffee,
+        'previousCollectables' : previous_collectables,
+        'listOfCoffeeLink' : list_coffee_link
     }
     return render(request, "dashboard.html", context)
 
