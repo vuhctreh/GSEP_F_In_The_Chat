@@ -24,6 +24,13 @@ def get_number_current_users():
     return active
 
 
+# Isabel 3/3/21
+@login_required(login_url='/')
+def get_msgs(request, table):
+    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    return render(request, 'messages.html', {'messages': messages})
+
+
 # Victoria: 18/2/21
 def index(request):
     context = {}
