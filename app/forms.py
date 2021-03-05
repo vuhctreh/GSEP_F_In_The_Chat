@@ -71,6 +71,9 @@ class CUserEditForm(forms.Form):
                                    widget=forms.Select(
                                        choices=(('', ''), ('Yes', 'Yes'),
                                                 ('No', 'No'))))
+    facebook_link = forms.CharField(max_length=255, required=False)
+    instagram_username = forms.CharField(max_length=200, required=False)
+    twitter_handle = forms.CharField(max_length=200, required=False)
 
 
 class createTaskForm(forms.ModelForm):

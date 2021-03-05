@@ -344,6 +344,30 @@ def edit_info(request):
             if form.cleaned_data['last_name']:
                 user.last_name = form.cleaned_data['last_name']
 
+            if form.cleaned_data['facebook_link']:
+                if form.cleaned_data['facebook_link'] == "/":
+                    user.facebook = None
+                # facebook does not have a defined username for the link format
+                # like the others.
+                # here we check that the link is an actual facebook link
+                # not a random malicious link
+                elif form.cleaned_data['facebook_link'].startswith("https://www.facebook.com/"):
+                    user.facebook = form.cleaned_data['facebook_link']
+
+            if form.cleaned_data['instagram_username']:
+                if form.cleaned_data['instagram_username'] == "/":
+                    user.instagram = None
+                else:
+                    user.instagram = "https://www.instagram.com/" + \
+                                        form.cleaned_data['instagram_username']
+
+            if form.cleaned_data['twitter_handle']:
+                if form.cleaned_data['twitter_handle'] == "/":
+                    user.twitter = None
+                else:
+                    user.twitter = "https://twitter.com/" + \
+                                        form.cleaned_data['twitter_handle']
+
             if form.cleaned_data['share_tables']:
                 if form.cleaned_data['share_tables'] == 'Yes':
                     user.share_tables = True
@@ -424,6 +448,8 @@ def edit_info(request):
     return render(request, "edit_info.html", context)
 
 
+# izzy 5/3/21
+@login_required(login_url='/')
 def profile_page(request, pk):
     context = {
         'year_entered': False,
@@ -437,7 +463,7 @@ def profile_page(request, pk):
     if viewing_user.year:
         context['year_entered'] = True
 
-    # User can decide to share tables or not - add to edit info ->        migrate!
+    # User can decide to share tables or not
     if viewing_user.share_tables:
         # get names of the tables the user is part of
         tables = viewing_user.cafe_table_ids.values_list('table_id', flat=True)
@@ -450,13 +476,11 @@ def profile_page(request, pk):
     # get their collectables
     pointsLevel = check_points_treshold(viewing_user.points)
     collectables = []
-    collectable_names = []
     for i in range(int(pointsLevel)+1):
         collectables.append(list_coffee_link[i])
-        collectable_names.append(list_coffee_name[i])
 
     context['collectable_pictures'] = collectables
-    context['collectable_names'] = collectable_names
+
     return render(request, "profile_page.html", context)
 
 

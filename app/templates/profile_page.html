@@ -6,10 +6,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Dashboard</title>
+  <title>Profile</title>
   {% load static %}
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/profile_page.css' %}"></link>
 
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
@@ -27,9 +28,30 @@
     <div class="user_info">
 
       <button onclick="document.location='../dashboard'" id="dashboard">Dashboard</button>
-      <br>
+      <br><br>
 
       {{ user.first_name }} {{ user.last_name }} <br>
+
+      <div class="social_media">
+        <p style=" text-align: center ">
+        {% if user.facebook %}
+        <a href="{{ user.facebook }}" target="_blank">
+          <img alt="fb" src="{% static 'images/facebook.png' %}" width=50 height=50>
+        </a>
+        {% endif %}
+        {% if user.twitter %}
+        <a href="{{ user.twitter }}" target="_blank">
+          <img alt="twt" src="{% static 'images/twitter.png' %}" width=50 height=50>
+        </a>
+        {% endif %}
+        {% if user.instagram %}
+        <a href="{{ user.instagram }}" target="_blank">
+          <img alt="insta" src="{% static 'images/instagram.png' %}" width=50 height=50>
+        </a>
+        {% endif %}
+      </p>
+      </div>
+
       University: {{ user.university }} <br>
 
       {% if course_entered %}
@@ -42,18 +64,23 @@
 
       Tables: <br>
       {% for table in tables %}
-      {{ table }} <br>
+      {{ table }}
       {% endfor %}
+      <br>
+
+    </div>
+
+    <br><br>
 
       Collectables:
       <div class="grid_collectables">
         {% for img in collectable_pictures %}
         {% if forloop.counter > 5%}
-          <img src="{% static img %}" style="grid-column: 2; grid-row: ;" >
+          <img src="{% static img %}" style="grid-row: 2; grid-column: ;" >
         {% endif %}
 
         {% if forloop.counter < 6 %}
-          <img src="{% static img %}" style="grid-column: 1; grid-row: {{forloop.counter}};" >
+          <img src="{% static img %}" style="grid-row: 1; grid-column: {{forloop.counter}};" >
         {% endif %}
         {% endfor %}
 

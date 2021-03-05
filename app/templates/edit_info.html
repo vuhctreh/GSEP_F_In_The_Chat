@@ -39,6 +39,8 @@
     {% csrf_token %}  <!-- security item required for django forms !! -->
     {{ form.as_p }}
 
+    Please enter / in the social media fields if you wish to unlink.<br><br>
+
     <button type="submit"> Change </button>
   </form><br>
   <button onclick="document.location='/dashboard'" id="dashboard">Dashboard</button>

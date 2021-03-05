@@ -76,14 +76,16 @@ class CoffeeUser(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     university = models.CharField(max_length=50, choices=AVAILABLE_UNIS)
-    is_staff = models.BooleanField(default=False)
     year = models.PositiveIntegerField(null=True, blank=True)
     course = models.CharField(max_length=50, blank=True)
-    avatar_url = models.FilePathField(path="/img")
     cafe_table_ids = models.ManyToManyField(CafeTable, blank=True)
     points = models.PositiveIntegerField(default=0)
     studying_until = models.DateTimeField(null=True, blank=True)
     share_tables = models.BooleanField(default=True)
+    # Social media
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    instagram = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]

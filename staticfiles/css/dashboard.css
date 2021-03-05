@@ -77,6 +77,8 @@ li {
 
 .grid_collectables {
     display: grid;
+    justify-content: center;
+    align-content: center;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(6, 5vw);
     grid-gap: 15px;
