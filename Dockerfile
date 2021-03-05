@@ -12,7 +12,7 @@ RUN yum -y install python3-pip wget
 RUN pip3 install --upgrade pip \
   && pip3 install --upgrade pipenv \
   && pipenv install --system --deploy \
-  && pip3 install jquery
+  && pipenv install jquery
 
 USER 1001
 
