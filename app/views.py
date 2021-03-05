@@ -154,7 +154,7 @@ def leaderboard(request):
 @login_required(login_url="/")
 def set_tasks(request):
     user = request.user
-    form = createTaskForm()
+    form = createTaskForm(user=request.user)
 
     if user.next_possible_set == datetime.date.today():
         user.tasks_set_today == 0
@@ -164,7 +164,7 @@ def set_tasks(request):
 
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
-        form = createTaskForm(request.POST)
+        form = createTaskForm(request.POST, user=request.user)
         if form.is_valid():
             task_name = form.cleaned_data.get('task_name')
             table_id = form.cleaned_data.get('table_id')

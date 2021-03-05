@@ -103,18 +103,8 @@ class CoffeeUser(AbstractBaseUser):
 
 
 class Task(models.Model):
-    POINTS = (
-        (1, "1"),
-        (2, "2"),
-        (3, "3"),
-        (4, "4"),
-        (5, "5"),
-        (10, "10"),
-        (15, "15"),
-        (20, "20"),
-        (25, "25"),
-        (30, "30")
-    )
+    POINTS = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
+              (10, "10"), (15, "15"), (20, "20"), (25, "25"), (30, "30"))
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     task_name = models.CharField(max_length=50)
