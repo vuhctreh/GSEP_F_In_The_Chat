@@ -1,16 +1,38 @@
 from __future__ import unicode_literals
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, createTaskForm
+from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
+                   createTaskForm, StudyBreaksForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
 from operator import attrgetter
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 from .small_scripts_def import check_points_treshold, how_much_to_go
 
 list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
 list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
+
+
+# Isabel 3/3/21
+def get_number_current_users():
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    active = 0
+    for session in active_sessions:
+        data = session.get_decoded()
+        if data != {}:
+            active += 1
+    return active
+
+
+# Isabel 3/3/21
+@login_required(login_url='/')
+def get_msgs(request, table):
+    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    return render(request, 'messages.html', {'messages': messages})
 
 
 # Victoria: 18/2/21
@@ -78,80 +100,28 @@ def table_view(request):
                                                              flat=True)
     )
     context = {
-        'tables': tables
+        'tables': tables,
+        'num_users': get_number_current_users()
     }
     return render(request, "table_view.html", context)
 
 
-@login_required(login_url="/")
-def set_tasks(request):
-    user = request.user
-    form = createTaskForm()
-
-    if not user.is_staff:
-        return redirect("home")
-
-    context = {'form': form}
-    if request.method == 'POST':
-        form = createTaskForm(request.POST)
-        if form.is_valid():
-            task_name = form.cleaned_data.get('task_name')
-            table_id = form.cleaned_data.get('table_id')
-            task_content = form.cleaned_data.get('task_content')
-            points = form.cleaned_data.get('points')
-            task = Task.objects.create(
-                task_name=task_name,
-                created_by=user,
-                table_id=table_id,
-                task_content=task_content,
-                points=points,
-            )
-        else:
-            context["createTaskForm"] = form
-    else:
-        context["createTaskForm"] = form
-    return render(request, 'set_tasks.html', context)
-
-
-@login_required(login_url="/")
-def view_tasks(request):
-    current_user = request.user
-    # get the tables the current user is part of
-    tables = CafeTable.objects.filter(
-        university=current_user.university,
-        table_id__in=current_user.cafe_table_ids.values_list('table_id',
-                                                             flat=True)
-    )
-    # get the tasks corresponding to these tables that the user hasn't done
-    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
-    context = {
-        'tasks': tasks
-    }
-    return render(request, 'view_tasks.html', context)
-
-
-@login_required(login_url='/')
-def completeTask(request, pk):
-    # Get the current user logged in
-    current_user = request.user
-    # Get the task for which the button is pressed
-    completedTask = Task.objects.get(pk=pk)
-    # Add user to completed by field in database
-    completedTask.completed_by.add(current_user)
-    # Increment points field by respective amount
-    current_user.points += completedTask.points
-    current_user.save()
-    print("SUCCESS!")
-    return redirect('/view_tasks')
-    # return render(request, 'view_tasks.html')
-
-
 @login_required(login_url='/')
 def dashboard(request):
-    user = CoffeeUser.objects.get(id=request.user.id)
+    user = request.user
+    # setting study breaks feature
+    if request.method == 'POST':
+        form = StudyBreaksForm(request.POST)
+        if form.is_valid():
+            mins = form.cleaned_data.get('minutes_studying_for')
+            break_time = datetime.datetime.now() + \
+                datetime.timedelta(minutes=mins)
+            user.studying_until = break_time
+            user.save()
     users = CoffeeUser.objects.all()
-    if len(users) > 10:
-        users = users[:9]
+    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    if len(sorted_users) > 10:
+        sorted_users = sorted_users[:9]
 
     # this derives an int from the points earned by the user,
     # the int corresponds to the name of the collectable's picture in the files
@@ -173,10 +143,17 @@ def dashboard(request):
     # calculating how many points to reach next collectable
     points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
 
-
-
-
-    sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    # see if the user is currently studying
+    if user.studying_until:
+        if user.studying_until <= datetime.datetime.now():
+            # they are not studying anymore
+            user.studying_until = None
+            user.save()
+            studying = False
+        else:
+            studying = True
+    else:
+        studying = False
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
@@ -189,7 +166,10 @@ def dashboard(request):
         'pointsToGo' : points_to_go_next_collectable,
         'nameCollectable' : name_coffee,
         'previousCollectables' : previous_collectables,
-        'listOfCoffeeLink' : list_coffee_link
+        'listOfCoffeeLink' : list_coffee_link,
+        'num_users': get_number_current_users(),
+        'break_form': StudyBreaksForm(),
+        'studying': studying
     }
     return render(request, "dashboard.html", context)
 
@@ -197,11 +177,12 @@ def dashboard(request):
 @login_required(login_url='/')
 def leaderboard(request):
     users = CoffeeUser.objects.all()
-    if len(users) > 10:
-        users = users[:9]
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
+    if len(sorted_users) > 10:
+        sorted_users = sorted_users[:9]
     context = {
         'users': sorted_users,
+        'num_users': get_number_current_users()
     }
     return render(request, "leaderboard.html", context)
 
@@ -214,7 +195,7 @@ def set_tasks(request):
     if not user.is_staff:
         return redirect("dashboard")
 
-    context = {'form': form}
+    context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
         form = createTaskForm(request.POST)
         if form.is_valid():
@@ -227,7 +208,7 @@ def set_tasks(request):
                 created_by=user,
                 table_id=table_id,
                 task_content=task_content,
-                points=points,
+                points=points
             )
         else:
             context["createTaskForm"] = form
@@ -248,7 +229,8 @@ def view_tasks(request):
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
     context = {
-        'tasks': tasks
+        'tasks': tasks,
+        'num_users': get_number_current_users()
     }
     return render(request, 'view_tasks.html', context)
 
@@ -264,7 +246,6 @@ def completeTask(request, pk):
     # Increment points field by respective amount
     current_user.points += completedTask.points
     current_user.save()
-    print("SUCCESS!")
     return redirect('/view_tasks')
     # return render(request, 'view_tasks.html')
 
@@ -272,6 +253,7 @@ def completeTask(request, pk):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_chat(request, pk):
+    # deal with if the requested table doesn't exist
     try:
         table = CafeTable.objects.get(pk=pk)
     except CafeTable.DoesNotExist:
@@ -297,23 +279,52 @@ def table_chat(request, pk):
         form = PostMessageForm()
     # show the existing messages by querying db
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
-    #IMPORTANT: we probs should not be loading every msg ever, later we should
-    # add a feature to load more when required
     # get the tasks for the table - new: only notified of tasks set in last 24h
     date_from = datetime.datetime.now() - datetime.timedelta(days=1)
     tasks = Task.objects.filter(table_id=table,
                                 task_date__gte=date_from).order_by('task_date')
     # get all the users in the table
     users = table.coffeeuser_set.all()
+    # see if currently studying
+    users_studying = []
+    other_users = []
+    for user in users:
+        if user.studying_until:
+            # if the user set a time to study until
+            if user.studying_until <= datetime.datetime.now():
+                # they are not studying anymore
+                user.studying_until = None
+                user.save()
+                other_users.append(user)
+            else:
+                users_studying.append(user)
+        else:
+            other_users.append(user)
+    users_studying = sorted(users_studying, key=attrgetter("studying_until"),
+                            reverse=True)
     # final
     context = {
         "table": table,
         "form": form,
         "messages": messages,
-        "users": users,
-        "tasks": tasks
+        "users_studying": users_studying,
+        "other_users": other_users,
+        "tasks": tasks,
+        'num_users': get_number_current_users()
     }
     return render(request, "table_chat.html", context)
+
+
+def upvote(request, pk):
+    current_user = request.user
+    message = Message.objects.get(id=pk)
+    if current_user not in message.message_upvote.all():
+        message.message_upvote.add(current_user)
+        message.total_upvotes += 1
+        message.save()
+
+    current_table = message.table_id.id
+    return redirect('table_chat', pk = current_table)
 
 
 # will and izzy
@@ -398,7 +409,8 @@ def edit_info(request):
     context = {
         'user': user,
         'form': form,
-        'tables': tables
+        'tables': tables,
+        'num_users': get_number_current_users()
     }
     return render(request, "edit_info.html", context)
 
