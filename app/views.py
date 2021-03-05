@@ -118,6 +118,27 @@ def dashboard(request):
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
         sorted_users = sorted_users[:9]
+
+    # this derives an int from the points earned by the user,
+    # the int corresponds to the name of the collectable's picture in the files
+    # it then concatenates together: the int returned and the link to the image
+    # which in the end gives a link to the collectable's image corresponding to the number of points
+    current_user_points = user.points
+    pointsLevel = check_points_treshold(current_user_points)
+    # getting the name from the list_coffee with the index for the current max collectable
+    link_img = list_coffee_link[int(pointsLevel)]
+    name_coffee = list_coffee_name[int(pointsLevel)]
+
+    #creating the list for the previous collectables
+    previous_collectables = []
+    index_list = 0
+    while (index_list < int(pointsLevel)):
+        previous_collectables.append(list_coffee_link[index_list])
+        index_list += 1
+
+    # calculating how many points to reach next collectable
+    points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+
     # see if the user is currently studying
     if user.studying_until:
         if user.studying_until <= datetime.datetime.now():
@@ -137,6 +158,11 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
+        'collectable': link_img,
+        'pointsToGo' : points_to_go_next_collectable,
+        'nameCollectable' : name_coffee,
+        'previousCollectables' : previous_collectables,
+        'listOfCoffeeLink' : list_coffee_link,
         'num_users': get_number_current_users(),
         'break_form': StudyBreaksForm(),
         'studying': studying
