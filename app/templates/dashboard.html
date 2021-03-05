@@ -10,6 +10,7 @@
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}"></link>
+
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
 </head>
@@ -32,6 +33,28 @@
         {{ dateJoined }} </p>
       <p class="uni"> University: {{ university }} </p>
       <p> Points: {{ points }} </p>
+      <p> Points to go before next collectable: {{ pointsToGo }} </p>
+
+      <div class="Collectable">
+        <img src='{% static collectable %}' style="width: 200px; height: auto;">
+        <p style=" text-align: center "> {{nameCollectable}} </p>
+      </div>
+      <p> _______________________________________ </p>
+      <p> Previous collectables: </p>
+      <div class="grid_collectables">
+        {% for img in previousCollectables %}
+        {% if forloop.counter > 5%}
+          <img src="{% static img %}" style="grid-column: 2; grid-row: ;" >
+        {% endif %}
+
+        {% if forloop.counter < 6 %}
+          <img src="{% static img %}" style="grid-column: 1; grid-row: {{forloop.counter}};" >
+        {% endif %}
+        {% endfor %}
+
+      </div>
+
+
       <div class="buttons">
         <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
         <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
