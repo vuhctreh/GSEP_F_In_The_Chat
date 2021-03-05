@@ -83,6 +83,7 @@ class CoffeeUser(AbstractBaseUser):
     cafe_table_ids = models.ManyToManyField(CafeTable, blank=True)
     points = models.PositiveIntegerField(default=0)
     studying_until = models.DateTimeField(null=True, blank=True)
+    share_tables = models.BooleanField(default=True)
 
     USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]

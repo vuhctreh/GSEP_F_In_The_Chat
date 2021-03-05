@@ -22,14 +22,18 @@
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
 
+  <div class="main">
+
   <br><br>
 
   {{ user.first_name }} {{ user.last_name }} <br>
   {{ user.university }} <br>
   My tables: <br>
+  <ul>
   {% for table_name in tables %}
-    {{ table_name }}
+    <li>{{ table_name }} </li>
   {% endfor %}
+</ul>
 
   <form method="post">
     {% csrf_token %}  <!-- security item required for django forms !! -->
@@ -38,6 +42,8 @@
     <button type="submit"> Change </button>
   </form><br>
   <button onclick="document.location='/dashboard'" id="dashboard">Dashboard</button>
+
+</div>
 
 </body>
 

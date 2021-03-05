@@ -126,14 +126,16 @@ def dashboard(request):
     # this derives an int from the points earned by the user,
     # the int corresponds to the name of the collectable's picture in the files
     # it then concatenates together: the int returned and the link to the image
-    # which in the end gives a link to the collectable's image corresponding to the number of points
+    # which in the end gives a link to the collectable's image corresponding to
+    # the number of points
     current_user_points = user.points
     pointsLevel = check_points_treshold(current_user_points)
-    # getting the name from the list_coffee with the index for the current max collectable
+    # getting the name from the list_coffee with the index for the current max
+    # collectable
     link_img = list_coffee_link[int(pointsLevel)]
     name_coffee = list_coffee_name[int(pointsLevel)]
 
-    #creating the list for the previous collectables
+    # creating the list for the previous collectables
     previous_collectables = []
     index_list = 0
     while (index_list < int(pointsLevel)):
@@ -163,13 +165,14 @@ def dashboard(request):
         'points': user.points,
         'users': sorted_users,
         'collectable': link_img,
-        'pointsToGo' : points_to_go_next_collectable,
-        'nameCollectable' : name_coffee,
-        'previousCollectables' : previous_collectables,
-        'listOfCoffeeLink' : list_coffee_link,
+        'pointsToGo': points_to_go_next_collectable,
+        'nameCollectable': name_coffee,
+        'previousCollectables': previous_collectables,
+        'listOfCoffeeLink': list_coffee_link,
         'num_users': get_number_current_users(),
         'break_form': StudyBreaksForm(),
-        'studying': studying
+        'studying': studying,
+        'pk': user.pk,
     }
     return render(request, "dashboard.html", context)
 
@@ -341,6 +344,12 @@ def edit_info(request):
             if form.cleaned_data['last_name']:
                 user.last_name = form.cleaned_data['last_name']
 
+            if form.cleaned_data['share_tables']:
+                if form.cleaned_data['share_tables'] == 'Yes':
+                    user.share_tables = True
+                if form.cleaned_data['share_tables'] == 'No':
+                    user.share_tables = False
+
             if form.cleaned_data['year']:
                 if form.cleaned_data['year'] >= 1:
                     user.year = form.cleaned_data['year']
@@ -413,6 +422,42 @@ def edit_info(request):
         'num_users': get_number_current_users()
     }
     return render(request, "edit_info.html", context)
+
+
+def profile_page(request, pk):
+    context = {
+        'year_entered': False,
+        'course_entered': False,
+        'num_users': get_number_current_users()
+    }
+    viewing_user = CoffeeUser.objects.get(id=pk)
+    context['user'] = viewing_user
+    if viewing_user.course:
+        context['course_entered'] = True
+    if viewing_user.year:
+        context['year_entered'] = True
+
+    # User can decide to share tables or not - add to edit info ->        migrate!
+    if viewing_user.share_tables:
+        # get names of the tables the user is part of
+        tables = viewing_user.cafe_table_ids.values_list('table_id', flat=True)
+        # filter out the course table if it exists
+        tables = filter(lambda x: x.startswith("COURSE: ") is not True, tables)
+    else:
+        tables = []
+    context['tables'] = tables
+
+    # get their collectables
+    pointsLevel = check_points_treshold(viewing_user.points)
+    collectables = []
+    collectable_names = []
+    for i in range(int(pointsLevel)+1):
+        collectables.append(list_coffee_link[i])
+        collectable_names.append(list_coffee_name[i])
+
+    context['collectable_pictures'] = collectables
+    context['collectable_names'] = collectable_names
+    return render(request, "profile_page.html", context)
 
 
 def health(request):
