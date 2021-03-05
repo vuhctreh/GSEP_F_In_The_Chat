@@ -85,6 +85,8 @@ class CoffeeUser(AbstractBaseUser):
     studying_until = models.DateTimeField(null=True, blank=True)
     tasks_set_today = models.PositiveIntegerField(default=0)
     next_possible_set = models.DateField(null=True, blank=True)
+    student_tasks_completed = models.PositiveIntegerField(default=0)
+    next_possible_complete = models.DateField(null=True, blank=True)
 
     USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]
@@ -117,6 +119,8 @@ class Task(models.Model):
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0, choices=POINTS)
+
+    REQUIRED_FIELDS = ["task_name", "task_content"]
 
     def __str__(self):
         return self.task_id

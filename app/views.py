@@ -150,13 +150,13 @@ def leaderboard(request):
     return render(request, "leaderboard.html", context)
 
 
-# Victoria 04/03/21
+# Victoria 04 & 05/03/21
 @login_required(login_url="/")
 def set_tasks(request):
     user = request.user
     form = createTaskForm(user=request.user)
 
-    if user.next_possible_set == datetime.date.today():
+    if user.tasks_set_today >= 2 and user.next_possible_set == datetime.date.today():
         user.tasks_set_today == 0
 
     if user.tasks_set_today >= 2 and not user.is_staff:
@@ -210,17 +210,37 @@ def view_tasks(request):
     return render(request, 'view_tasks.html', context)
 
 
+# Victoria 05/03/21
 @login_required(login_url='/')
 def completeTask(request, pk):
     # Get the current user logged in
     current_user = request.user
     # Get the task for which the button is pressed
     completedTask = Task.objects.get(pk=pk)
-    # Add user to completed by field in database
-    completedTask.completed_by.add(current_user)
-    # Increment points field by respective amount
-    current_user.points += completedTask.points
-    current_user.save()
+
+    if current_user.student_tasks_completed >= 2 and current_user.next_possible_complete == datetime.date.today():
+        user.tasks_set_today == 0
+
+    if completedTask.created_by.is_staff:
+        # Add user to completed by field in database
+        completedTask.completed_by.add(current_user)
+        # Increment points field by respective amount
+        current_user.points += completedTask.points
+        current_user.save()
+    
+    else:
+        if current_user.student_tasks_completed < 2:
+            # Add user to completed by field in database
+            completedTask.completed_by.add(current_user)
+            # Increment points field by respective amount
+            current_user.points += completedTask.points
+            current_user.student_tasks_completed += 1
+            current_user.save()
+
+        else:
+            current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
+            current_user.save()
+
     return redirect('/view_tasks')
     # return render(request, 'view_tasks.html')
 
