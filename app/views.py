@@ -191,6 +191,10 @@ def dashboard(request):
 def set_tasks(request):
     user = request.user
     form = createTaskForm()
+    tables = CafeTable.objects.filter(
+        university=user.university,
+        table_id__in=user.cafe_table_ids.values_list('table_id', flat=True))
+    form.fields['table_id'].queryset = tables
 
     if not user.is_staff:
         return redirect("dashboard")
