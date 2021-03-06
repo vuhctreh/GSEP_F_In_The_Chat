@@ -1,12 +1,13 @@
 body {
     background-color: #ece0d1;
     margin: 0%;
-    font-family: 'Inter', sans-serif;  
+    font-family: 'Inter', sans-serif;
 }
 
 .darkmode {
     filter: invert(1) hue-rotate(180deg);
-    background-color: #131f2e;
+    transition: opacity .5s ease-in-out;
+    background-color: #291d15;
 }
 
 .dark-mode-toggle {
