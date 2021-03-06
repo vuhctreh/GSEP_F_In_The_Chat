@@ -72,8 +72,7 @@
       Tasks
       {% for task in tasks %}
       <li>
-        {{task.task_content}} <!-- Should link to the tasks here when we know what task link is -->
-        set by {{task.created_by}}
+       <a href="/view_tasks">{{task.task_name}}</a> set by {{task.created_by.first_name}} {{task.created_by.last_name}}
       </li>
       {% endfor %}
     </div>
