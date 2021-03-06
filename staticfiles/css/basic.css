@@ -35,6 +35,10 @@ body {
     background-color: #dbc1ac;
     box-shadow: 0px 2.5px 5px #888888;
     padding-left: 1%;
+    padding-right: 1%;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .app_name {
@@ -59,10 +63,22 @@ body {
 }
 
 .logout {
+    background-color: whitesmoke;
+    color: black;
+    border: 1.8px solid #967259;
+
     display: inline-block;
-    width: 32%;
+    height: 70%;
     text-align: right;
     font-size: small;
+    vertical-align: middle;
+    transition-duration: 0.4s;
+}
+
+.logout:hover{
+  background-color: #cc0000;
+  color: whitesmoke;
+  border: 1.8px solid #cc0000;
 }
 
 @media only screen and (max-width: 850px) {
