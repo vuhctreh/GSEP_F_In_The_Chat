@@ -203,7 +203,7 @@ def view_tasks(request):
                                                              flat=True)
     )
     # get the tasks corresponding to these tables that the user hasn't done
-    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user)
+    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
     context = {
         'tasks': tasks,
         'num_users': get_number_current_users()
