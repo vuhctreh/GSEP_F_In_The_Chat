@@ -157,7 +157,8 @@ def set_tasks(request):
     form = createTaskForm(user=request.user)
 
     if user.tasks_set_today >= 2 and user.next_possible_set == datetime.date.today():
-        user.tasks_set_today == 0
+        user.tasks_set_today = 0
+        user.save()
 
     if user.tasks_set_today >= 2 and not user.is_staff:
         return redirect("dashboard")
@@ -219,7 +220,8 @@ def completeTask(request, pk):
     completedTask = Task.objects.get(pk=pk)
 
     if current_user.student_tasks_completed >= 2 and current_user.next_possible_complete == datetime.date.today():
-        user.tasks_set_today == 0
+        current_user.student_tasks_completed = 0
+        current_user.save()
 
     if completedTask.created_by.is_staff:
         # Add user to completed by field in database
@@ -229,15 +231,12 @@ def completeTask(request, pk):
         current_user.save()
     
     else:
-        if current_user.student_tasks_completed < 2:
+        if current_user.student_tasks_completed < 2 and not completedTask.created_by == current_user:
             # Add user to completed by field in database
             completedTask.completed_by.add(current_user)
             # Increment points field by respective amount
             current_user.points += completedTask.points
             current_user.student_tasks_completed += 1
-            current_user.save()
-
-        else:
             current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
             current_user.save()
 
