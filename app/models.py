@@ -76,17 +76,20 @@ class CoffeeUser(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     university = models.CharField(max_length=50, choices=AVAILABLE_UNIS)
-    is_staff = models.BooleanField(default=False)
     year = models.PositiveIntegerField(null=True, blank=True)
     course = models.CharField(max_length=50, blank=True)
-    avatar_url = models.FilePathField(path="/img")
     cafe_table_ids = models.ManyToManyField(CafeTable, blank=True)
     points = models.PositiveIntegerField(default=0)
     studying_until = models.DateTimeField(null=True, blank=True)
+    share_tables = models.BooleanField(default=True)
     tasks_set_today = models.PositiveIntegerField(default=0)
     next_possible_set = models.DateField(null=True, blank=True)
     student_tasks_completed = models.PositiveIntegerField(default=0)
     next_possible_complete = models.DateField(null=True, blank=True)
+    # Social media
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    instagram = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = "email"  # users log in using their email
     REQUIRED_FIELDS = ["first_name", "last_name", "university", "is_staff"]
@@ -124,6 +127,7 @@ class Task(models.Model):
 
     def __str__(self):
         return self.task_id
+
 
 class Message(models.Model):
     # please note Django implicitly gives an auto incrementing primary
