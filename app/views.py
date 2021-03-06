@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
-                   createTaskForm, StudyBreaksForm
+                   createTaskForm, StudyBreaksForm, CUserEditFormStaff
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task
 import datetime
@@ -109,53 +109,62 @@ def table_view(request):
 @login_required(login_url='/')
 def dashboard(request):
     user = request.user
-    # setting study breaks feature
-    if request.method == 'POST':
-        form = StudyBreaksForm(request.POST)
-        if form.is_valid():
-            mins = form.cleaned_data.get('minutes_studying_for')
-            break_time = datetime.datetime.now() + \
-                datetime.timedelta(minutes=mins)
-            user.studying_until = break_time
-            user.save()
     users = CoffeeUser.objects.all()
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
         sorted_users = sorted_users[:9]
+    if user.is_staff is False:
+        # setting study breaks feature
+        if request.method == 'POST':
+            form = StudyBreaksForm(request.POST)
+            if form.is_valid():
+                mins = form.cleaned_data.get('minutes_studying_for')
+                break_time = datetime.datetime.now() + \
+                    datetime.timedelta(minutes=mins)
+                user.studying_until = break_time
+                user.save()
 
-    # this derives an int from the points earned by the user,
-    # the int corresponds to the name of the collectable's picture in the files
-    # it then concatenates together: the int returned and the link to the image
-    # which in the end gives a link to the collectable's image corresponding to
-    # the number of points
-    current_user_points = user.points
-    pointsLevel = check_points_treshold(current_user_points)
-    # getting the name from the list_coffee with the index for the current max
-    # collectable
-    link_img = list_coffee_link[int(pointsLevel)]
-    name_coffee = list_coffee_name[int(pointsLevel)]
+        # this derives an int from the points earned by the user,
+        # the int corresponds to the name of the collectable's picture in the files
+        # it then concatenates together: the int returned and the link to the image
+        # which in the end gives a link to the collectable's image corresponding to
+        # the number of points
+        current_user_points = user.points
+        pointsLevel = check_points_treshold(current_user_points)
+        # getting the name from the list_coffee with the index for the current max
+        # collectable
+        link_img = list_coffee_link[int(pointsLevel)]
+        name_coffee = list_coffee_name[int(pointsLevel)]
 
-    # creating the list for the previous collectables
-    previous_collectables = []
-    index_list = 0
-    while (index_list < int(pointsLevel)):
-        previous_collectables.append(list_coffee_link[index_list])
-        index_list += 1
+        # creating the list for the previous collectables
+        previous_collectables = []
+        index_list = 0
+        while (index_list < int(pointsLevel)):
+            previous_collectables.append(list_coffee_link[index_list])
+            index_list += 1
 
-    # calculating how many points to reach next collectable
-    points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+        # calculating how many points to reach next collectable
+        points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
 
-    # see if the user is currently studying
-    if user.studying_until:
-        if user.studying_until <= datetime.datetime.now():
-            # they are not studying anymore
-            user.studying_until = None
-            user.save()
-            studying = False
+        # see if the user is currently studying
+        if user.studying_until:
+            if user.studying_until <= datetime.datetime.now():
+                # they are not studying anymore
+                user.studying_until = None
+                user.save()
+                studying = False
+            else:
+                studying = True
         else:
-            studying = True
-    else:
+            studying = False
+    else:  # staff user - don't waste computation on irrelevant stuff
+        link_img = ''
+        points_to_go_next_collectable = 0
+        name_coffee = ''
+        previous_collectables = []
+        list_coffee_link = []
         studying = False
+
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
@@ -173,6 +182,7 @@ def dashboard(request):
         'break_form': StudyBreaksForm(),
         'studying': studying,
         'pk': user.pk,
+        'staff': user.is_staff,
     }
     return render(request, "dashboard.html", context)
 
@@ -223,6 +233,8 @@ def set_tasks(request):
 @login_required(login_url="/")
 def view_tasks(request):
     current_user = request.user
+    if current_user.is_staff:
+        return redirect("dashboard")
     # get the tables the current user is part of
     tables = CafeTable.objects.filter(
         university=current_user.university,
@@ -334,110 +346,155 @@ def upvote(request, pk):
 @login_required(login_url='/')
 def edit_info(request):
     user = request.user
-    if request.method == 'POST':
-        form = CUserEditForm(request.POST)
-        if form.is_valid():
-            # save what is entered and validate
-            if form.cleaned_data['first_name']:
-                user.first_name = form.cleaned_data['first_name']
 
-            if form.cleaned_data['last_name']:
-                user.last_name = form.cleaned_data['last_name']
+    if user.is_staff:
+        if request.method == 'POST':
+            form = CUserEditFormStaff(request.POST)
+            if form.is_valid():
+                # save what is entered and validate
+                if form.cleaned_data['first_name']:
+                    user.first_name = form.cleaned_data['first_name']
 
-            if form.cleaned_data['facebook_link']:
-                if form.cleaned_data['facebook_link'] == "/":
-                    user.facebook = None
-                # facebook does not have a defined username for the link format
-                # like the others.
-                # here we check that the link is an actual facebook link
-                # not a random malicious link
-                elif form.cleaned_data['facebook_link'].startswith("https://www.facebook.com/"):
-                    user.facebook = form.cleaned_data['facebook_link']
+                if form.cleaned_data['last_name']:
+                    user.last_name = form.cleaned_data['last_name']
 
-            if form.cleaned_data['instagram_username']:
-                if form.cleaned_data['instagram_username'] == "/":
-                    user.instagram = None
-                else:
-                    user.instagram = "https://www.instagram.com/" + \
-                                        form.cleaned_data['instagram_username']
+                if form.cleaned_data['course']:
+                    if user.course:
+                        old_course = user.course
+                        # if already on a course, remove from old course table
+                        old_table_name = "COURSE: " + old_course
+                        table = user.cafe_table_ids.get(table_id=old_table_name)
+                        user.cafe_table_ids.remove(table)
 
-            if form.cleaned_data['twitter_handle']:
-                if form.cleaned_data['twitter_handle'] == "/":
-                    user.twitter = None
-                else:
-                    user.twitter = "https://twitter.com/" + \
-                                        form.cleaned_data['twitter_handle']
-
-            if form.cleaned_data['share_tables']:
-                if form.cleaned_data['share_tables'] == 'Yes':
-                    user.share_tables = True
-                if form.cleaned_data['share_tables'] == 'No':
-                    user.share_tables = False
-
-            if form.cleaned_data['year']:
-                if form.cleaned_data['year'] >= 1:
-                    user.year = form.cleaned_data['year']
-
-            if form.cleaned_data['course']:
-                if user.course:
-                    old_course = user.course
-                    # if already on a course, remove from old course table
-                    old_table_name = "COURSE: " + old_course
-                    table = user.cafe_table_ids.get(table_id=old_table_name)
-                    user.cafe_table_ids.remove(table)
-
-                new_course = form.cleaned_data['course'].lower()
-                user.course = new_course
-                # upper case throughout so not duplicates with different casing
-                new_course_table_name = "COURSE: " + new_course
-                # see if a table for this course exists
-                try:
-                    table = CafeTable.objects.get(
-                        university=user.university,
-                        table_id=new_course_table_name
-                    )
-                except CafeTable.DoesNotExist:
-                    # if that table does not exist, create it
-                    table = CafeTable.objects.create(
-                        table_id=new_course_table_name,
-                        university=user.university
-                    )
-                # add the user to the table
-                user.cafe_table_ids.add(table)
-
-            if form.cleaned_data['add_table_id']:
-                add_table_id = form.cleaned_data['add_table_id'].lower()
-                if not add_table_id.startswith("course:"):
-                    # can't be sneaky and add urself to a course this way
-                    # see if table already exists
+                    new_course = form.cleaned_data['course'].lower()
+                    user.course = new_course
+                    # upper case throughout so not duplicates with different casing
+                    new_course_table_name = "COURSE: " + new_course
+                    # see if a table for this course exists
                     try:
                         table = CafeTable.objects.get(
                             university=user.university,
-                            table_id=add_table_id
+                            table_id=new_course_table_name
                         )
                     except CafeTable.DoesNotExist:
                         # if that table does not exist, create it
                         table = CafeTable.objects.create(
-                            table_id=add_table_id,
+                            table_id=new_course_table_name,
                             university=user.university
                         )
                     # add the user to the table
                     user.cafe_table_ids.add(table)
 
-            if form.cleaned_data['remove_table_id']:
-                # if it is actually in their list of tables, remove
-                table_name_to_rm = form.cleaned_data['remove_table_id']
-                #make lower again
-                try:
-                    table = user.cafe_table_ids.get(table_id=table_name_to_rm)
-                    user.cafe_table_ids.remove(table)
-                except CafeTable.DoesNotExist:
-                    pass
-            # end
-            user.save()
+                user.save()
+                form = CUserEditFormStaff()
+        else:
+            form = CUserEditFormStaff()
+
+    else:  # student user
+        if request.method == 'POST':
+            form = CUserEditForm(request.POST)
+            if form.is_valid():
+                # save what is entered and validate
+                if form.cleaned_data['first_name']:
+                    user.first_name = form.cleaned_data['first_name']
+
+                if form.cleaned_data['last_name']:
+                    user.last_name = form.cleaned_data['last_name']
+
+                if form.cleaned_data['facebook_link']:
+                    if form.cleaned_data['facebook_link'] == "/":
+                        user.facebook = None
+                    # facebook does not have a defined username for the link format
+                    # like the others.
+                    # here we check that the link is an actual facebook link
+                    # not a random malicious link
+                    elif form.cleaned_data['facebook_link'].startswith("https://www.facebook.com/"):
+                        user.facebook = form.cleaned_data['facebook_link']
+
+                if form.cleaned_data['instagram_username']:
+                    if form.cleaned_data['instagram_username'] == "/":
+                        user.instagram = None
+                    else:
+                        user.instagram = "https://www.instagram.com/" + \
+                                            form.cleaned_data['instagram_username']
+
+                if form.cleaned_data['twitter_handle']:
+                    if form.cleaned_data['twitter_handle'] == "/":
+                        user.twitter = None
+                    else:
+                        user.twitter = "https://twitter.com/" + \
+                                            form.cleaned_data['twitter_handle']
+
+                if form.cleaned_data['share_tables']:
+                    if form.cleaned_data['share_tables'] == 'Yes':
+                        user.share_tables = True
+                    if form.cleaned_data['share_tables'] == 'No':
+                        user.share_tables = False
+
+                if form.cleaned_data['year']:
+                    if form.cleaned_data['year'] >= 1:
+                        user.year = form.cleaned_data['year']
+
+                if form.cleaned_data['course']:
+                    if user.course:
+                        old_course = user.course
+                        # if already on a course, remove from old course table
+                        old_table_name = "COURSE: " + old_course
+                        table = user.cafe_table_ids.get(table_id=old_table_name)
+                        user.cafe_table_ids.remove(table)
+
+                    new_course = form.cleaned_data['course'].lower()
+                    user.course = new_course
+                    # upper case throughout so not duplicates with different casing
+                    new_course_table_name = "COURSE: " + new_course
+                    # see if a table for this course exists
+                    try:
+                        table = CafeTable.objects.get(
+                            university=user.university,
+                            table_id=new_course_table_name
+                        )
+                    except CafeTable.DoesNotExist:
+                        # if that table does not exist, create it
+                        table = CafeTable.objects.create(
+                            table_id=new_course_table_name,
+                            university=user.university
+                        )
+                    # add the user to the table
+                    user.cafe_table_ids.add(table)
+
+                if form.cleaned_data['add_table_id']:
+                    add_table_id = form.cleaned_data['add_table_id'].lower()
+                    if not add_table_id.startswith("course:"):
+                        # can't be sneaky and add urself to a course this way
+                        # see if table already exists
+                        try:
+                            table = CafeTable.objects.get(
+                                university=user.university,
+                                table_id=add_table_id
+                            )
+                        except CafeTable.DoesNotExist:
+                            # if that table does not exist, create it
+                            table = CafeTable.objects.create(
+                                table_id=add_table_id,
+                                university=user.university
+                            )
+                        # add the user to the table
+                        user.cafe_table_ids.add(table)
+
+                if form.cleaned_data['remove_table_id']:
+                    # if it is actually in their list of tables, remove
+                    table_name_to_rm = form.cleaned_data['remove_table_id']
+                    #make lower again
+                    try:
+                        table = user.cafe_table_ids.get(table_id=table_name_to_rm)
+                        user.cafe_table_ids.remove(table)
+                    except CafeTable.DoesNotExist:
+                        pass
+                # end
+                user.save()
+                form = CUserEditForm()
+        else:
             form = CUserEditForm()
-    else:
-        form = CUserEditForm()
     tables = user.cafe_table_ids.values_list('table_id', flat=True)
     context = {
         'user': user,
@@ -463,8 +520,8 @@ def profile_page(request, pk):
     if viewing_user.year:
         context['year_entered'] = True
 
-    # User can decide to share tables or not
-    if viewing_user.share_tables:
+    # Student users can decide to share tables or not
+    if viewing_user.share_tables and viewing_user.is_staff is not True:
         # get names of the tables the user is part of
         tables = viewing_user.cafe_table_ids.values_list('table_id', flat=True)
         # filter out the course table if it exists
@@ -473,11 +530,13 @@ def profile_page(request, pk):
         tables = []
     context['tables'] = tables
 
-    # get their collectables
-    pointsLevel = check_points_treshold(viewing_user.points)
+    # get their collectables, if student
     collectables = []
-    for i in range(int(pointsLevel)+1):
-        collectables.append(list_coffee_link[i])
+
+    if viewing_user.is_staff is not True:
+        pointsLevel = check_points_treshold(viewing_user.points)
+        for i in range(int(pointsLevel)+1):
+            collectables.append(list_coffee_link[i])
 
     context['collectable_pictures'] = collectables
 

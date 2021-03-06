@@ -56,14 +56,16 @@
     {% for user in users_studying %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
-      {{user.first_name}} {{user.last_name}} studying until {{user.studying_until}}
-    </a>
+      {{user.first_name}} {{user.last_name}}</a> studying until {{user.studying_until}}
     </li>
     {% endfor %}
     {% for user in other_users %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
       {{user.first_name}} {{user.last_name}} </a>
+      {% if user.is_staff %}
+      : STAFF
+      {% endif %}
     </li>
     {% endfor %}
     </div>

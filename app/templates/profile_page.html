@@ -32,6 +32,15 @@
 
       {{ user.first_name }} {{ user.last_name }} <br>
 
+      {% if user.is_staff %}
+
+      This user is a staff member. <br>
+      Contact email: {{ user.email }} <br>
+
+      {% endif %}
+
+      {% if user.is_staff is not True %}
+
       <div class="social_media">
         <p style=" text-align: center ">
         {% if user.facebook %}
@@ -52,11 +61,15 @@
       </p>
       </div>
 
+      {% endif %}
+
       University: {{ user.university }} <br>
 
       {% if course_entered %}
       Course: {{ user.course }} <br>
       {% endif %}
+
+      {% if user.is_staff is not True %}
 
       {% if year_entered %}
       Year: {{ user.year }} <br>
@@ -68,7 +81,11 @@
       {% endfor %}
       <br>
 
+      {% endif %}
+
     </div>
+
+    {% if user.is_staff is not True %}
 
     <br><br>
 
@@ -85,6 +102,8 @@
         {% endfor %}
 
       </div>
+
+  {% endif %}
 
 
 </div>
