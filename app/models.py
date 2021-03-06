@@ -125,7 +125,6 @@ class Task(models.Model):
     def __str__(self):
         return self.task_id
 
-
 class Message(models.Model):
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)

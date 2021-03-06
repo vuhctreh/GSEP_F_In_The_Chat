@@ -206,6 +206,7 @@ def view_tasks(request):
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
     context = {
         'tasks': tasks,
+        'users': CoffeeUser.objects.all(),
         'num_users': get_number_current_users()
     }
     return render(request, 'view_tasks.html', context)
@@ -304,6 +305,7 @@ def table_chat(request, pk):
         "users_studying": users_studying,
         "other_users": other_users,
         "tasks": tasks,
+        'users': CoffeeUser.objects.all(),
         'num_users': get_number_current_users()
     }
     return render(request, "table_chat.html", context)
