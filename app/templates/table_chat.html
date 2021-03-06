@@ -55,12 +55,15 @@
     Group members
     {% for user in users_studying %}
     <li>
+      <a href="{% url 'profile_page' user.id %}">
       {{user.first_name}} {{user.last_name}} studying until {{user.studying_until}}
+    </a>
     </li>
     {% endfor %}
     {% for user in other_users %}
     <li>
-      {{user.first_name}} {{user.last_name}}
+      <a href="{% url 'profile_page' user.id %}">
+      {{user.first_name}} {{user.last_name}} </a>
     </li>
     {% endfor %}
     </div>

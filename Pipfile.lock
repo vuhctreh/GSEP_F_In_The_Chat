@@ -65,6 +65,14 @@
             "index": "pypi",
             "version": "==2.6.3"
         },
+        "django-jquery": {
+            "hashes": [
+                "sha256:e7e2ac14234bac26be937e448d94efd6d37ee2f3cdbaa2def3c8e74c2afb2b9a",
+                "sha256:414ac1083708ac71cc771612e7287702c939d06cd357fd53bb1271a4f6255115"
+            ],
+            "index": "pypi",
+            "version": "==3.1.0"
+        },
         "ply": {
             "hashes": [
                 "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3",

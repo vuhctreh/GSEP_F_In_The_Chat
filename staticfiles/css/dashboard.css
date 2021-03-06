@@ -72,3 +72,19 @@ li {
     float: right;
     padding-right: 2.5%;
 }
+
+/* This is for the grid of collectable */
+
+.grid_collectables {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 5vw);
+    grid-gap: 15px;
+}
+
+.grid_collectables img {
+  width: 80px;
+  height: auto;
+}

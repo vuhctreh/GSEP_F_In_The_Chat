@@ -11,6 +11,10 @@ from operator import attrgetter
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from .small_scripts_def import check_points_treshold, how_much_to_go
+
+list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
+list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
 
 
 # Isabel 3/3/21
@@ -118,6 +122,29 @@ def dashboard(request):
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
         sorted_users = sorted_users[:9]
+
+    # this derives an int from the points earned by the user,
+    # the int corresponds to the name of the collectable's picture in the files
+    # it then concatenates together: the int returned and the link to the image
+    # which in the end gives a link to the collectable's image corresponding to
+    # the number of points
+    current_user_points = user.points
+    pointsLevel = check_points_treshold(current_user_points)
+    # getting the name from the list_coffee with the index for the current max
+    # collectable
+    link_img = list_coffee_link[int(pointsLevel)]
+    name_coffee = list_coffee_name[int(pointsLevel)]
+
+    # creating the list for the previous collectables
+    previous_collectables = []
+    index_list = 0
+    while (index_list < int(pointsLevel)):
+        previous_collectables.append(list_coffee_link[index_list])
+        index_list += 1
+
+    # calculating how many points to reach next collectable
+    points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+
     # see if the user is currently studying
     if user.studying_until:
         if user.studying_until <= datetime.datetime.now():
@@ -137,9 +164,15 @@ def dashboard(request):
         'dateJoined': user.date_joined,
         'points': user.points,
         'users': sorted_users,
+        'collectable': link_img,
+        'pointsToGo': points_to_go_next_collectable,
+        'nameCollectable': name_coffee,
+        'previousCollectables': previous_collectables,
+        'listOfCoffeeLink': list_coffee_link,
         'num_users': get_number_current_users(),
         'break_form': StudyBreaksForm(),
-        'studying': studying
+        'studying': studying,
+        'pk': user.pk,
     }
     return render(request, "dashboard.html", context)
 
@@ -311,6 +344,36 @@ def edit_info(request):
             if form.cleaned_data['last_name']:
                 user.last_name = form.cleaned_data['last_name']
 
+            if form.cleaned_data['facebook_link']:
+                if form.cleaned_data['facebook_link'] == "/":
+                    user.facebook = None
+                # facebook does not have a defined username for the link format
+                # like the others.
+                # here we check that the link is an actual facebook link
+                # not a random malicious link
+                elif form.cleaned_data['facebook_link'].startswith("https://www.facebook.com/"):
+                    user.facebook = form.cleaned_data['facebook_link']
+
+            if form.cleaned_data['instagram_username']:
+                if form.cleaned_data['instagram_username'] == "/":
+                    user.instagram = None
+                else:
+                    user.instagram = "https://www.instagram.com/" + \
+                                        form.cleaned_data['instagram_username']
+
+            if form.cleaned_data['twitter_handle']:
+                if form.cleaned_data['twitter_handle'] == "/":
+                    user.twitter = None
+                else:
+                    user.twitter = "https://twitter.com/" + \
+                                        form.cleaned_data['twitter_handle']
+
+            if form.cleaned_data['share_tables']:
+                if form.cleaned_data['share_tables'] == 'Yes':
+                    user.share_tables = True
+                if form.cleaned_data['share_tables'] == 'No':
+                    user.share_tables = False
+
             if form.cleaned_data['year']:
                 if form.cleaned_data['year'] >= 1:
                     user.year = form.cleaned_data['year']
@@ -383,6 +446,42 @@ def edit_info(request):
         'num_users': get_number_current_users()
     }
     return render(request, "edit_info.html", context)
+
+
+# izzy 5/3/21
+@login_required(login_url='/')
+def profile_page(request, pk):
+    context = {
+        'year_entered': False,
+        'course_entered': False,
+        'num_users': get_number_current_users()
+    }
+    viewing_user = CoffeeUser.objects.get(id=pk)
+    context['user'] = viewing_user
+    if viewing_user.course:
+        context['course_entered'] = True
+    if viewing_user.year:
+        context['year_entered'] = True
+
+    # User can decide to share tables or not
+    if viewing_user.share_tables:
+        # get names of the tables the user is part of
+        tables = viewing_user.cafe_table_ids.values_list('table_id', flat=True)
+        # filter out the course table if it exists
+        tables = filter(lambda x: x.startswith("COURSE: ") is not True, tables)
+    else:
+        tables = []
+    context['tables'] = tables
+
+    # get their collectables
+    pointsLevel = check_points_treshold(viewing_user.points)
+    collectables = []
+    for i in range(int(pointsLevel)+1):
+        collectables.append(list_coffee_link[i])
+
+    context['collectable_pictures'] = collectables
+
+    return render(request, "profile_page.html", context)
 
 
 def health(request):
