@@ -16,7 +16,6 @@ from .small_scripts_def import check_points_treshold, how_much_to_go
 list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
 list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
 
-
 # Isabel 3/3/21
 def get_number_current_users():
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
@@ -109,10 +108,12 @@ def table_view(request):
 @login_required(login_url='/')
 def dashboard(request):
     user = request.user
+
     users = CoffeeUser.objects.all()
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
         sorted_users = sorted_users[:9]
+
     if user.is_staff is False:
         # setting study breaks feature
         if request.method == 'POST':
@@ -125,14 +126,14 @@ def dashboard(request):
                 user.save()
 
         # this derives an int from the points earned by the user,
-        # the int corresponds to the name of the collectable's picture in the files
-        # it then concatenates together: the int returned and the link to the image
-        # which in the end gives a link to the collectable's image corresponding to
-        # the number of points
+        # the int corresponds to the name of the collectable's picture in the
+        # files it then concatenates together: the int returned and the link to
+        # the image which in the end gives a link to the collectable's image
+        # corresponding to the number of points
         current_user_points = user.points
         pointsLevel = check_points_treshold(current_user_points)
-        # getting the name from the list_coffee with the index for the current max
-        # collectable
+        # getting the name from the list_coffee with the index for the current
+        # max collectable
         link_img = list_coffee_link[int(pointsLevel)]
         name_coffee = list_coffee_name[int(pointsLevel)]
 
@@ -157,12 +158,12 @@ def dashboard(request):
                 studying = True
         else:
             studying = False
+
     else:  # staff user - don't waste computation on irrelevant stuff
         link_img = ''
         points_to_go_next_collectable = 0
         name_coffee = ''
         previous_collectables = []
-        list_coffee_link = []
         studying = False
 
     context = {
