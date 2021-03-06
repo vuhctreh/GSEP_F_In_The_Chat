@@ -14,6 +14,12 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+
+  <script>
+  function convertTZ(date, tzString) {
+    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+  }
+  </script>
 </head>
 
 <body>
@@ -30,8 +36,13 @@
         <p class="email"> {{ email }} </p>
       </div>
 
-      <p> Date Joined:
-        {{ dateJoined }} </p>
+        Date Joined:
+        <p id="test"></p>
+        <script>
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        var date = "{{ dateJoined }}"
+        document.getElementById("test").innerHTML = convertTZ(date, tz)
+        </script>
       <p class="uni"> University: {{ university }} </p>
 
       {% if staff is False %}

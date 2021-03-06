@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from .small_scripts_def import check_points_treshold, how_much_to_go
+import pytz
 
 list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
 list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
@@ -166,12 +167,14 @@ def dashboard(request):
         previous_collectables = []
         studying = False
 
+    tz_date = pytz.utc.localize(user.date_joined).isoformat()
+
     context = {
         'firstName': user.first_name,
         'lastName': user.last_name,
         'email': user.email,
         'university': user.get_university_display(),
-        'dateJoined': user.date_joined,
+        'dateJoined': tz_date,
         'points': user.points,
         'users': sorted_users,
         'collectable': link_img,
