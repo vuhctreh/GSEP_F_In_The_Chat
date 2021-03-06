@@ -23,6 +23,8 @@ urlpatterns = [
                path('view_tasks', views.view_tasks, name='viewtasks'),
                path('complete/<pk>', views.completeTask, name='complete'),
                path('dashboard', views.dashboard, name='dashboard'),
+               path('profile_page/<pk>', views.profile_page,
+                    name='profile_page'),
                path('favicon.ico',
                     RedirectView.as_view(
                         url=staticfiles_storage.url('static/images/favicon.ico'))

@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
 from app.models import CoffeeUser, Message, Task
 from django.utils.translation import ugettext_lazy
+from django.db.models.fields import BLANK_CHOICE_DASH
 
 
 # Isabel: 18/2/21
@@ -66,6 +67,13 @@ class CUserEditForm(forms.Form):
     course = forms.CharField(max_length=50, required=False)
     add_table_id = forms.CharField(max_length=50, required=False)
     remove_table_id = forms.CharField(max_length=50, required=False)
+    share_tables = forms.CharField(required=False,
+                                   widget=forms.Select(
+                                       choices=(('', ''), ('Yes', 'Yes'),
+                                                ('No', 'No'))))
+    facebook_link = forms.CharField(max_length=255, required=False)
+    instagram_username = forms.CharField(max_length=200, required=False)
+    twitter_handle = forms.CharField(max_length=200, required=False)
 
 
 class createTaskForm(forms.ModelForm):
