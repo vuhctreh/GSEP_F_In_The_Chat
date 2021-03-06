@@ -38,8 +38,18 @@
     text-transform: capitalize;
 }
 
-.buttons {
-    display: inline-flex;
+
+button{
+  display: inline-flex;
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
+}
+
+button:hover {
+  background-color: #967259;
+  color: whitesmoke;
 }
 
 .set_study_break {

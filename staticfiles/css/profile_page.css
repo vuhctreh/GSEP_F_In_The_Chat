@@ -35,11 +35,18 @@ input {
 }
 
 input[type=button], input[type=submit] {
-    background-color: #967259;
-    color: whitesmoke;
+    background-color: whitesmoke;
+    color: black;
 }
 
 button{
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
+}
+
+button:hover {
   background-color: #967259;
   color: whitesmoke;
 }
