@@ -246,8 +246,27 @@ def completeTask(request, pk):
     # Increment points field by respective amount
     current_user.points += completedTask.points
     current_user.save()
+
+    table = CafeTable.objects.get(pk=completedTask.table_id_id)
+    table_members = table.coffeeuser_set.exclude(is_staff=1).count()
+
+    if completedTask.created_by.is_staff:
+        if completedTask.completed_by.count() == table_members:
+            completers = completedTask.completed_by.all()
+            for completer in completers:
+                completer.points += 2
+                completer.save()
+ 
+    else:
+        if completedTask.completed_by.count() == table_members - 1:
+            completers = completedTask.completed_by.all()
+            for completer in completers:
+                completer.points += 2
+                completer.save()
+
     return redirect('/view_tasks')
-    # return render(request, 'view_tasks.html')
+
+
 
 
 # Isabel: 18/2/21
