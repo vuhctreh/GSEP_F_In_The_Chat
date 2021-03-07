@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate
-from app.models import CoffeeUser, Message, Task
+from app.models import CoffeeUser, Message, Task, Report
 from django.utils.translation import ugettext_lazy
 from django.db.models.fields import BLANK_CHOICE_DASH
 
@@ -108,3 +108,10 @@ class PostMessageForm(forms.ModelForm):
 # Isabel 3/3/21
 class StudyBreaksForm(forms.Form):
     minutes_studying_for = forms.IntegerField(min_value=5, max_value=300)
+
+
+class ReportForm(forms.ModelForm):
+
+    class Meta:
+        model = Report
+        fields = ('title', 'category', 'detail', 'table_id')
