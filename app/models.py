@@ -112,7 +112,6 @@ class Task(models.Model):
     created_by = models.ForeignKey(CoffeeUser, related_name="created_tasks",
                                    on_delete=models.CASCADE)
     completed_by = models.ManyToManyField(CoffeeUser, blank=True)
-    # is task date date to be completed by or date set?
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0)
@@ -132,3 +131,20 @@ class Message(models.Model):
     message_content = models.TextField(max_length=4000)
     message_upvote = models.ManyToManyField(CoffeeUser, related_name="message_upvote")
     total_upvotes = models.PositiveIntegerField(default=0)
+
+
+class Report(models.Model):
+    REPORT_CLASSES = (
+        ("Table (general)", "Table (general)"),
+        ("Task", "Task"),
+        ("Messages", "Messages"),
+        ("Other", "Other")
+    )
+
+    title = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, choices=REPORT_CLASSES)
+    detail = models.CharField(max_length=250)
+    table_id = models.ForeignKey(CafeTable, related_name="reports",
+                                 on_delete=models.CASCADE)
+    flagged_by = models.ForeignKey(CoffeeUser, related_name="reports",
+                                   on_delete=models.CASCADE)
