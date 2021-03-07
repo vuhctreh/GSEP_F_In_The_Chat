@@ -125,7 +125,7 @@ def table_view(request):
 def dashboard(request):
     user = request.user
 
-    users = CoffeeUser.objects.all()
+    users = CoffeeUser.objects.filter(is_staff=False)
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
         sorted_users = sorted_users[:9]
