@@ -37,7 +37,7 @@ body {
     padding-left: 1%;
     padding-right: 1%;
     display: flex;
-    justify-content: space-between;
+
 
 }
 
@@ -57,22 +57,25 @@ body {
     padding-bottom: 8px;
     font-size: small;
     font-weight:lighter;
-    width: 34%;
+    width: auto;
     display: inline-block;
     text-align: center;
+    flex: 1 1 auto;
 }
 
 .logout {
     background-color: whitesmoke;
     color: black;
     border: 1.8px solid #967259;
-
+    text-decoration: none;
     display: inline-block;
     height: 70%;
+    width: auto;
     text-align: right;
     font-size: small;
     vertical-align: middle;
     transition-duration: 0.4s;
+    flex: 1 1 auto;
 }
 
 .logout:hover{
@@ -86,7 +89,5 @@ body {
         width: 35%;
     }
 
-    .logout {
-        width: 29%;
-    }
+
 }
