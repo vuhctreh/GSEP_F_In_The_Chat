@@ -3,9 +3,10 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
-                   createTaskForm, StudyBreaksForm, CUserEditFormStaff
+                   createTaskForm, StudyBreaksForm, CUserEditFormStaff, \
+                   ReportForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task
+from .models import CoffeeUser, CafeTable, Message, Task, Report
 import datetime
 from operator import attrgetter
 from django.contrib.auth.models import User
@@ -591,6 +592,35 @@ def profile_page(request, pk):
     context['collectable_pictures'] = collectables
 
     return render(request, "profile_page.html", context)
+
+
+@login_required(login_url='/')
+def report(request):
+    user = request.user
+    form = ReportForm()
+    tables = CafeTable.objects.filter(
+        university=user.university,
+        table_id__in=user.cafe_table_ids.values_list('table_id', flat=True))
+    form.fields['table_id'].queryset = tables
+
+    context = {'form': form, 'num_users': get_number_current_users()}
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            category = form.cleaned_data.get('category')
+            detail = form.cleaned_data.get('detail')
+            table_id = form.cleaned_data.get('table_id')
+
+            report = Report.objects.create(
+                title=title,
+                category=category,
+                detail=detail,
+                table_id=table_id,
+                flagged_by=user,
+            )
+            redirect('dashboard')
+    return render(request, 'report.html', context)
 
 
 def health(request):

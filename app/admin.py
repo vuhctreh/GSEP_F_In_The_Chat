@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import AdminSignUpForm, AdminCUserEditForm
-from .models import CafeTable, CoffeeUser, Task, Message
+from .models import CafeTable, CoffeeUser, Task, Message, Report
 
 
 class CoffeeUserAdmin(UserAdmin):
@@ -32,3 +32,4 @@ admin.site.register(CafeTable)
 admin.site.register(CoffeeUser, CoffeeUserAdmin)
 admin.site.register(Task)
 admin.site.register(Message)
+admin.site.register(Report)
