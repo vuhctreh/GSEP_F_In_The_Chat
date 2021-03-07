@@ -83,6 +83,11 @@ class CUserEditFormStaff(forms.Form):
 
 
 class createTaskForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(createTaskForm, self).__init__(*args, **kwargs)
+        if not user.is_staff:
+            self.fields['points'].choices = ((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'))
 
     class Meta:
         model = Task
