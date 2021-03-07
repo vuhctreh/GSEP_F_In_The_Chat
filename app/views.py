@@ -31,7 +31,22 @@ def get_number_current_users():
 # Isabel 3/3/21
 @login_required(login_url='/')
 def get_msgs(request, table):
+    # deal with if the requested table doesn't exist
+    try:
+        table = CafeTable.objects.get(pk=table)
+    except CafeTable.DoesNotExist:
+        return render(request, 'denied.html')
+    # make sure user can only access their tables
+    current_user = request.user
+    if ((current_user.university != table.university) or
+       (table.table_id not in
+       current_user.cafe_table_ids.values_list('table_id', flat=True))):
+        return render(request, 'denied.html')
+
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+
+    for msg in messages:
+        msg.message_date = pytz.utc.localize(msg.message_date).isoformat()
     return render(request, 'messages.html', {'messages': messages})
 
 
@@ -503,6 +518,12 @@ def edit_info(request):
 # izzy 5/3/21
 @login_required(login_url='/')
 def profile_page(request, pk):
+    # deal with if the requested user doesn't exist
+    try:
+        viewing_user = CoffeeUser.objects.get(id=pk)
+    except CoffeeUser.DoesNotExist:
+        return redirect('/handler404')
+
     context = {
         'year_entered': False,
         'course_entered': False,

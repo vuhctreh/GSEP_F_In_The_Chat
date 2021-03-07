@@ -32,6 +32,11 @@
         };
     message_update();
     var i = setInterval(message_update, 3000);
+    function scrollDown() {
+      var chatBox = document.getElementById("messages");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
   </script>
 
 </head>
@@ -82,7 +87,7 @@
 
     </div>
 
-    <div class="messages" id="messages">
+    <div class="messages" id="messages" onLoad="scrollDown()">
     <div class="fetched_msgs" id="fetched_msgs"> </div>
 
     <div class="form">

@@ -37,11 +37,11 @@
       </div>
 
         Date Joined:
-        <p id="test"></p>
+        <div id="joinDate"></div>
         <script>
         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
         var date = "{{ dateJoined }}"
-        document.getElementById("test").innerHTML = convertTZ(date, tz)
+        document.getElementById("joinDate").innerHTML = convertTZ(date, tz).toLocaleString()
         </script>
       <p class="uni"> University: {{ university }} </p>
 
