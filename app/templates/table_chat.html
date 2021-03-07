@@ -13,9 +13,23 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
 
   <script>
+  var scrolled = false;
+  // scrolls to the bottom if the user hasn't already scrolled
+  function updateScroll(){
+      if(!scrolled){
+          var element = document.getElementById("messages");
+          element.scrollTop = element.scrollHeight;
+      }
+  }
+
+  $(document).ready(function(){
+    $("div").scroll(function() {
+        scrolled=true;
+  });
+
   function message_update(){
     $(document).ready(function() {
             $.ajax({
@@ -24,19 +38,13 @@
                 url: "/get_msgs/{{ table.id }}",
                 success: function(data) {
                   $('#fetched_msgs').html(data);
-                  var chatBox = document.getElementById("messages");
-                  chatBox.scrollTop = chatBox.scrollHeight;
+                  updateScroll();
                 }
             });
           },);
         };
     message_update();
     var i = setInterval(message_update, 3000);
-    function scrollDown() {
-      var chatBox = document.getElementById("messages");
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
   </script>
 
 </head>
@@ -87,7 +95,7 @@
 
     </div>
 
-    <div class="messages" id="messages" onLoad="scrollDown()">
+    <div class="messages" id="messages">
     <div class="fetched_msgs" id="fetched_msgs"> </div>
 
     <div class="form">
@@ -99,6 +107,7 @@
   </div>
 
 </div>
+
 
 </body>
 
