@@ -29,18 +29,22 @@
 
   {{ user.first_name }} {{ user.last_name }} <br>
   {{ user.university }} <br>
+  {% if user.is_staff is not True %}
   My tables: <br>
   <ul>
   {% for table_name in tables %}
     <li>{{ table_name }} </li>
   {% endfor %}
 </ul>
+{% endif %}
 
   <form method="post">
     {% csrf_token %}  <!-- security item required for django forms !! -->
     {{ form.as_p }}
 
+    {% if user.is_staff is not True %}
     Please enter / in the social media fields if you wish to unlink.<br><br>
+    {% endif %}
 
     <button type="submit"> Change </button>
   </form><br>

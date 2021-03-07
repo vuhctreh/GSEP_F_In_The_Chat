@@ -76,6 +76,12 @@ class CUserEditForm(forms.Form):
     twitter_handle = forms.CharField(max_length=200, required=False)
 
 
+class CUserEditFormStaff(forms.Form):
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(required=False)
+    course = forms.CharField(max_length=50, required=False)
+
+
 class createTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

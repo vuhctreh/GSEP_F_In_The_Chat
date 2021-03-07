@@ -14,6 +14,12 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+
+  <script>
+  function convertTZ(date, tzString) {
+    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+  }
+  </script>
 </head>
 
 <body>
@@ -30,9 +36,16 @@
         <p class="email"> {{ email }} </p>
       </div>
 
-      <p> Date Joined:
-        {{ dateJoined }} </p>
+        Date Joined:
+        <div id="joinDate"></div>
+        <script>
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        var date = "{{ dateJoined }}"
+        document.getElementById("joinDate").innerHTML = convertTZ(date, tz).toLocaleString()
+        </script>
       <p class="uni"> University: {{ university }} </p>
+
+      {% if staff is False %}
       <p> Points: {{ points }} </p>
       <p> Points to go before next collectable: {{ pointsToGo }} </p>
 
@@ -57,14 +70,18 @@
 
       </div>
 
+      {% endif %}
 
       <div class="buttons">
         <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
-        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
-        <button onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
-        <button onclick="document.location='set_tasks'" id="set_tasks">Staff: Set Tasks</button>
         <button onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
+        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
+        <button onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
+        {% if staff is False %}
+        <button onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
+        {% endif %}
       </div>
+      {% if staff is False %}
       <div class="set_study_break">
         {% if studying == False %}
         <form method="post">
@@ -73,6 +90,7 @@
         </form>
         {% endif %}
       </div>
+      {% endif %}
     </div>
 
     <div class="leaderboard">
