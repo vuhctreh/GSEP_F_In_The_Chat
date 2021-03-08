@@ -20,6 +20,12 @@ list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "lat
 
 # Isabel 3/3/21
 def get_number_current_users():
+    """ Calculates the number of active users
+
+    Returns:
+        active::int 
+            The number of users currently using the web app
+    """
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
     active = 0
     for session in active_sessions:
@@ -32,6 +38,18 @@ def get_number_current_users():
 # Isabel 3/3/21
 @login_required(login_url='/')
 def get_msgs(request, table):
+    """ Retrieves all messages in a specific table and renders them
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+        table::int
+            The id of the table where the specific messages are written
+
+    Returns:
+        render
+            Renders the 'messages.html' file and passes the retireved messages as a parameter
+    """
     # deal with if the requested table doesn't exist
     try:
         table = CafeTable.objects.get(pk=table)
@@ -52,6 +70,8 @@ def get_msgs(request, table):
 
 
 def check_recurring_tasks():
+    """ Checks whether a reccuring task exists and removes it if found
+    """
     recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(recurrence_interval="n")
     for task in recurring_tasks:
         if task.recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
@@ -97,6 +117,17 @@ def log_out(request):
 
 # Isabel: 18/2/21
 def signup(request):
+    """ Checks whether sign up form is valid and gathers user information
+        If users has already signed up, he gets logged in
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+
+    Returns:
+        render
+            Renders the 'sign_up.html' file and passes as a context parameter the sign up form
+    """
     context = {}
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -118,6 +149,18 @@ def signup(request):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_view(request):
+    """ Finds all the tables for which the given user is part of
+        and displays them
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+
+    Returns:
+        render
+            Renders the 'table_view.html' file and passes as a parameter the tables which the
+            logged-in user is part of along with the number of active users.
+    """
     current_user = request.user
     # tables with correct interests and university for user
     tables = CafeTable.objects.filter(
@@ -220,6 +263,18 @@ def dashboard(request):
 # Victoria 04 & 05/03/21
 @login_required(login_url="/")
 def set_tasks(request):
+    """ Retrives the information from the set_tasks page form 
+        and creates a task for the given table. Checks for the number
+        of tasks that have already been created are also made.
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+
+    Returns:
+        render
+            Renders the 'set_tasks.html' page and passes the set tasks form as context
+    """
     user = request.user
     form = createTaskForm(user=request.user)
 
@@ -272,6 +327,17 @@ def set_tasks(request):
 # Alex, Isabel & Victoria 20/2/21
 @login_required(login_url="/")
 def view_tasks(request):
+    """ Displays all the tasks that have been set for the current user
+        and which haven't already been completed by him/her.
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+    Returns:
+        render
+            Renders the 'view_tasks.html' page and passes as a parameter
+            the required tasks, active users and all other users.
+    """
     current_user = request.user
     if current_user.is_staff:
         return redirect("dashboard")
@@ -305,6 +371,18 @@ def view_tasks(request):
 # Victoria & Alex 05/03/21
 @login_required(login_url='/')
 def completeTask(request, pk):
+    """ Marks task as completed and awards the user with the corresponding points.
+        Checks are made to see how many tasks the current user has completed in the day
+        to avoid spamming.
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+        pk::int
+            The id of the specific task for which the completed button was clicked
+    Returns:
+        redirect
+            redirects user to the 'view_tasks.html' page
+    """
     # Get the current user logged in
     current_user = request.user
     # Get the task for which the button is pressed
@@ -415,6 +493,18 @@ def table_chat(request, pk):
 
 # Alex 4/3/21
 def upvote(request, pk):
+    """ Increases the upvote count for specific message when 
+        upvote button is clicked.
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+        pk::int
+            The id of the message for which the upvote button is clicked.
+    Returns:
+        redirect
+            Redirects user to the 'table_chat.html' page and passes as a 
+            parameter the table id for which the liked message is part of
+    """
     current_user = request.user
     message = Message.objects.get(id=pk)
     if current_user not in message.message_upvote.all():
@@ -429,6 +519,18 @@ def upvote(request, pk):
 # will and izzy
 @login_required(login_url='/')
 def edit_info(request):
+    """ Displays the edit info form. Collects all information from the edit info form and updates the
+        respective fields with the new information. In addition, icons that redirect user
+        to external social media are present.
+    
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+    Returns:
+        render
+            Renders the 'edit_info.html' page
+
+    """
     user = request.user
 
     if user.is_staff:
@@ -592,6 +694,18 @@ def edit_info(request):
 # izzy 5/3/21
 @login_required(login_url='/')
 def profile_page(request, pk):
+    """ Displays all relevant information for a particular user
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+        pk::int
+            The id of the users profile page
+    Returns:
+        render
+            Renders the 'profile_page.html' page and passes as parameter 
+            all of the given users information
+    """
     # deal with if the requested user doesn't exist
     try:
         viewing_user = CoffeeUser.objects.get(id=pk)
