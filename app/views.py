@@ -269,7 +269,7 @@ def set_tasks(request):
     form.fields['recurrence_interval'].initial = "n"
     return render(request, 'set_tasks.html', context)
 
-
+# Alex, Isabel & Victoria
 @login_required(login_url="/")
 def view_tasks(request):
     current_user = request.user
