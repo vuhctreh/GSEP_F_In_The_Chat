@@ -25,7 +25,7 @@
   <button onclick="document.location='dashboard'" id="dashboard">Dashboard</button>
 
   <ul>
-      {% for task in tasks %}
+      {% for task, current, total in tasks %}
       <li>
         <h3 class="task_name">{{task.task_name}}</h3>
         <div class="task_info">
@@ -33,12 +33,14 @@
           <h4>Points: </h4>{{task.points}}
           <h4>Description:</h4>
           <div class="descrip">{{task.task_content}}</div>
+          <br>
+          Completed by {{ current }} / {{ total }} people.
           <form action = "{% url 'complete' task.id %}" method="post">
             {% csrf_token %}  <!-- security item required for django forms !! -->
             <br><button type="submit"> Completed </button>
           </form>
         </div>
-      </li>  
+      </li>
       {% endfor %}
     </ul>
     <script src="{% static 'js/darkmode.js' %}" type="text/javascript"></script>

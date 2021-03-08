@@ -268,8 +268,16 @@ def view_tasks(request):
     )
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
+
+    complete_current = []
+    complete_total = []
+    for task in tasks:
+        current, total = task.get_number_completed_task()
+        complete_current.append(current)
+        complete_total.append(total)
+
     context = {
-        'tasks': tasks,
+        'tasks': zip(tasks, complete_current, complete_total),
         'users': CoffeeUser.objects.all(),
         'num_users': get_number_current_users()
     }
@@ -288,20 +296,12 @@ def completeTask(request, pk):
         current_user.student_tasks_completed = 0
         current_user.save()
 
-    table = CafeTable.objects.get(pk=completedTask.table_id_id)
-    table_members = table.coffeeuser_set.exclude(is_staff=1).count()
-
     if completedTask.created_by.is_staff:
         # Add user to completed by field in database
         completedTask.completed_by.add(current_user)
         # Increment points field by respective amount
         current_user.points += completedTask.points
         current_user.save()
-        if completedTask.completed_by.count() == table_members:
-            completers = completedTask.completed_by.all()
-            for completer in completers:
-                completer.points += 2
-                completer.save()
 
     else:
         if current_user.student_tasks_completed < 2 and not completedTask.created_by == current_user:
@@ -312,11 +312,13 @@ def completeTask(request, pk):
             current_user.student_tasks_completed += 1
             current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
             current_user.save()
-        if completedTask.completed_by.count() == table_members - 1:
-            completers = completedTask.completed_by.all()
-            for completer in completers:
-                completer.points += 2
-                completer.save()
+
+    current, total = completedTask.get_number_completed_task()
+    if current == total:
+        completers = completedTask.completed_by.all()
+        for completer in completers:
+            completer.points += 2
+            completer.save()
 
     return redirect('/view_tasks')
 
