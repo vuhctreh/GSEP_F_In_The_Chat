@@ -47,7 +47,7 @@ def get_msgs(request, table):
             The id of the table where the specific messages are written
 
     Returns:
-        render
+        render::HttpResponse
             Renders the 'messages.html' file and passes the retireved messages as a parameter
     """
     # deal with if the requested table doesn't exist
@@ -125,7 +125,7 @@ def signup(request):
             Object that contains metadata about the request
 
     Returns:
-        render
+        render::HttpResponse
             Renders the 'sign_up.html' file and passes as a context parameter the sign up form
     """
     context = {}
@@ -157,7 +157,7 @@ def table_view(request):
             Object that contains metadata about the request
 
     Returns:
-        render
+        render::HttpResponse
             Renders the 'table_view.html' file and passes as a parameter the tables which the
             logged-in user is part of along with the number of active users.
     """
@@ -272,7 +272,7 @@ def set_tasks(request):
             Object that contains metadata about the request
 
     Returns:
-        render
+        render::HttpResponse
             Renders the 'set_tasks.html' page and passes the set tasks form as context
     """
     user = request.user
@@ -334,7 +334,7 @@ def view_tasks(request):
         request::HttpRequest
             Object that contains metadata about the request.
     Returns:
-        render
+        render::HttpResponse
             Renders the 'view_tasks.html' page and passes as a parameter
             the required tasks, active users and all other users.
     """
@@ -380,7 +380,7 @@ def completeTask(request, pk):
         pk::int
             The id of the specific task for which the completed button was clicked
     Returns:
-        redirect
+        redirect::HttpResponse
             redirects user to the 'view_tasks.html' page
     """
     # Get the current user logged in
@@ -501,7 +501,7 @@ def upvote(request, pk):
         pk::int
             The id of the message for which the upvote button is clicked.
     Returns:
-        redirect
+        redirect::HttpResponse
             Redirects user to the 'table_chat.html' page and passes as a 
             parameter the table id for which the liked message is part of
     """
@@ -527,7 +527,7 @@ def edit_info(request):
         request::HttpRequest
             Object that contains metadata about the request.
     Returns:
-        render
+        render::HttpResponse
             Renders the 'edit_info.html' page
 
     """
@@ -702,7 +702,7 @@ def profile_page(request, pk):
         pk::int
             The id of the users profile page
     Returns:
-        render
+        render::HttpResponse
             Renders the 'profile_page.html' page and passes as parameter 
             all of the given users information
     """
