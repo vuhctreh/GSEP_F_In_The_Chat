@@ -119,7 +119,6 @@ class Task(models.Model):
     created_by = models.ForeignKey(CoffeeUser, related_name="created_tasks",
                                    on_delete=models.CASCADE)
     completed_by = models.ManyToManyField(CoffeeUser, blank=True)
-    # date set
     date_set = models.DateField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0, choices=POINTS)

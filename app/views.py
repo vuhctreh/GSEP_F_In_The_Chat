@@ -51,6 +51,15 @@ def get_msgs(request, table):
     return render(request, 'messages.html', {'messages': messages})
 
 
+def check_recurring_tasks():
+    recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(recurrence_interval="n")
+    for task in recurring_tasks:
+        if task.recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
+            task.completed_by.remove(*task.completed_by.all())
+            task.no_of_repeats += 1
+            task.date_set = datetime.date.today()
+            task.save()
+
 # Victoria: 18/2/21
 def index(request):
     context = {}
@@ -256,6 +265,7 @@ def set_tasks(request):
             context["createTaskForm"] = form
     else:
         context["createTaskForm"] = form
+    form.fields['recurrence_interval'].initial = "n"
     return render(request, 'set_tasks.html', context)
 
 
@@ -271,14 +281,7 @@ def view_tasks(request):
                                                              flat=True)
     )
 
-    recurring_tasks = Task.objects.exclude(max_repeats=0)
-    for task in recurring_tasks:
-        if task.recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
-            task.completed_by.remove(*task.completed_by.all())
-            task.no_of_repeats += 1
-            task.date_set = datetime.date.today()
-            task.save()
-
+    check_recurring_tasks()
 
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
@@ -321,7 +324,7 @@ def completeTask(request, pk):
 
     if completedTask.recurrence_interval == "d":
         completedTask.recurring_date = completedTask.date_set + datetime.timedelta(days=1)
-    elif task.recurrence_interval == "w":
+    elif completedTask.recurrence_interval == "w":
         completedTask.recurring_date = completedTask.date_set + datetime.timedelta(weeks=1)
     completedTask.save()
 
@@ -359,6 +362,7 @@ def table_chat(request, pk):
     # show the existing messages by querying db
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
     # get the tasks for the table - new: only notified of tasks set today
+    check_recurring_tasks()
     date_from = datetime.date.today()
     tasks = Task.objects.filter(table_id=table,
                                 date_set=date_from).order_by('date_set')
