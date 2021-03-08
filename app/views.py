@@ -7,7 +7,7 @@ from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
                    ReportForm
 from django.contrib.auth.decorators import login_required
 from .models import CoffeeUser, CafeTable, Message, Task, Report
-import datetime
+import datetime # go through and fix all the datetime.xyz to just xyz since imported
 from operator import attrgetter
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
@@ -49,6 +49,16 @@ def get_msgs(request, table):
     for msg in messages:
         msg.message_date = pytz.utc.localize(msg.message_date).isoformat()
     return render(request, 'messages.html', {'messages': messages})
+
+
+def check_recurring_tasks():
+    recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(recurrence_interval="n")
+    for task in recurring_tasks:
+        if task.recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
+            task.completed_by.remove(*task.completed_by.all())
+            task.no_of_repeats += 1
+            task.date_set = datetime.date.today()
+            task.save()
 
 
 # Victoria: 18/2/21
@@ -233,12 +243,16 @@ def set_tasks(request):
             table_id = form.cleaned_data.get('table_id')
             task_content = form.cleaned_data.get('task_content')
             points = form.cleaned_data.get('points')
+            recurrence_interval = form.cleaned_data.get('recurrence_interval')
+            max_repeats = form.cleaned_data.get('max_repeats')
             task = Task.objects.create(
                 task_name=task_name,
                 created_by=user,
                 table_id=table_id,
                 task_content=task_content,
-                points=points
+                points=points,
+                recurrence_interval=recurrence_interval,
+                max_repeats=max_repeats
             )
             user.tasks_set_today += 1
             user.save()
@@ -252,6 +266,7 @@ def set_tasks(request):
             context["createTaskForm"] = form
     else:
         context["createTaskForm"] = form
+    form.fields['recurrence_interval'].initial = "n"
     return render(request, 'set_tasks.html', context)
 
 
@@ -266,6 +281,9 @@ def view_tasks(request):
         table_id__in=current_user.cafe_table_ids.values_list('table_id',
                                                              flat=True)
     )
+
+    check_recurring_tasks()
+
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
 
@@ -320,6 +338,12 @@ def completeTask(request, pk):
             completer.points += 2
             completer.save()
 
+    if completedTask.recurrence_interval == "d":
+        completedTask.recurring_date = completedTask.date_set + datetime.timedelta(days=1)
+    elif completedTask.recurrence_interval == "w":
+        completedTask.recurring_date = completedTask.date_set + datetime.timedelta(weeks=1)
+    completedTask.save()
+
     return redirect('/view_tasks')
 
 
@@ -352,10 +376,11 @@ def table_chat(request, pk):
         form = PostMessageForm()
     # show the existing messages by querying db
     messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
-    # get the tasks for the table - new: only notified of tasks set in last 24h
-    date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+    # get the tasks for the table - new: only notified of tasks set today
+    check_recurring_tasks()
+    date_from = datetime.date.today()
     tasks = Task.objects.filter(table_id=table,
-                                task_date__gte=date_from).order_by('task_date')
+                                date_set=date_from.order_by('date_set')
     # get all the users in the table
     users = table.coffeeuser_set.all()
     # see if currently studying
