@@ -269,7 +269,7 @@ def set_tasks(request):
     form.fields['recurrence_interval'].initial = "n"
     return render(request, 'set_tasks.html', context)
 
-# Alex, Isabel & Victoria
+# Alex, Isabel & Victoria 20/2/21
 @login_required(login_url="/")
 def view_tasks(request):
     current_user = request.user
@@ -302,7 +302,7 @@ def view_tasks(request):
     return render(request, 'view_tasks.html', context)
 
 
-# Victoria 05/03/21
+# Victoria & Alex 05/03/21
 @login_required(login_url='/')
 def completeTask(request, pk):
     # Get the current user logged in
@@ -413,7 +413,7 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
-# Alex
+# Alex 4/3/21
 def upvote(request, pk):
     current_user = request.user
     message = Message.objects.get(id=pk)
