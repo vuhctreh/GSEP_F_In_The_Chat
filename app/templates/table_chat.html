@@ -85,7 +85,7 @@
     </div>
 
     <div class="tasks">
-      Tasks
+      Tasks set today:
       {% for task in tasks %}
       <li>
        <a href="/view_tasks">{{task.task_name}}</a> set by {{task.created_by.first_name}} {{task.created_by.last_name}}
