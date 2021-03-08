@@ -288,13 +288,21 @@ def completeTask(request, pk):
         current_user.student_tasks_completed = 0
         current_user.save()
 
+    table = CafeTable.objects.get(pk=completedTask.table_id_id)
+    table_members = table.coffeeuser_set.exclude(is_staff=1).count()
+
     if completedTask.created_by.is_staff:
         # Add user to completed by field in database
         completedTask.completed_by.add(current_user)
         # Increment points field by respective amount
         current_user.points += completedTask.points
         current_user.save()
-    
+        if completedTask.completed_by.count() == table_members:
+            completers = completedTask.completed_by.all()
+            for completer in completers:
+                completer.points += 2
+                completer.save()
+
     else:
         if current_user.student_tasks_completed < 2 and not completedTask.created_by == current_user:
             # Add user to completed by field in database
@@ -304,9 +312,13 @@ def completeTask(request, pk):
             current_user.student_tasks_completed += 1
             current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
             current_user.save()
+        if completedTask.completed_by.count() == table_members - 1:
+            completers = completedTask.completed_by.all()
+            for completer in completers:
+                completer.points += 2
+                completer.save()
 
     return redirect('/view_tasks')
-    # return render(request, 'view_tasks.html')
 
 
 # Isabel: 18/2/21
