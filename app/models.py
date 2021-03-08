@@ -127,6 +127,13 @@ class Task(models.Model):
     def __str__(self):
         return self.task_id
 
+    def get_number_completed_task(self):
+        out_of = self.table_id.coffeeuser_set.exclude(is_staff=1).count()
+        if self.created_by.is_staff:
+            return (self.completed_by.count(), out_of)
+        else:
+            return (self.completed_by.count(), out_of - 1)
+
 
 class Message(models.Model):
     # please note Django implicitly gives an auto incrementing primary
