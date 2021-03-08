@@ -413,7 +413,7 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
-
+# Alex
 def upvote(request, pk):
     current_user = request.user
     message = Message.objects.get(id=pk)
