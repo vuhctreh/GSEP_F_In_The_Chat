@@ -6,7 +6,7 @@ from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
                    createTaskForm, StudyBreaksForm, CUserEditFormStaff, \
                    ReportForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task, Report
+from .models import CoffeeUser, CafeTable, Message, Task, Report, Notification
 import datetime # go through and fix all the datetime.xyz to just xyz since imported
 from operator import attrgetter
 from django.contrib.auth.models import User
@@ -136,6 +136,8 @@ def table_view(request):
 def dashboard(request):
     user = request.user
 
+    notifications = Notification.objects.all()
+
     users = CoffeeUser.objects.filter(is_staff=False)
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
@@ -213,6 +215,7 @@ def dashboard(request):
         'studying': studying,
         'pk': user.pk,
         'staff': user.is_staff,
+        'notifications': notifications,
     }
     return render(request, "dashboard.html", context)
 
@@ -256,6 +259,11 @@ def set_tasks(request):
             )
             user.tasks_set_today += 1
             user.save()
+
+            # Add notification
+            task_text = "Task " + task_name + " was added to tasks! Check it out!"
+            notification = Notification(table_id=table_id, notification_type=1, text_preview=task_text)
+            notification.save()
 
             if user.tasks_set_today >= 2 and not user.is_staff:
                 user.next_possible_set = datetime.date.today() + datetime.timedelta(days=1)
