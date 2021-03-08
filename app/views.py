@@ -3,9 +3,10 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
-                   createTaskForm, StudyBreaksForm, CUserEditFormStaff
+                   createTaskForm, StudyBreaksForm, CUserEditFormStaff, \
+                   ReportForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task
+from .models import CoffeeUser, CafeTable, Message, Task, Report
 import datetime # go through and fix all the datetime.xyz to just xyz since imported
 from operator import attrgetter
 from django.contrib.auth.models import User
@@ -16,7 +17,6 @@ import pytz
 
 list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
 list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
-
 
 # Isabel 3/3/21
 def get_number_current_users():
@@ -59,6 +59,7 @@ def check_recurring_tasks():
             task.no_of_repeats += 1
             task.date_set = datetime.date.today()
             task.save()
+
 
 # Victoria: 18/2/21
 def index(request):
@@ -285,8 +286,16 @@ def view_tasks(request):
 
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
+
+    complete_current = []
+    complete_total = []
+    for task in tasks:
+        current, total = task.get_number_completed_task()
+        complete_current.append(current)
+        complete_total.append(total)
+
     context = {
-        'tasks': tasks,
+        'tasks': zip(tasks, complete_current, complete_total),
         'users': CoffeeUser.objects.all(),
         'num_users': get_number_current_users()
     }
@@ -322,6 +331,13 @@ def completeTask(request, pk):
             current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
             current_user.save()
 
+    current, total = completedTask.get_number_completed_task()
+    if current == total:
+        completers = completedTask.completed_by.all()
+        for completer in completers:
+            completer.points += 2
+            completer.save()
+
     if completedTask.recurrence_interval == "d":
         completedTask.recurring_date = completedTask.date_set + datetime.timedelta(days=1)
     elif completedTask.recurrence_interval == "w":
@@ -329,7 +345,6 @@ def completeTask(request, pk):
     completedTask.save()
 
     return redirect('/view_tasks')
-    # return render(request, 'view_tasks.html')
 
 
 # Isabel: 18/2/21
@@ -365,7 +380,7 @@ def table_chat(request, pk):
     check_recurring_tasks()
     date_from = datetime.date.today()
     tasks = Task.objects.filter(table_id=table,
-                                date_set=date_from).order_by('date_set')
+                                date_set=date_from.order_by('date_set')
     # get all the users in the table
     users = table.coffeeuser_set.all()
     # see if currently studying
@@ -616,6 +631,35 @@ def profile_page(request, pk):
     context['collectable_pictures'] = collectables
 
     return render(request, "profile_page.html", context)
+
+
+@login_required(login_url='/')
+def report(request):
+    user = request.user
+    form = ReportForm()
+    tables = CafeTable.objects.filter(
+        university=user.university,
+        table_id__in=user.cafe_table_ids.values_list('table_id', flat=True))
+    form.fields['table_id'].queryset = tables
+
+    context = {'form': form, 'num_users': get_number_current_users()}
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            category = form.cleaned_data.get('category')
+            detail = form.cleaned_data.get('detail')
+            table_id = form.cleaned_data.get('table_id')
+
+            report = Report.objects.create(
+                title=title,
+                category=category,
+                detail=detail,
+                table_id=table_id,
+                flagged_by=user,
+            )
+            redirect('dashboard')
+    return render(request, 'report.html', context)
 
 
 def health(request):
