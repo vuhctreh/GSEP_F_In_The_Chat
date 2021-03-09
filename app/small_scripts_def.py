@@ -1,21 +1,27 @@
-#william
+""" Placeholder """
+
+
+# william
 def check_points_treshold(total_points):
+    """ Placeholder """
 
-    # This is just a very easy function to mesure the level obtained, proof of concept. to be changed later TODO
+    # This is just a very easy function to mesure the level obtained, proof of
+    # concept. to be changed later TODO
 
-    #this will give an experience treshold
+    # This will give an experience treshold
     level = total_points/50
 
-    if (level >= 9):
-        return 9
+    if level >= 9:
+        level = 9
 
-    else:
-        return level
+    return level
 
-#william
+
+# william
 def how_much_to_go(current_level):
+    """ Placeholder """
 
-    if (current_level<9):
+    if current_level < 9:
         # transforming the current_level which is a float into an int
         int_value = int(current_level)
 
@@ -24,11 +30,12 @@ def how_much_to_go(current_level):
         # this will give the level missing to go to the next threshold
         to_go_level = (int_value+1) - current_level
 
-        # multiplying it by the 50 (this value has to be the same as the divider in the function check_points_treshold)
+        # multiplying it by the 50 (this value has to be the same as the
+        # divider in the function check_points_treshold)
         # this gives the number of points to go before the next treshold
         to_go_points = to_go_level*50
 
-        return to_go_points
-
     else:
-        return 0
+        to_go_points = 0
+
+    return to_go_points

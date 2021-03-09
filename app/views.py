@@ -1,23 +1,32 @@
-from __future__ import unicode_literals
-from typing import NewType
-from django.http import JsonResponse, HttpResponse
-from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
-                   createTaskForm, StudyBreaksForm, CUserEditFormStaff, \
-                   ReportForm
-from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task, Report, Notification
-import datetime # go through and fix all the datetime.xyz to just xyz since imported
-from operator import attrgetter
-from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
-from django.utils import timezone
-from .small_scripts_def import check_points_treshold, how_much_to_go
-import pytz
+""" Placeholder """
 
-list_coffee_link = ["images/espresso.PNG", "images/americano.PNG", "images/cappuccino.PNG", "images/hot_chocolate.PNG", "images/latte.PNG", "images/mocha.PNG", "images/matcha.PNG", "images/frappuccino.PNG", "images/ice_tea.PNG", "images/bubble_tea.PNG"]
-list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate", "latte", "mocha", "matcha", "frappuccino", "ice tea", "bubble tea"]
+from __future__ import unicode_literals
+from operator import attrgetter
+import datetime
+import pytz
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from app.forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
+                   CreateTaskForm, StudyBreaksForm, CUserEditFormStaff, \
+                   ReportForm
+from app.models import CoffeeUser, CafeTable, Message, Task, Report, \
+                       Notification
+from app.small_scripts_def import check_points_treshold, how_much_to_go
+
+
+list_coffee_link = ["images/espresso.PNG", "images/americano.PNG",
+                    "images/cappuccino.PNG", "images/hot_chocolate.PNG",
+                    "images/latte.PNG", "images/mocha.PNG",
+                    "images/matcha.PNG", "images/frappuccino.PNG",
+                    "images/ice_tea.PNG", "images/bubble_tea.PNG"]
+list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate",
+                    "latte", "mocha", "matcha", "frappuccino", "ice tea",
+                    "bubble tea"]
+
 
 # Isabel 3/3/21
 def get_number_current_users():
@@ -49,7 +58,8 @@ def get_msgs(request, table):
 
     Returns:
         render::HttpResponse
-            Renders the 'messages.html' file and passes the retireved messages as a parameter
+            Renders the 'messages.html' file and passes the retireved messages
+            as a parameter
     """
     # deal with if the requested table doesn't exist
     try:
@@ -63,7 +73,8 @@ def get_msgs(request, table):
        current_user.cafe_table_ids.values_list('table_id', flat=True))):
         return render(request, 'denied.html')
 
-    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    messages = Message.objects.filter(table_id=table).order_by(
+                'message_date')[:100]
 
     for msg in messages:
         msg.message_date = pytz.utc.localize(msg.message_date).isoformat()
@@ -71,19 +82,29 @@ def get_msgs(request, table):
 
 
 def check_recurring_tasks():
-    """ Checks whether a reccuring task exists and removes it if found
-    """
-    recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(recurrence_interval="n")
+    """ Checks whether a reccuring task exists and removes it if found"""
+    recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(
+        recurrence_interval="n")
     for task in recurring_tasks:
-        if task.recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
+        if task.recurring_date == datetime.date.today() and \
+          task.no_of_repeats <= task.max_repeats:
             task.completed_by.remove(*task.completed_by.all())
             task.no_of_repeats += 1
             task.date_set = datetime.date.today()
             task.save()
 
 
+def student_edit_form_verify(form, user):
+    """ placeholder """
+
+
+def staff_edit_form_verify(form, user):
+    """ placeholder """
+
+
 # Victoria: 18/2/21
 def index(request):
+    """ Placeholder """
     context = {}
 
     # if user is already authenticated they will be redirected to home
@@ -112,6 +133,7 @@ def index(request):
 
 
 def log_out(request):
+    """ Placeholder """
     logout(request)
     return redirect('/')
 
@@ -127,7 +149,8 @@ def signup(request):
 
     Returns:
         render::HttpResponse
-            Renders the 'sign_up.html' file and passes as a context parameter the sign up form
+            Renders the 'sign_up.html' file and passes as a context parameter
+            the sign up form
     """
     context = {}
     if request.method == 'POST':
@@ -159,8 +182,9 @@ def table_view(request):
 
     Returns:
         render::HttpResponse
-            Renders the 'table_view.html' file and passes as a parameter the tables which the
-            logged-in user is part of along with the number of active users.
+            Renders the 'table_view.html' file and passes as a parameter the
+            tables which the logged-in user is part of along with the number
+            of active users.
     """
     current_user = request.user
     # tables with correct interests and university for user
@@ -178,12 +202,13 @@ def table_view(request):
 
 @login_required(login_url='/')
 def dashboard(request):
+    """ Placeholder """
     user = request.user
 
     tables = CafeTable.objects.filter(
         university=user.university,
         table_id__in=user.cafe_table_ids.values_list('table_id',
-                                                             flat=True)
+                                                     flat=True)
     )
 
     # Get all notifications pertaining to the user
@@ -211,27 +236,29 @@ def dashboard(request):
         # the image which in the end gives a link to the collectable's image
         # corresponding to the number of points
         current_user_points = user.points
-        pointsLevel = check_points_treshold(current_user_points)
+        points_level = check_points_treshold(current_user_points)
         # getting the name from the list_coffee with the index for the current
         # max collectable
-        link_img = list_coffee_link[int(pointsLevel)]
-        name_coffee = list_coffee_name[int(pointsLevel)]
+        link_img = list_coffee_link[int(points_level)]
+        name_coffee = list_coffee_name[int(points_level)]
 
         # creating the list for the previous collectables
         previous_collectables = []
         index_list = 0
-        while (index_list < int(pointsLevel)):
+        while index_list < int(points_level):
             previous_collectables.append(list_coffee_link[index_list])
             index_list += 1
 
         # calculating how many points to reach next collectable
-        points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+        points_to_go_next_collectable = int(how_much_to_go(points_level))
 
         # Notification for points left
-        if (points_to_go_next_collectable < 10):
-            n_text = user.first_name + " has less than 10 points to go until their next award!"
-            n = Notification(table_id=0, notification_type=1, text_preview=n_text)
-            n.save()
+        if points_to_go_next_collectable < 10:
+            n_text = user.first_name + \
+                " has less than 10 points to go until their next award!"
+            notif = Notification(table_id=0, notification_type=1,
+                                 text_preview=n_text)
+            notif.save()
 
         # see if the user is currently studying
         if user.studying_until:
@@ -290,17 +317,19 @@ def set_tasks(request):
 
     Returns:
         render::HttpResponse
-            Renders the 'set_tasks.html' page and passes the set tasks form as context
+            Renders the 'set_tasks.html' page and passes the set tasks form as
+            context
     """
     user = request.user
-    form = createTaskForm(user=request.user)
+    form = CreateTaskForm(user=request.user)
 
     tables = CafeTable.objects.filter(
         university=user.university,
         table_id__in=user.cafe_table_ids.values_list('table_id', flat=True))
     form.fields['table_id'].queryset = tables
 
-    if user.tasks_set_today >= 2 and user.next_possible_set == datetime.date.today():
+    if user.tasks_set_today >= 2 and \
+       user.next_possible_set == datetime.date.today():
         user.tasks_set_today = 0
         user.save()
 
@@ -309,7 +338,7 @@ def set_tasks(request):
 
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
-        form = createTaskForm(request.POST, user=request.user)
+        form = CreateTaskForm(request.POST, user=request.user)
         if form.is_valid():
             task_name = form.cleaned_data.get('task_name')
             table_id = form.cleaned_data.get('table_id')
@@ -317,7 +346,7 @@ def set_tasks(request):
             points = form.cleaned_data.get('points')
             recurrence_interval = form.cleaned_data.get('recurrence_interval')
             max_repeats = form.cleaned_data.get('max_repeats')
-            task = Task.objects.create(
+            Task.objects.create(  # removed task = for pylint
                 task_name=task_name,
                 created_by=user,
                 table_id=table_id,
@@ -330,21 +359,25 @@ def set_tasks(request):
             user.save()
 
             # Add notification
-            task_text = user.first_name + " has added " + task_name + " as a new task! Check it out!"
-            notification = Notification(table_id=table_id, notification_type=3, text_preview=task_text)
+            task_text = user.first_name + " has added " + task_name + \
+                " as a new task! Check it out!"
+            notification = Notification(table_id=table_id, notification_type=3,
+                                        text_preview=task_text)
             notification.save()
 
             if user.tasks_set_today >= 2 and not user.is_staff:
-                user.next_possible_set = datetime.date.today() + datetime.timedelta(days=1)
+                user.next_possible_set = datetime.date.today() + \
+                    datetime.timedelta(days=1)
                 user.save()
                 return redirect("dashboard")
 
         else:
-            context["createTaskForm"] = form
+            context["CreateTaskForm"] = form
     else:
-        context["createTaskForm"] = form
+        context["CreateTaskForm"] = form
     form.fields['recurrence_interval'].initial = "n"
     return render(request, 'set_tasks.html', context)
+
 
 # Alex, Isabel & Victoria 20/2/21
 @login_required(login_url="/")
@@ -373,7 +406,8 @@ def view_tasks(request):
     check_recurring_tasks()
 
     # get the tasks corresponding to these tables that the user hasn't done
-    tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
+    tasks = Task.objects.filter(table_id__in=tables).exclude(
+        completed_by=current_user).exclude(created_by=current_user)
 
     complete_current = []
     complete_total = []
@@ -392,15 +426,16 @@ def view_tasks(request):
 
 # Victoria & Alex 05/03/21
 @login_required(login_url='/')
-def completeTask(request, pk):
-    """ Marks task as completed and awards the user with the corresponding points.
-        Checks are made to see how many tasks the current user has completed in the day
-        to avoid spamming.
+def complete_task(request, pk):
+    """ Marks task as completed and awards the user with the corresponding
+        points. Checks are made to see how many tasks the current user has
+        completed in the day to avoid spamming.
     Args:
         request::HttpRequest
             Object that contains metadata about the request.
         pk::int
-            The id of the specific task for which the completed button was clicked
+            The id of the specific task for which the completed button was
+            clicked
     Returns:
         redirect::HttpResponse
             redirects user to the 'view_tasks.html' page
@@ -408,45 +443,53 @@ def completeTask(request, pk):
     # Get the current user logged in
     current_user = request.user
     # Get the task for which the button is pressed
-    completedTask = Task.objects.get(pk=pk)
+    completed_task = Task.objects.get(pk=pk)
 
-    if current_user.student_tasks_completed >= 2 and current_user.next_possible_complete == datetime.date.today():
+    if current_user.student_tasks_completed >= 2 and \
+       current_user.next_possible_complete == datetime.date.today():
         current_user.student_tasks_completed = 0
         current_user.save()
 
-    if completedTask.created_by.is_staff:
+    if completed_task.created_by.is_staff:
         # Add user to completed by field in database
-        completedTask.completed_by.add(current_user)
+        completed_task.completed_by.add(current_user)
         # Increment points field by respective amount
-        current_user.points += completedTask.points
+        current_user.points += completed_task.points
         current_user.save()
 
     else:
-        if current_user.student_tasks_completed < 2 and not completedTask.created_by == current_user:
+        if current_user.student_tasks_completed < 2 and not \
+           completed_task.created_by == current_user:
             # Add user to completed by field in database
-            completedTask.completed_by.add(current_user)
+            completed_task.completed_by.add(current_user)
             # Increment points field by respective amount
-            current_user.points += completedTask.points
+            current_user.points += completed_task.points
             current_user.student_tasks_completed += 1
-            current_user.next_possible_complete = datetime.date.today() + datetime.timedelta(days=1)
+            current_user.next_possible_complete = datetime.date.today() + \
+                datetime.timedelta(days=1)
             current_user.save()
 
-    current, total = completedTask.get_number_completed_task()
+    current, total = completed_task.get_number_completed_task()
     if current == total:
-        completers = completedTask.completed_by.all()
+        completers = completed_task.completed_by.all()
         for completer in completers:
             completer.points += 2
             completer.save()
 
-    if completedTask.recurrence_interval == "d":
-        completedTask.recurring_date = completedTask.date_set + datetime.timedelta(days=1)
-    elif completedTask.recurrence_interval == "w":
-        completedTask.recurring_date = completedTask.date_set + datetime.timedelta(weeks=1)
-    completedTask.save()
+    if completed_task.recurrence_interval == "d":
+        completed_task.recurring_date = completed_task.date_set + \
+            datetime.timedelta(days=1)
+    elif completed_task.recurrence_interval == "w":
+        completed_task.recurring_date = completed_task.date_set + \
+            datetime.timedelta(weeks=1)
+    completed_task.save()
 
     # Make a notification about the completed task
-    not_text = str(current_user.first_name) + " has completed " + str(completedTask.task_name) + " and has earned " + str(completedTask.points) + " points in doing so!"
-    notification = Notification(table_id=completedTask.table_id, notification_type=3, text_preview=not_text)
+    not_text = str(current_user.first_name) + " has completed " + \
+        str(completed_task.task_name) + " and has earned " + \
+        str(completed_task.points) + " points in doing so!"
+    notification = Notification(table_id=completed_task.table_id,
+                                notification_type=3, text_preview=not_text)
     notification.save()
 
     return redirect('/view_tasks')
@@ -455,6 +498,7 @@ def completeTask(request, pk):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_chat(request, pk):
+    """ Placeholder """
     # deal with if the requested table doesn't exist
     try:
         table = CafeTable.objects.get(pk=pk)
@@ -471,7 +515,7 @@ def table_chat(request, pk):
         form = PostMessageForm(request.POST)
         if form.is_valid():
             message_content = form.cleaned_data.get('message_content')
-            msg = Message.objects.create(
+            Message.objects.create(  # removed msg =
                 table_id=table,
                 created_by=current_user,
                 message_content=message_content,
@@ -480,7 +524,8 @@ def table_chat(request, pk):
     else:
         form = PostMessageForm()
     # show the existing messages by querying db
-    messages = Message.objects.filter(table_id=table).order_by('message_date')[:100]
+    messages = Message.objects.filter(table_id=table).order_by(
+                'message_date')[:100]
     # get the tasks for the table - new: only notified of tasks set today
     check_recurring_tasks()
     date_from = datetime.date.today()
@@ -518,6 +563,7 @@ def table_chat(request, pk):
     }
     return render(request, "table_chat.html", context)
 
+
 # Alex 4/3/21
 def upvote(request, pk):
     """ Increases the upvote count for specific message when
@@ -546,9 +592,10 @@ def upvote(request, pk):
 # will and izzy
 @login_required(login_url='/')
 def edit_info(request):
-    """ Displays the edit info form. Collects all information from the edit info form and updates the
-        respective fields with the new information. In addition, icons that redirect user
-        to external social media are present.
+    """ Displays the edit info form. Collects all information from the edit
+        info form and updates the respective fields with the new information.
+        In addition, icons that redirect user to external social media are
+        present.
 
     Args:
         request::HttpRequest
@@ -576,12 +623,14 @@ def edit_info(request):
                         old_course = user.course
                         # if already on a course, remove from old course table
                         old_table_name = "COURSE: " + old_course
-                        table = user.cafe_table_ids.get(table_id=old_table_name)
+                        table = user.cafe_table_ids.get(
+                            table_id=old_table_name)
                         user.cafe_table_ids.remove(table)
 
                     new_course = form.cleaned_data['course'].lower()
                     user.course = new_course
-                    # upper case throughout so not duplicates with different casing
+                    # upper case throughout so not duplicates with different
+                    # casing
                     new_course_table_name = "COURSE: " + new_course
                     # see if a table for this course exists
                     try:
@@ -617,11 +666,12 @@ def edit_info(request):
                 if form.cleaned_data['facebook_link']:
                     if form.cleaned_data['facebook_link'] == "/":
                         user.facebook = None
-                    # facebook does not have a defined username for the link format
-                    # like the others.
+                    # facebook does not have a defined username for the link
+                    # format like the others.
                     # here we check that the link is an actual facebook link
                     # not a random malicious link
-                    elif form.cleaned_data['facebook_link'].startswith("https://www.facebook.com/"):
+                    elif form.cleaned_data['facebook_link'].startswith(
+                       "https://www.facebook.com/"):
                         user.facebook = form.cleaned_data['facebook_link']
 
                 if form.cleaned_data['instagram_username']:
@@ -629,14 +679,14 @@ def edit_info(request):
                         user.instagram = None
                     else:
                         user.instagram = "https://www.instagram.com/" + \
-                                            form.cleaned_data['instagram_username']
+                            form.cleaned_data['instagram_username']
 
                 if form.cleaned_data['twitter_handle']:
                     if form.cleaned_data['twitter_handle'] == "/":
                         user.twitter = None
                     else:
                         user.twitter = "https://twitter.com/" + \
-                                            form.cleaned_data['twitter_handle']
+                            form.cleaned_data['twitter_handle']
 
                 if form.cleaned_data['share_tables']:
                     if form.cleaned_data['share_tables'] == 'Yes':
@@ -653,12 +703,14 @@ def edit_info(request):
                         old_course = user.course
                         # if already on a course, remove from old course table
                         old_table_name = "COURSE: " + old_course
-                        table = user.cafe_table_ids.get(table_id=old_table_name)
+                        table = user.cafe_table_ids.get(
+                            table_id=old_table_name)
                         user.cafe_table_ids.remove(table)
 
                     new_course = form.cleaned_data['course'].lower()
                     user.course = new_course
-                    # upper case throughout so not duplicates with different casing
+                    # upper case throughout so not duplicates with
+                    # different casing
                     new_course_table_name = "COURSE: " + new_course
                     # see if a table for this course exists
                     try:
@@ -697,9 +749,10 @@ def edit_info(request):
                 if form.cleaned_data['remove_table_id']:
                     # if it is actually in their list of tables, remove
                     table_name_to_rm = form.cleaned_data['remove_table_id']
-                    #make lower again
+                    # make lower again
                     try:
-                        table = user.cafe_table_ids.get(table_id=table_name_to_rm)
+                        table = user.cafe_table_ids.get(
+                            table_id=table_name_to_rm)
                         user.cafe_table_ids.remove(table)
                     except CafeTable.DoesNotExist:
                         pass
@@ -765,8 +818,8 @@ def profile_page(request, pk):
     collectables = []
 
     if viewing_user.is_staff is not True:
-        pointsLevel = check_points_treshold(viewing_user.points)
-        for i in range(int(pointsLevel)+1):
+        points_level = check_points_treshold(viewing_user.points)
+        for i in range(int(points_level)+1):
             collectables.append(list_coffee_link[i])
 
     context['collectable_pictures'] = collectables
@@ -774,8 +827,10 @@ def profile_page(request, pk):
     return render(request, "profile_page.html", context)
 
 
+# izzy 7/3/21
 @login_required(login_url='/')
-def report(request):
+def reporting(request):
+    """ Placeholder """
     user = request.user
     form = ReportForm()
     tables = CafeTable.objects.filter(
@@ -792,7 +847,7 @@ def report(request):
             detail = form.cleaned_data.get('detail')
             table_id = form.cleaned_data.get('table_id')
 
-            report = Report.objects.create(
+            Report.objects.create(
                 title=title,
                 category=category,
                 detail=detail,
@@ -804,21 +859,26 @@ def report(request):
 
 
 def health(request):
+    """ Placeholder """
     state = {"status": "UP"}
     return JsonResponse(state)
 
 
 def handler404(request):
+    """ Placeholder """
     return render(request, '404.html', status=404)
 
 
 def handler500(request):
+    """ Placeholder """
     return render(request, '500.html', status=500)
 
 
 def privacy(request):
+    """ Placeholder """
     return render(request, 'privacy.html')
 
 
 def terms(request):
+    """ Placeholder """
     return render(request, 'terms.html')

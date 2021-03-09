@@ -1,13 +1,14 @@
+""" Placeholder """
+
 from django.urls import path
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
-
-from . import views
+from app import views
 
 urlpatterns = [
                path('', views.index, name='index'),  # login
                path('logout', views.log_out, name='logout'),
-               path('report', views.report, name='report'),
+               path('report', views.reporting, name='report'),
                path('signup', views.signup, name='signup'),
                path('table_view', views.table_view, name='table_view'),
                path('tables/<pk>', views.table_chat,
@@ -22,7 +23,7 @@ urlpatterns = [
                path('terms', views.terms, name='terms'),
                path('set_tasks', views.set_tasks, name='set_tasks'),
                path('view_tasks', views.view_tasks, name='viewtasks'),
-               path('complete/<pk>', views.completeTask, name='complete'),
+               path('complete/<pk>', views.complete_task, name='complete'),
                path('dashboard', views.dashboard, name='dashboard'),
                path('profile_page/<pk>', views.profile_page,
                     name='profile_page'),

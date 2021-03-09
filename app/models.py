@@ -1,3 +1,5 @@
+""" Placeholder """
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -5,19 +7,24 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CafeTable(models.Model):
+    """ Placeholder """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
 
     def __str__(self):
+        """ Placeholder """
         return self.table_id
 
 
 # required for custom user model
 class CoffeeUserManager(BaseUserManager):
+    """ Placeholder """
+
     def create_user(self, email, first_name, last_name, university, is_staff,
                     password=None):
+        """ Placeholder """
         if not email:
             raise ValueError("Users must have an email address")
         if not first_name:
@@ -41,6 +48,7 @@ class CoffeeUserManager(BaseUserManager):
 
     def create_superuser(self, email, first_name, last_name, university,
                          is_staff, password):
+        """ Placeholder """
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
@@ -57,6 +65,8 @@ class CoffeeUserManager(BaseUserManager):
 
 
 class CoffeeUser(AbstractBaseUser):
+    """ Placeholder """
+
     AVAILABLE_UNIS = (
         ("University of Exeter", "University of Exeter"),
         ("Test uni", "Test uni")
@@ -98,16 +108,20 @@ class CoffeeUser(AbstractBaseUser):
 
     # Required functions for custom user model
     def __str__(self):
+        """ Placeholder """
         return self.email
 
     def has_perm(self, perm, obj=None):
+        """ Placeholder """
         return self.is_admin
 
     def has_module_perms(self, app_label):
+        """ Placeholder """
         return True
 
 
 class Task(models.Model):
+    """ Placeholder """
     POINTS = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
               (10, "10"), (15, "15"), (20, "20"), (25, "25"), (30, "30"))
     REPEATS = (("n", "NONE"), ("d", "DAILY"), ("w", "WEEKLY"))
@@ -130,17 +144,21 @@ class Task(models.Model):
     REQUIRED_FIELDS = ["task_name", "task_content"]
 
     def __str__(self):
-        return self.task_id
+        """ Placeholder """
+        return self.task_name
 
     def get_number_completed_task(self):
+        """ Placeholder """
         out_of = self.table_id.coffeeuser_set.exclude(is_staff=1).count()
         if self.created_by.is_staff:
-            return (self.completed_by.count(), out_of)
+            result = (self.completed_by.count(), out_of)
         else:
-            return (self.completed_by.count(), out_of - 1)
+            result = (self.completed_by.count(), out_of - 1)
+        return result
 
 
 class Message(models.Model):
+    """ Placeholder """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.ForeignKey(CafeTable, related_name="messages",
@@ -154,6 +172,8 @@ class Message(models.Model):
 
 
 class Report(models.Model):
+    """ Placeholder """
+
     REPORT_CLASSES = (
         ("Table (general)", "Table (general)"),
         ("Task", "Task"),
@@ -169,10 +189,14 @@ class Report(models.Model):
     flagged_by = models.ForeignKey(CoffeeUser, related_name="reports",
                                    on_delete=models.CASCADE)
 
-class Notification(models.Model):
-	NOTIFICATION_TYPES = ((1,'Award'), (2,'Points'), (3, 'Task'))
 
-	table_id = models.ForeignKey(CafeTable, on_delete=models.CASCADE, related_name="noti_post", blank=False, null=True)
-	notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)
-	text_preview = models.CharField(max_length=90, blank=True)
-	date = models.DateTimeField(auto_now_add=True)
+class Notification(models.Model):
+    """ Placeholder """
+    NOTIFICATION_TYPES = ((1, 'Award'), (2, 'Points'), (3, 'Task'))
+
+    table_id = models.ForeignKey(CafeTable, on_delete=models.CASCADE,
+                                 related_name="noti_post", blank=False,
+                                 null=True)
+    notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)
+    text_preview = models.CharField(max_length=90, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
