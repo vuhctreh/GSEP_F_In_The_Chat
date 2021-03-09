@@ -1,4 +1,4 @@
-""" Placeholder """
+""" Classes for all objects that are used throughout the application """
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -7,24 +7,48 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CafeTable(models.Model):
-    """ Placeholder """
+    """ Contains the information for each table (group) """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.CharField(max_length=50)
     university = models.CharField(max_length=50)
 
     def __str__(self):
-        """ Placeholder """
+        """ Function to return the id of a specific table
+
+        Returns:
+            self.table_id::int
+                The id of the specific table
+        """
         return self.table_id
 
 
 # required for custom user model
 class CoffeeUserManager(BaseUserManager):
-    """ Placeholder """
+    """ Class for creating either a normal user or a super user """
 
     def create_user(self, email, first_name, last_name, university, is_staff,
                     password=None):
-        """ Placeholder """
+        """ Creating a user without admin or superuser permissions
+
+        Args:
+            email::string
+                Users email address
+            first_name::string
+                Users first name 
+            last_name::string
+                Users last name
+            university::string
+                Users inputted university
+            is_staff::boolean
+                Boolean value to confirm whether user is a staff member
+            password::string
+                User password
+
+        Returns:
+            user::CoffeeUserManager
+                A coffee user object is returned
+        """
         if not email:
             raise ValueError("Users must have an email address")
         if not first_name:
@@ -48,7 +72,26 @@ class CoffeeUserManager(BaseUserManager):
 
     def create_superuser(self, email, first_name, last_name, university,
                          is_staff, password):
-        """ Placeholder """
+        """ Creating a user that also has admin and superuser permissions
+
+        Args:
+            email::string
+                Users email address
+            first_name::string
+                Users first name 
+            last_name::string
+                Users last name
+            university::string
+                Users inputted university
+            is_staff::boolean
+                Boolean value to confirm whether user is a staff member
+            password::string
+                User password
+
+        Returns:
+            user::CoffeeUserManager
+                A coffee user object is returned
+        """
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
@@ -65,7 +108,7 @@ class CoffeeUserManager(BaseUserManager):
 
 
 class CoffeeUser(AbstractBaseUser):
-    """ Placeholder """
+    """ Contains all possible information for a user """
 
     AVAILABLE_UNIS = (
         ("University of Exeter", "University of Exeter"),
@@ -108,20 +151,20 @@ class CoffeeUser(AbstractBaseUser):
 
     # Required functions for custom user model
     def __str__(self):
-        """ Placeholder """
+        """ Returns the specific users email address """
         return self.email
 
     def has_perm(self, perm, obj=None):
-        """ Placeholder """
+        """ Returns a boolean value depending on if user has admin permissions """
         return self.is_admin
 
     def has_module_perms(self, app_label):
-        """ Placeholder """
+        """ Returns a boolean value depending on if user has module permissions """
         return True
 
 
 class Task(models.Model):
-    """ Placeholder """
+    """ Contains all fields for a task """
     POINTS = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
               (10, "10"), (15, "15"), (20, "20"), (25, "25"), (30, "30"))
     REPEATS = (("n", "NONE"), ("d", "DAILY"), ("w", "WEEKLY"))
@@ -144,11 +187,16 @@ class Task(models.Model):
     REQUIRED_FIELDS = ["task_name", "task_content"]
 
     def __str__(self):
-        """ Placeholder """
+        """ Returns the name of the specific task """
         return self.task_name
 
     def get_number_completed_task(self):
-        """ Placeholder """
+        """ Returns the number of users who've completed a specific task
+
+        Returns:
+            result::int
+                Number of people who've completed task
+        """
         out_of = self.table_id.coffeeuser_set.exclude(is_staff=1).count()
         if self.created_by.is_staff:
             result = (self.completed_by.count(), out_of)
@@ -158,7 +206,7 @@ class Task(models.Model):
 
 
 class Message(models.Model):
-    """ Placeholder """
+    """ Contains all the information for a message """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.ForeignKey(CafeTable, related_name="messages",
@@ -172,7 +220,7 @@ class Message(models.Model):
 
 
 class Report(models.Model):
-    """ Placeholder """
+    """ Contains all the information that a report may have """
 
     REPORT_CLASSES = (
         ("Table (general)", "Table (general)"),
@@ -191,7 +239,7 @@ class Report(models.Model):
 
 
 class Notification(models.Model):
-    """ Placeholder """
+    """ Contains the contents of a notification """
     NOTIFICATION_TYPES = ((1, 'Award'), (2, 'Points'), (3, 'Task'))
 
     table_id = models.ForeignKey(CafeTable, on_delete=models.CASCADE,
