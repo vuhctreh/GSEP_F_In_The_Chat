@@ -31,16 +31,20 @@
   {{ user.university }} <br>
   {% if user.is_staff is not True %}
   My tables: <br>
-  <ul>
   {% for table_name in tables %}
-    <li>{{ table_name }} </li>
+  {{ table_name }} <br>   
   {% endfor %}
-</ul>
+<br>
 {% endif %}
 
   <form method="post">
     {% csrf_token %}  <!-- security item required for django forms !! -->
-    {{ form.as_p }}
+    {% for field in form %}
+      <p>
+        {{field.label_tag}}<br>
+        {{field}}
+      </p>
+    {% endfor %}
 
     {% if user.is_staff is not True %}
     Please enter / in the social media fields if you wish to unlink.<br><br>

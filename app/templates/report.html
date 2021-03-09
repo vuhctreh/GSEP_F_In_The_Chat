@@ -26,10 +26,15 @@
 
   <div class="main">
     <h2>Report</h2>
-    You can use this form to report inappropriate behaviour to the admin team if you need to. 
+    You can use this form to report inappropriate behaviour to the admin team if you need to.
     <form method="post">
       {% csrf_token %}  <!-- security item required for django forms !! -->
-      {{ form.as_p }}
+      {% for field in form %}
+        <p>
+          {{field.label_tag}}<br>
+          {{field}}
+        </p>
+      {% endfor %}
       <button type="submit">Report</button>
     </form><br>
     <button onclick="document.location='table_view'" id="signup">Home</button><br>
