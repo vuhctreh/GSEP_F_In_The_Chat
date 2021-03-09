@@ -1,0 +1,8 @@
+Django==3.1.6
+django-cors-headers==3.7.0
+django-jquery==3.1.0
+django-rest-framework==0.1.0
+djangorestframework==3.12.2
+livereload==2.6.3
+pytz==2021.1
+whitenoise==5.2.0
