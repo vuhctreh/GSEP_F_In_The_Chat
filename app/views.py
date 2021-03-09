@@ -1,4 +1,4 @@
-""" Placeholder """
+""" Functions called when navigating to a specific page in the web application """
 
 from __future__ import unicode_literals
 from operator import attrgetter
@@ -214,7 +214,17 @@ def table_view(request):
 
 @login_required(login_url='/')
 def dashboard(request):
-    """ Placeholder """
+    """ Fetches and displays all relevant information for the dashboard
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+
+    Returns:
+        renders::HttpResponse
+            Renders the 'dashboard.html' page and passes all relevant information as a
+            parameter inside the contexts
+    """
     user = request.user
 
     tables = CafeTable.objects.filter(
@@ -510,7 +520,19 @@ def complete_task(request, pk):
 # Isabel: 18/2/21
 @login_required(login_url='/')
 def table_chat(request, pk):
-    """ Placeholder """
+    """ Shows users the messages and tasks set for a specific table
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+        pk::int
+            The id of the specific table for which messages are displayed
+            and tasks are set
+    
+    Returns:
+        render::HttpResponse
+            Renders the 'table_chat.html' page 
+    """
     # deal with if the requested table doesn't exist
     try:
         table = CafeTable.objects.get(pk=pk)
@@ -804,7 +826,16 @@ def profile_page(request, pk):
 # izzy 7/3/21
 @login_required(login_url='/')
 def reporting(request):
-    """ Placeholder """
+    """ Displays the report form that users can fill and submit
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request.
+
+    Returns:
+        render::HttpResponse
+            Renders the 'report.html' page
+    """
     user = request.user
     form = ReportForm()
     tables = CafeTable.objects.filter(
