@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from typing import NewType
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
@@ -6,7 +7,7 @@ from .forms import SignUpForm, LoginForm, PostMessageForm, CUserEditForm, \
                    createTaskForm, StudyBreaksForm, CUserEditFormStaff, \
                    ReportForm
 from django.contrib.auth.decorators import login_required
-from .models import CoffeeUser, CafeTable, Message, Task, Report
+from .models import CoffeeUser, CafeTable, Message, Task, Report, Notification
 import datetime # go through and fix all the datetime.xyz to just xyz since imported
 from operator import attrgetter
 from django.contrib.auth.models import User
@@ -179,6 +180,15 @@ def table_view(request):
 def dashboard(request):
     user = request.user
 
+    tables = CafeTable.objects.filter(
+        university=user.university,
+        table_id__in=user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+
+    # Get all notifications pertaining to the user
+    notifications = Notification.objects.filter(table_id__in=tables)
+
     users = CoffeeUser.objects.filter(is_staff=False)
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
     if len(sorted_users) > 10:
@@ -216,6 +226,12 @@ def dashboard(request):
 
         # calculating how many points to reach next collectable
         points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+
+        # Notification for points left
+        if (points_to_go_next_collectable < 10):
+            n_text = user.first_name + " has less than 10 points to go until their next award!"
+            n = Notification(table_id=0, notification_type=1, text_preview=n_text)
+            n.save()
 
         # see if the user is currently studying
         if user.studying_until:
@@ -256,6 +272,7 @@ def dashboard(request):
         'studying': studying,
         'pk': user.pk,
         'staff': user.is_staff,
+        'notifications': notifications,
     }
     return render(request, "dashboard.html", context)
 
@@ -287,8 +304,8 @@ def set_tasks(request):
         user.tasks_set_today = 0
         user.save()
 
-    if user.tasks_set_today >= 2 and not user.is_staff:
-        return redirect("dashboard")
+    #if user.tasks_set_today >= 2 and not user.is_staff:
+    #    return redirect("dashboard")
 
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
@@ -311,6 +328,11 @@ def set_tasks(request):
             )
             user.tasks_set_today += 1
             user.save()
+
+            # Add notification
+            task_text = user.first_name + " has added " + task_name + " as a new task! Check it out!"
+            notification = Notification(table_id=table_id, notification_type=3, text_preview=task_text)
+            notification.save()
 
             if user.tasks_set_today >= 2 and not user.is_staff:
                 user.next_possible_set = datetime.date.today() + datetime.timedelta(days=1)
@@ -421,6 +443,11 @@ def completeTask(request, pk):
     elif completedTask.recurrence_interval == "w":
         completedTask.recurring_date = completedTask.date_set + datetime.timedelta(weeks=1)
     completedTask.save()
+
+    # Make a notification about the completed task
+    not_text = str(current_user.first_name) + " has completed " + str(completedTask.task_name) + " and has earned " + str(completedTask.points) + " points in doing so!"
+    notification = Notification(table_id=completedTask.table_id, notification_type=3, text_preview=not_text)
+    notification.save()
 
     return redirect('/view_tasks')
 

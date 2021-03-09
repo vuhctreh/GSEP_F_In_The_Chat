@@ -168,3 +168,11 @@ class Report(models.Model):
                                  on_delete=models.CASCADE)
     flagged_by = models.ForeignKey(CoffeeUser, related_name="reports",
                                    on_delete=models.CASCADE)
+
+class Notification(models.Model):
+	NOTIFICATION_TYPES = ((1,'Award'), (2,'Points'), (3, 'Task'))
+
+	table_id = models.ForeignKey(CafeTable, on_delete=models.CASCADE, related_name="noti_post", blank=False, null=True)
+	notification_type = models.IntegerField(choices=NOTIFICATION_TYPES)
+	text_preview = models.CharField(max_length=90, blank=True)
+	date = models.DateTimeField(auto_now_add=True)
