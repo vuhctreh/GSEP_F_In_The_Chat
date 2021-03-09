@@ -1,53 +1,73 @@
-# -*- coding: utf-8 -*-
-from django.test import SimpleTestCase, TestCase, Client
-from .models import CafeTable, CoffeeUser, Message, Task
-from django.template.loader import render_to_string
+""" Placeholder """
 
+from django.test import SimpleTestCase, TestCase, Client
+from django.template.loader import render_to_string
+from app.models import CafeTable, CoffeeUser, Message, Task
 
 client = Client()
 
 
 class HealthEndpointTests(SimpleTestCase):
+    """ Placeholder """
+
     def test_health_status_is_up(self):
+        """ Placeholder """
         response = self.client.get('/health')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '{"status": "UP"}')
 
 
 class LogInTests(TestCase):
+    """ Placeholder """
+
     def test_login_view_status_code(self):
+        """ Placeholder """
         response = self.client.get('')  # login page
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_csrf(self):
+        """ Placeholder """
         response = self.client.get('')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
 
 class SignUpTests(TestCase):
+    """ Placeholder """
+
     def test_signup_view_status_code(self):
+        """ Placeholder """
         response = self.client.get('/signup')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_csrf(self):
+        """ Placeholder """
         response = self.client.get('/signup')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
 
 class PrivacyPolicyTests(TestCase):
+    """ Placeholder """
+
     def test_privacy_policy_view_status_code(self):
+        """ Placeholder """
         response = self.client.get('/privacy')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TermsTests(TestCase):
+    """ Placeholder """
+
     def test_tandc_view_status_code(self):
+        """ Placeholder """
         response = self.client.get('/terms')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TablesViewTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -60,19 +80,24 @@ class TablesViewTests(TestCase):
         self.client.login(email='test@test.com', password='123')
 
     def test_tables_view_status_code(self):
+        """ Placeholder """
         response = self.client.get('/table_view')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_tables_view_content(self):
+        """ Placeholder """
         response = self.client.get('/table_view')
         response_html = response.content.decode()
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue('Test' in response_html)
         self.assertFalse('Test 2' in response_html)
 
 
 class InTableTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -85,17 +110,20 @@ class InTableTests(TestCase):
         self.client.login(email='test@test.com', password='123')
 
     def test_in_table_view_correct(self):
+        """ Placeholder """
         response = self.client.get('/tables/1')
         response_html = response.content.decode()
-        self.assertEquals(response.status_code, 200)
-        self.assertNotEquals(response_html, render_to_string('denied.html'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(response_html, render_to_string('denied.html'))
         self.assertTrue('testf testl' in response_html)  # names
 
     def test_csrf(self):
+        """ Placeholder """
         response = self.client.get('/tables/1')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
+        """ Placeholder """
         data = {
             'message_content': 'Test msg',
         }
@@ -105,27 +133,34 @@ class InTableTests(TestCase):
         self.assertTrue('Test msg' in response_html)
 
     def test_new_topic_empty_post_data(self):
+        """ Placeholder """
         data = {
             'message_content': '',
         }
         response = self.client.post('/tables/1', data)
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(Message.objects.exists())
 
     def test_in_table_view_not_part_table(self):
+        """ Placeholder """
         response = self.client.get('/tables/2')
         response_html = response.content.decode()
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response_html, render_to_string('denied.html'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_html, render_to_string('denied.html'))
 
     def test_in_table_view_not_exist_table(self):
+        """ Placeholder """
         response = self.client.get('/tables/3')
         response_html = response.content.decode()
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response_html, render_to_string('denied.html'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_html, render_to_string('denied.html'))
 
 
 class DashboardTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -138,12 +173,16 @@ class DashboardTests(TestCase):
         self.client.login(email='test@test.com', password='123')
 
     def test_status_code(self):
+        """ Placeholder """
         response = self.client.get('/dashboard')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class EditInfoTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -156,16 +195,21 @@ class EditInfoTests(TestCase):
         self.client.login(email='test@test.com', password='123')
 
     def test_status_code(self):
+        """ Placeholder """
         response = self.client.get('/dashboard/edit_info')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_csrf(self):
+        """ Placeholder """
         response = self.client.get('/dashboard/edit_info')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
 
 class SetTaskTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -178,16 +222,21 @@ class SetTaskTests(TestCase):
         self.client.login(email='test@test.com', password='123')
 
     def test_status_code(self):
+        """ Placeholder """
         response = self.client.get('/set_tasks')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_csrf(self):
+        """ Placeholder """
         response = self.client.get('/set_tasks')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
 
 class ViewTaskTests(TestCase):
+    """ Placeholder """
+
     def setUp(self):
+        """ Placeholder """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
         table2 = CafeTable.objects.create(table_id='Test 2',
@@ -203,5 +252,6 @@ class ViewTaskTests(TestCase):
                                    points=1)
 
     def test_status_code(self):
+        """ Placeholder """
         response = self.client.get('/view_tasks')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)

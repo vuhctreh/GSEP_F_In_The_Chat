@@ -1,3 +1,4 @@
+//Alex: 3/3/21
 // check for saved 'darkMode' in localStorage
 let darkMode = localStorage.getItem('darkMode'); 
 

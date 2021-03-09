@@ -14,6 +14,12 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+
+  <script>
+  function convertTZ(date, tzString) {
+    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+  }
+  </script>
 </head>
 
 <body>
@@ -34,9 +40,16 @@
         <button class="edit_button" onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
       </div>
 
-      <p> Date Joined:
-        {{ dateJoined }} </p>
+        Date Joined:
+        <div id="joinDate"></div>
+        <script>
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        var date = "{{ dateJoined }}"
+        document.getElementById("joinDate").innerHTML = convertTZ(date, tz).toLocaleString()
+        </script>
       <p class="uni"> University: {{ university }} </p>
+
+      {% if staff is False %}
       <p> Points: {{ points }} </p>
       <p> Points to go before next collectable: {{ pointsToGo }} </p>
 
@@ -61,12 +74,18 @@
 
       </div>
 
+      {% endif %}
 
       <div class="buttons">
-        <button class="otherbutton" onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
-        <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Staff: Set Tasks</button>
+        <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
         <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
+        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
+        <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
+        {% if staff is False %}
+        <button class="otherbutton" onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
+        {% endif %}
       </div>
+      {% if staff is False %}
       <div class="set_study_break">
         {% if studying == False %}
         <form method="post">
@@ -75,6 +94,17 @@
         </form>
         {% endif %}
       </div>
+      {% endif %}
+
+    </div>
+
+    <div class="user_info">
+    <h2 class="board_title">Notification Feed: </h2>
+    {% for notification in notifications %}
+      <div class='notification'>
+      {{notification.text_preview}}, {{notification.date}}
+      </div>
+    {% endfor %}
     </div>
 
     <div class="leaderboard">
@@ -86,6 +116,10 @@
 
 </div>
 <script src="{% static 'js/darkmode.js' %}" type="text/javascript"></script>
+
+<center>
+Our <a href="privacy" target="_blank">Privacy Policy</a> and <a href="terms" target="_blank">Terms of Use</a> are accessible here. Click <a href="report">here</a> if you need to report inappropriate, harmful, or offensive behaviour to our team.<br><br><br> </div>
+</center>
 </body>
 
 </html>

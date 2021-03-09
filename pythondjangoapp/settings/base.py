@@ -1,3 +1,5 @@
+""" Defines settings for django app."""
+
 import os
 from django.core.management.utils import get_random_secret_key
 
@@ -92,3 +94,5 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+TIME_ZONE = 'UTC'

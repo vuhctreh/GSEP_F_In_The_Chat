@@ -84,6 +84,30 @@ body {
   border: 1.8px solid #cc0000;
 }
 
+a:link {
+  color: #705644;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #705644;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: #705644;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
 @media only screen and (max-width: 850px) {
     .user_count {
         width: 35%;

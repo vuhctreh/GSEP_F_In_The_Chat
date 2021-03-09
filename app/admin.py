@@ -1,11 +1,14 @@
+""" Enables functionality for interaction with models in admin view. """
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import AdminSignUpForm, AdminCUserEditForm
-from .models import CafeTable, CoffeeUser, Task, Message
+from app.forms import AdminSignUpForm, AdminCUserEditForm
+from app.models import CafeTable, CoffeeUser, Task, Message, Report
 
 
 class CoffeeUserAdmin(UserAdmin):
+    """ Placeholder docstring """
     add_form = AdminSignUpForm
     form = AdminCUserEditForm
     list_display = ('email', 'first_name', 'last_name', 'university',
@@ -32,3 +35,4 @@ admin.site.register(CafeTable)
 admin.site.register(CoffeeUser, CoffeeUserAdmin)
 admin.site.register(Task)
 admin.site.register(Message)
+admin.site.register(Report)

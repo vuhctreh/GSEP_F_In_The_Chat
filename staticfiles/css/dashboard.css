@@ -100,6 +100,7 @@ li {
     padding-right: 2.5%;
 }
 
+
 /* This is for the grid of collectable */
 
 .grid_collectables {
@@ -112,9 +113,11 @@ li {
 }
 
 .grid_collectables img {
-  width: 80px;
-  height: auto;
+    width: 80px;
+    height: auto;
 }
+
+/* end grid of collectable */
 
 /* This is for the top bar*/
 .cafe_data{
@@ -149,4 +152,19 @@ li {
 .goToCafe_button:hover {
   background-color: #967259;
   color: whitesmoke;
+}
+
+
+.notification {
+    margin: 5px 0 0;
+    padding: 20px;
+    overflow: hidden;
+    border: none;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    background-color: #967259;
 }

@@ -13,9 +13,24 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
 
   <script>
+  var scrolled = false;
+  // scrolls to the bottom if the user hasn't already scrolled
+  function updateScroll(){
+      if(!scrolled){
+          var element = document.getElementById("messages");
+          element.scrollTop = element.scrollHeight;
+      }
+  }
+
+  $(document).ready(function(){
+    $("div").scroll(function() {
+        scrolled=true;
+    });
+  });
+
   function message_update(){
     $(document).ready(function() {
             $.ajax({
@@ -24,8 +39,7 @@
                 url: "/get_msgs/{{ table.id }}",
                 success: function(data) {
                   $('#fetched_msgs').html(data);
-                  var chatBox = document.getElementById("messages");
-                  chatBox.scrollTop = chatBox.scrollHeight;
+                  updateScroll();
                 }
             });
           },);
@@ -45,7 +59,7 @@
 
   <div class="navigation">
     <button onclick="document.location='/table_view'" id="table_view" inline="true">Back to Cafe</button><br>
-    <h2 class="table_name">{{ table }}</h2>
+    <h2 class="table_name">{{ table.university }} : {{ table.table_id }}</h2>
   </div>
 
   <div class="row">
@@ -56,24 +70,25 @@
     {% for user in users_studying %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
-      {{user.first_name}} {{user.last_name}} studying until {{user.studying_until}}
-    </a>
+      {{user.first_name}} {{user.last_name}}</a> studying until {{user.studying_until}}
     </li>
     {% endfor %}
     {% for user in other_users %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
       {{user.first_name}} {{user.last_name}} </a>
+      {% if user.is_staff %}
+      : STAFF
+      {% endif %}
     </li>
     {% endfor %}
     </div>
 
     <div class="tasks">
-      Tasks
+      Tasks set today:
       {% for task in tasks %}
       <li>
-        {{task.task_content}} <!-- Should link to the tasks here when we know what task link is -->
-        set by {{task.created_by}}
+       <a href="/view_tasks">{{task.task_name}}</a> set by {{task.created_by.first_name}} {{task.created_by.last_name}}
       </li>
       {% endfor %}
     </div>
