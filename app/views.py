@@ -1,4 +1,4 @@
-""" Functions called when navigating to a specific page in the web application """
+""" Functions called when navigating to a specific page in the web app """
 
 from __future__ import unicode_literals
 from operator import attrgetter
@@ -96,7 +96,8 @@ def check_recurring_tasks():
 
 # Victoria: 18/2/21
 def index(request):
-    """ Checks to see whether login credentials are valid and logs user in if they are
+    """ Checks to see whether login credentials are valid and logs user in if
+        they are
 
     Args:
         request::HttpRequest
@@ -106,7 +107,8 @@ def index(request):
         redirect::HttpResponse
             Redirects user 'table_view.html' if login credentials are valid
         render::HttpResponse
-            Renders the 'login.html' page and passes the login form as a parameter
+            Renders the 'login.html' page and passes the login form as a
+            parameter
 
     """
     context = {}
@@ -222,8 +224,8 @@ def dashboard(request):
 
     Returns:
         renders::HttpResponse
-            Renders the 'dashboard.html' page and passes all relevant information as a
-            parameter inside the contexts
+            Renders the 'dashboard.html' page and passes all relevant
+            information as a parameter inside the contexts
     """
     user = request.user
 
@@ -301,6 +303,11 @@ def dashboard(request):
         previous_collectables = []
         studying = False
 
+    can_set_tasks = True
+    if user.tasks_set_today >= 2 and not user.is_staff and \
+       user.next_possible_set > datetime.date.today():
+        can_set_tasks = False
+
     tz_date = pytz.utc.localize(user.date_joined).isoformat()
 
     context = {
@@ -321,6 +328,7 @@ def dashboard(request):
         'studying': studying,
         'pk': user.pk,
         'staff': user.is_staff,
+        'can_set_tasks': can_set_tasks,
         'notifications': notifications,
     }
     return render(request, "dashboard.html", context)
@@ -431,15 +439,19 @@ def view_tasks(request):
     tasks = Task.objects.filter(table_id__in=tables).exclude(
         completed_by=current_user).exclude(created_by=current_user)
 
-    complete_current = []
-    complete_total = []
-    for task in tasks:
-        current, total = task.get_number_completed_task()
-        complete_current.append(current)
-        complete_total.append(total)
+    if tasks:
+        complete_current = []
+        complete_total = []
+        for task in tasks:
+            current, total = task.get_number_completed_task()
+            complete_current.append(current)
+            complete_total.append(total)
+        task_info = zip(tasks, complete_current, complete_total)
+    else:
+        task_info = []
 
     context = {
-        'tasks': zip(tasks, complete_current, complete_total),
+        'tasks': task_info,
         'users': CoffeeUser.objects.all(),
         'num_users': get_number_current_users()
     }
@@ -528,10 +540,10 @@ def table_chat(request, pk):
         pk::int
             The id of the specific table for which messages are displayed
             and tasks are set
-    
+
     Returns:
         render::HttpResponse
-            Renders the 'table_chat.html' page 
+            Renders the 'table_chat.html' page
     """
     # deal with if the requested table doesn't exist
     try:
@@ -864,7 +876,7 @@ def reporting(request):
 
 
 def health(request):
-    """ Checks to see whether the web application is running correctly (its status) """
+    """ Checks to see whether web application is running correctly (status) """
     state = {"status": "UP"}
     return JsonResponse(state)
 
