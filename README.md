@@ -36,7 +36,23 @@ The task system is gamified and students can gain points by completing tasks, pr
 
 Community, connection, and celebrating individual's interests are key to our project. We hope you will enjoy making new friends at CoffeeClique!
 
+## Features
+
+am doing this -izzy
+
 ## Technologies
 
 The web app is built in Python using the Django framework and the associated SQLite database, and is hosted on IBM Cloud. We have also used HTML/CSS for the front end.
 We used Figma to create our mock up designs, and Trello for project management, following the agile kanban methodology.
+
+## Installation
+
+You **do not** need to install anything to use our product; simply navigate to our hosted web site at: https://python-django-app-coffee.eu-gb.mybluemix.net.
+
+However, if for development and testing purposes you wish to run a copy of this project locally, you can follow these steps:
+1. Clone this repository
+2. Navigate to the directory GSEP_F_In_The_Chat
+3. Ensure all dependencies are satisfied (see requirements.txt)
+4. Run ```python3 manage.py runserver```
+5. Navigate to http://127.0.0.1:8000/ in a web browser
+6. To run tests, run ```python3 manage.py test```
