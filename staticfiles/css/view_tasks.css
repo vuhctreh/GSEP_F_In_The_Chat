@@ -2,56 +2,80 @@ body, html {
     height: 100%;
 }
 
+/* Buttons */
 #dashboard {
     margin-left: 46.1%;
     margin-top: 2.5%;
 }
 
+
+
 .button {
-    width: fit-content;
+  width: fit-content;
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
 }
+
+.button:hover {
+  background-color: #967259;
+  color: whitesmoke;
+}
+/* End of buttons */
+
 
 ul {
+    height: 100%;
     padding-inline-start: 0;
-    height: 100%;
-}
-
-.tasks {
-    margin-left: 7%;
-}
-
-.task_info {
-    height: 100%;
 }
 
 li {
     background-color: #dbc1ac;
     display: block;
     float: left;
+    height: 75%;
+    width: 20%;
     margin-left: 1.5%;
     margin-right: 1.5%;
     margin-top: 0.5%;
     margin-bottom: 2%;
-    width: 20%;
     padding: 1%;
-    height: 63%;
+}
+
+/* Task information */
+.task_info {
+    height: 87%;
+}
+
+.task_name {
+    text-align: center;
+    text-transform: capitalize;
 }
 
 .creator {
     overflow-wrap: anywhere;
+    text-transform: capitalize;
 }
 
 .descrip {
     overflow: scroll;
     height: 25%;
 }
+/* End of task information */
 
-.task_name {
-    text-transform: capitalize;
+.message {
     text-align: center;
+    margin: auto;
+    width: 98%;
+    margin-top: 10%;
 }
+
 @media only screen and (max-width: 850px) {
-    .tasks {
-        margin-left: 21%;
+    li {
+        width: 80%;
+        margin-left: 7%;
+        margin-bottom: 5%;
+        padding: 3%;
     }
 }

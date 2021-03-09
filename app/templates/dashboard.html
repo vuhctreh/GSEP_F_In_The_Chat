@@ -34,6 +34,7 @@
       <div class="person">
         <h3 class="name"> {{ firstName }} {{ lastName }} </h3>
         <p class="email"> {{ email }} </p>
+        <button class="edit_button" onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
       </div>
 
         Date Joined:
@@ -73,12 +74,13 @@
       {% endif %}
 
       <div class="buttons">
-        <button onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
-        <button onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
-        <button onclick="document.location='table_view'" id="table_view">To Cafe</button>
-        <button onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
+        <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
+        <button class="otherbutton" onclick="document.location='table_view'" id="table_view">To Cafe</button>
+        {% if can_set_tasks %}
+        <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
+        {% endif %}
         {% if staff is False %}
-        <button onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
+        <button class="otherbutton" onclick="document.location='view_tasks'" id="view_tasks">Tasks</button>
         {% endif %}
       </div>
       {% if staff is False %}
@@ -86,7 +88,7 @@
         {% if studying == False %}
         <form method="post">
           {% csrf_token %}  <!-- security item required for django forms !! -->
-          {{ break_form }}<button type="submit"> Study! </button>
+          {{ break_form }}<button class="otherbutton" type="submit"> Study! </button>
         </form>
         {% endif %}
       </div>
@@ -118,8 +120,9 @@
 </div>
 <script src="{% static 'js/darkmode.js' %}" type="text/javascript"></script>
 
-<div>
-Our <a href="privacy" target="_blank">Privacy Policy</a> and<a href="terms" target="_blank">Terms of Use</a> are accessible here. Click <a href="report">here</a> if you need to report inappropriate, harmful, or offensive behaviour to our team.<br><br><br> </div>
+<center>
+Our <a href="privacy" target="_blank">Privacy Policy</a> and <a href="terms" target="_blank">Terms of Use</a> are accessible here. Click <a href="report">here</a> if you need to report inappropriate, harmful, or offensive behaviour to our team.<br><br><br> </div>
+</center>
 </body>
 
 </html>

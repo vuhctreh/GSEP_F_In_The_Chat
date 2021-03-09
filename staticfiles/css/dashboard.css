@@ -15,31 +15,58 @@
     width: 72%;
 }
 
+/* This is for the info and edit button */
 .person {
     background-color: #967259;
     color: whitesmoke;
     padding: 5%;
+    text-align: center;
 }
 
 .name {
     text-transform: capitalize;
-    text-align: center;
     margin: 0;
 }
 
 .email {
-    text-align: center;
     margin: 0;
     font-size: small;
     font-weight: lighter;
 }
 
+.edit_button{
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
+  height: 60%;
+  width: auto;
+  margin-top: 7px;
+}
+.edit_button:hover {
+  border: 1.8px solid whitesmoke;
+  background-color: #967259;
+  color: whitesmoke;
+
+}
+
+/* This is for displaying the tasks */
 .uni {
     text-transform: capitalize;
 }
 
-.buttons {
-    display: inline-flex;
+
+.otherbutton{
+  display: inline-flex;
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
+}
+
+.otherbutton:hover {
+  background-color: #967259;
+  color: whitesmoke;
 }
 
 .set_study_break {
@@ -90,8 +117,43 @@ li {
     height: auto;
 }
 
-
 /* end grid of collectable */
+
+/* This is for the top bar*/
+.cafe_data{
+  padding-top: 6px;
+  height: 90%;
+  display: flex;
+  text-align: center;
+  flex: 1 1 auto;
+}
+
+.user_count_dash{
+  margin: 0;
+  font-size: small;
+  font-weight:lighter;
+  width: 34%;
+  display: inline-block;
+  text-align: center;
+  margin-top: 1px;
+
+}
+
+.goToCafe_button{
+  background-color: whitesmoke;
+  color: black;
+  border: 1.8px solid #967259;
+  transition-duration: 0.4s;
+  height: 60%;
+  width: auto;
+  margin-right: 10px;
+}
+
+.goToCafe_button:hover {
+  background-color: #967259;
+  color: whitesmoke;
+}
+
 
 .notification {
     margin: 5px 0 0;

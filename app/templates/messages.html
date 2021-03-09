@@ -11,6 +11,7 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" rel="stylesheet"></link>
 
   <script>
   function convertTZ(date, tzString) {
@@ -34,7 +35,7 @@
         <p class="msg">{{msg.message_content}}</p>
         <form action= "{% url 'upvote_message' msg.id %}" method="POST">
             {% csrf_token %}
-            <button type="submit", name="message_upvote", value="{{ msg.id }}">Like</button> - {{msg.total_upvotes}} Likes
+            <button style="background-color: transparent;" type="submit", name="message_upvote", value="{{ msg.id }}"><i class="fas fa-thumbs-up fa-sm"></i> Like </button> - <small>{{msg.total_upvotes}} Likes</small>
         </form>
       </li>
 

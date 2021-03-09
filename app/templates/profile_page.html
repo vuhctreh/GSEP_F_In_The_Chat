@@ -24,90 +24,71 @@
   </div>
 
   <div class="main">
+    <button onclick="document.location='../dashboard'" id="dashboard">Dashboard</button><br><br>
 
     <div class="user_info">
-
-      <button onclick="document.location='../dashboard'" id="dashboard">Dashboard</button>
-      <br><br>
-
-      {{ user.first_name }} {{ user.last_name }} <br>
+      <div class="name">{{ user.first_name }} {{ user.last_name }}</div>
 
       {% if user.is_staff %}
-
-      This user is a staff member. <br>
-      Contact email: {{ user.email }} <br>
-
+      <div class="staff_info">
+        This user is a staff member.<br>
+        Contact email: {{ user.email }}<br><br>
+      </div>
       {% endif %}
 
       {% if user.is_staff is not True %}
-
       <div class="social_media">
         <p style=" text-align: center ">
-        {% if user.facebook %}
-        <a href="{{ user.facebook }}" target="_blank">
-          <img alt="fb" src="{% static 'images/facebook.png' %}" width=50 height=50>
-        </a>
-        {% endif %}
-        {% if user.twitter %}
-        <a href="{{ user.twitter }}" target="_blank">
-          <img alt="twt" src="{% static 'images/twitter.png' %}" width=50 height=50>
-        </a>
-        {% endif %}
-        {% if user.instagram %}
-        <a href="{{ user.instagram }}" target="_blank">
-          <img alt="insta" src="{% static 'images/instagram.png' %}" width=50 height=50>
-        </a>
-        {% endif %}
-      </p>
-      </div>
+          {% if user.facebook %}
+          <a href="{{ user.facebook }}" target="_blank">
+            <img alt="fb" src="{% static 'images/facebook.png' %}" width=50 height=50>
+          </a>
+          {% endif %}
 
+          {% if user.instagram %}
+          <a href="{{ user.instagram }}" target="_blank">
+            <img alt="insta" src="{% static 'images/instagram.png' %}" width=50 height=50>
+          </a>
+          {% endif %}
+
+          {% if user.twitter %}
+          <a href="{{ user.twitter }}" target="_blank">
+            <img alt="twt" src="{% static 'images/twitter.png' %}" width=50 height=50>
+          </a>
+          {% endif %}
+        </p>
+      </div>
       {% endif %}
 
-      University: {{ user.university }} <br>
+      University: {{ user.university }}<br><br>
 
       {% if course_entered %}
-      Course: {{ user.course }} <br>
+      Course: {{ user.course }}<br><br>
       {% endif %}
 
       {% if user.is_staff is not True %}
+        {% if year_entered %}
+        Year: {{ user.year }}<br><br>
+        {% endif %}
 
-      {% if year_entered %}
-      Year: {{ user.year }} <br>
+        Tables:<br>
+        {% for table in tables %}
+        {{ table }}, 
+        {% endfor %}
       {% endif %}
-
-      Tables: <br>
-      {% for table in tables %}
-      {{ table }}
-      {% endfor %}
-      <br>
-
-      {% endif %}
-
     </div>
 
-    {% if user.is_staff is not True %}
+    {% if user.is_staff is not True %}<br>
+    Collectables:<br><br>
+    <div class="grid_collectables">
+      {% for img in collectable_pictures %}
+        <img src="{% static img %}">
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
 
-    <br><br>
-
-      Collectables:
-      <div class="grid_collectables">
-        {% for img in collectable_pictures %}
-        {% if forloop.counter > 5%}
-          <img src="{% static img %}" style="grid-row: 2; grid-column: ;" >
-        {% endif %}
-
-        {% if forloop.counter < 6 %}
-          <img src="{% static img %}" style="grid-row: 1; grid-column: {{forloop.counter}};" >
-        {% endif %}
-        {% endfor %}
-
-      </div>
-
-  {% endif %}
-
-
-</div>
-<script src="{% static 'js/darkmode.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/darkmode.js' %}" type="text/javascript"></script>
 </body>
 
 </html>
