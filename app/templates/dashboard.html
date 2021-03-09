@@ -98,7 +98,12 @@
     <h2 class="board_title">Notification Feed: </h2>
     {% for notification in notifications %}
       <div class='notification'>
-      {{notification.text_preview}}, {{notification.date}}
+      <div>
+      {{notification.date}}
+      </div>
+      <div>
+      {{notification.text_preview}}
+      </div>
       </div>
     {% endfor %}
     </div>
