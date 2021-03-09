@@ -53,6 +53,13 @@ li {
 }
 /* End of task information */
 
+.message {
+    text-align: center;
+    margin: auto;
+    width: 98%;
+    margin-top: 10%;
+}
+
 @media only screen and (max-width: 850px) {
     li {
         width: 80%;
