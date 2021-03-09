@@ -137,8 +137,14 @@ def table_view(request):
 def dashboard(request):
     user = request.user
 
+    tables = CafeTable.objects.filter(
+        university=user.university,
+        table_id__in=user.cafe_table_ids.values_list('table_id',
+                                                             flat=True)
+    )
+
     # Get all notifications pertaining to the user
-    notifications = Notification.objects.all()
+    notifications = Notification.objects.filter(table_id__in=tables)
 
     users = CoffeeUser.objects.filter(is_staff=False)
     sorted_users = sorted(users, key=attrgetter("points"), reverse=True)
@@ -177,6 +183,12 @@ def dashboard(request):
 
         # calculating how many points to reach next collectable
         points_to_go_next_collectable = int(how_much_to_go(pointsLevel))
+
+        # Notification for points left
+        if (points_to_go_next_collectable < 10):
+            n_text = user.first_name + " has less than 10 points to go until their next award!"
+            n = Notification(table_id=0, notification_type=1, text_preview=n_text)
+            n.save()
 
         # see if the user is currently studying
         if user.studying_until:
