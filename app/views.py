@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from typing import NewType
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
@@ -136,6 +137,7 @@ def table_view(request):
 def dashboard(request):
     user = request.user
 
+    # Get all notifications pertaining to the user
     notifications = Notification.objects.all()
 
     users = CoffeeUser.objects.filter(is_staff=False)
@@ -235,8 +237,8 @@ def set_tasks(request):
         user.tasks_set_today = 0
         user.save()
 
-    if user.tasks_set_today >= 2 and not user.is_staff:
-        return redirect("dashboard")
+    #if user.tasks_set_today >= 2 and not user.is_staff:
+    #    return redirect("dashboard")
 
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
@@ -261,8 +263,8 @@ def set_tasks(request):
             user.save()
 
             # Add notification
-            task_text = "Task " + task_name + " was added to tasks! Check it out!"
-            notification = Notification(table_id=table_id, notification_type=1, text_preview=task_text)
+            task_text = user.first_name + " has added " + task_name + " as a new task! Check it out!"
+            notification = Notification(table_id=table_id, notification_type=3, text_preview=task_text)
             notification.save()
 
             if user.tasks_set_today >= 2 and not user.is_staff:
@@ -351,6 +353,11 @@ def completeTask(request, pk):
     elif completedTask.recurrence_interval == "w":
         completedTask.recurring_date = completedTask.date_set + datetime.timedelta(weeks=1)
     completedTask.save()
+
+    # Make a notification about the completed task
+    not_text = str(current_user.first_name) + " has completed " + str(completedTask.task_name) + " and has earned " + str(completedTask.points) + " points in doing so!"
+    notification = Notification(table_id=completedTask.table_id, notification_type=3, text_preview=not_text)
+    notification.save()
 
     return redirect('/view_tasks')
 
