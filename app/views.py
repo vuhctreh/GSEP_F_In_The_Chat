@@ -94,14 +94,6 @@ def check_recurring_tasks():
             task.save()
 
 
-def student_edit_form_verify(form, user):
-    """ placeholder """
-
-
-def staff_edit_form_verify(form, user):
-    """ placeholder """
-
-
 # Victoria: 18/2/21
 def index(request):
     """ Placeholder """
@@ -607,62 +599,50 @@ def edit_info(request):
     """
     user = request.user
 
-    if user.is_staff:
-        if request.method == 'POST':
+    if request.method == 'POST':
+        if user.is_staff:
             form = CUserEditFormStaff(request.POST)
-            if form.is_valid():
-                # save what is entered and validate
-                if form.cleaned_data['first_name']:
-                    user.first_name = form.cleaned_data['first_name']
-
-                if form.cleaned_data['last_name']:
-                    user.last_name = form.cleaned_data['last_name']
-
-                if form.cleaned_data['course']:
-                    if user.course:
-                        old_course = user.course
-                        # if already on a course, remove from old course table
-                        old_table_name = "COURSE: " + old_course
-                        table = user.cafe_table_ids.get(
-                            table_id=old_table_name)
-                        user.cafe_table_ids.remove(table)
-
-                    new_course = form.cleaned_data['course'].lower()
-                    user.course = new_course
-                    # upper case throughout so not duplicates with different
-                    # casing
-                    new_course_table_name = "COURSE: " + new_course
-                    # see if a table for this course exists
-                    try:
-                        table = CafeTable.objects.get(
-                            university=user.university,
-                            table_id=new_course_table_name
-                        )
-                    except CafeTable.DoesNotExist:
-                        # if that table does not exist, create it
-                        table = CafeTable.objects.create(
-                            table_id=new_course_table_name,
-                            university=user.university
-                        )
-                    # add the user to the table
-                    user.cafe_table_ids.add(table)
-
-                user.save()
-                form = CUserEditFormStaff()
         else:
-            form = CUserEditFormStaff()
-
-    else:  # student user
-        if request.method == 'POST':
             form = CUserEditForm(request.POST)
-            if form.is_valid():
-                # save what is entered and validate
-                if form.cleaned_data['first_name']:
-                    user.first_name = form.cleaned_data['first_name']
 
-                if form.cleaned_data['last_name']:
-                    user.last_name = form.cleaned_data['last_name']
+        if form.is_valid():
+            # save what is entered and validate
+            if form.cleaned_data['first_name']:
+                user.first_name = form.cleaned_data['first_name']
 
+            if form.cleaned_data['last_name']:
+                user.last_name = form.cleaned_data['last_name']
+
+            if form.cleaned_data['course']:
+                if user.course:
+                    old_course = user.course
+                    # if already on a course, remove from old course table
+                    old_table_name = "COURSE: " + old_course
+                    table = user.cafe_table_ids.get(
+                        table_id=old_table_name)
+                    user.cafe_table_ids.remove(table)
+
+                new_course = form.cleaned_data['course'].lower()
+                user.course = new_course
+                # upper case throughout so not duplicates with different
+                # casing
+                new_course_table_name = "COURSE: " + new_course
+                # see if a table for this course exists
+                try:
+                    table = CafeTable.objects.get(
+                        university=user.university,
+                        table_id=new_course_table_name
+                    )
+                except CafeTable.DoesNotExist:
+                    # if that table does not exist, create it
+                    table = CafeTable.objects.create(
+                        table_id=new_course_table_name,
+                        university=user.university
+                    )
+                # add the user to the table
+                user.cafe_table_ids.add(table)
+
+            if user.is_staff is False:
                 if form.cleaned_data['facebook_link']:
                     if form.cleaned_data['facebook_link'] == "/":
                         user.facebook = None
@@ -698,35 +678,6 @@ def edit_info(request):
                     if form.cleaned_data['year'] >= 1:
                         user.year = form.cleaned_data['year']
 
-                if form.cleaned_data['course']:
-                    if user.course:
-                        old_course = user.course
-                        # if already on a course, remove from old course table
-                        old_table_name = "COURSE: " + old_course
-                        table = user.cafe_table_ids.get(
-                            table_id=old_table_name)
-                        user.cafe_table_ids.remove(table)
-
-                    new_course = form.cleaned_data['course'].lower()
-                    user.course = new_course
-                    # upper case throughout so not duplicates with
-                    # different casing
-                    new_course_table_name = "COURSE: " + new_course
-                    # see if a table for this course exists
-                    try:
-                        table = CafeTable.objects.get(
-                            university=user.university,
-                            table_id=new_course_table_name
-                        )
-                    except CafeTable.DoesNotExist:
-                        # if that table does not exist, create it
-                        table = CafeTable.objects.create(
-                            table_id=new_course_table_name,
-                            university=user.university
-                        )
-                    # add the user to the table
-                    user.cafe_table_ids.add(table)
-
                 if form.cleaned_data['add_table_id']:
                     add_table_id = form.cleaned_data['add_table_id'].lower()
                     if not add_table_id.startswith("course:"):
@@ -756,11 +707,14 @@ def edit_info(request):
                         user.cafe_table_ids.remove(table)
                     except CafeTable.DoesNotExist:
                         pass
-                # end
-                user.save()
-                form = CUserEditForm()
-        else:
-            form = CUserEditForm()
+
+            user.save()
+
+    if user.is_staff:
+        form = CUserEditFormStaff()
+    else:
+        form = CUserEditForm()
+
     tables = user.cafe_table_ids.values_list('table_id', flat=True)
     context = {
         'user': user,
