@@ -32,7 +32,7 @@ Nearly 1/4 of students reported that they actively seek more friends and support
 
 ## Features
 
-As 95.6% of students surveyed used cafes in some degree for studying and socialising pre-covid, CoffeeClique provides a virtual cafe space. With the responses to our research in mind, CoffeeClique has the following Key Features:
+95.6% of students surveyed used cafes in some degree for studying and socialising pre-covid; CoffeeClique provides a virtual cafe space. With the responses to our research in mind, CoffeeClique has the following Key Features:
 
 * Dynamically join tables based on your course and interests, where you can easily interact with similar students and appropriate staff, and chat live.
 * View the interests and collectables of others you share a table with, and connect on social media.
@@ -45,9 +45,7 @@ As 95.6% of students surveyed used cafes in some degree for studying and sociali
 
 ## Usage
 
-Link to hosted website: https://python-django-app-coffee.eu-gb.mybluemix.net
-
-As our product is a web app, it is easily accessible both from mobile and desktop devices and does not require installation.
+As our product is a web app, it is easily accessible both from mobile and desktop devices and does not require installation. You can access CoffeeClique's hosted website here: https://python-django-app-coffee.eu-gb.mybluemix.net
 
 Please refer to our Privacy Policy and Terms of Use for how we process your data and how you are expected to behave using our service.
 
@@ -61,8 +59,7 @@ Community, connection, and celebrating individual's interests are key to our pro
 
 ## Technologies
 
-The web app is built in Python using the Django framework and the associated SQLite database, and is hosted on IBM Cloud. We have also used HTML/CSS for the front end.
-We used Figma to create our mock up designs, and Trello for project management, following the agile kanban methodology.
+The web app is built in Python using the Django framework and the associated SQLite database, and is hosted on IBM Cloud. We have also used HTML/CSS/JS for the front end. We used Figma to create our mock up designs, and Trello for project management, following the agile kanban methodology.
 
 ## Installation
 
