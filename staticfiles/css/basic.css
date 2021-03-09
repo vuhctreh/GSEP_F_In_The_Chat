@@ -67,6 +67,8 @@ body {
     color: #967259;
     text-decoration: none;
     display: inline-block;
+    padding-top: 9px;
+    padding-bottom: 8px;
     height: 70%;
     width: auto;
     text-align: right;
