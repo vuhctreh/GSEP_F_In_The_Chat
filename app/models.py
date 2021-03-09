@@ -119,11 +119,10 @@ class Task(models.Model):
     created_by = models.ForeignKey(CoffeeUser, related_name="created_tasks",
                                    on_delete=models.CASCADE)
     completed_by = models.ManyToManyField(CoffeeUser, blank=True)
-    # is task date date to be completed by or date set?
-    task_date = models.DateTimeField(auto_now_add=True)
+    # date set
+    date_set = models.DateField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0, choices=POINTS)
-    date_last_set = models.DateField(null=True, blank=True)
     recurring_date = models.DateField(null=True, blank=True)
     recurrence_interval = models.CharField(max_length=1, choices=REPEATS)
     no_of_repeats = models.PositiveIntegerField(default=0)
