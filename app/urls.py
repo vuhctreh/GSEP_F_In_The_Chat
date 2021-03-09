@@ -1,4 +1,4 @@
-""" Placeholder """
+""" The URLs for all pages in the web application """
 
 from django.urls import path
 from django.contrib.staticfiles.storage import staticfiles_storage
