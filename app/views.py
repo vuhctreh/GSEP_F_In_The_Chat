@@ -380,7 +380,7 @@ def table_chat(request, pk):
     check_recurring_tasks()
     date_from = datetime.date.today()
     tasks = Task.objects.filter(table_id=table,
-                                date_set=date_from.order_by('date_set'))
+                                date_set=date_from)
     # get all the users in the table
     users = table.coffeeuser_set.all()
     # see if currently studying
