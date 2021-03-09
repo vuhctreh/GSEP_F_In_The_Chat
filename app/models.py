@@ -110,6 +110,7 @@ class CoffeeUser(AbstractBaseUser):
 class Task(models.Model):
     POINTS = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
               (10, "10"), (15, "15"), (20, "20"), (25, "25"), (30, "30"))
+    REPEATS = (("n", "NONE"), ("d", "DAILY"), ("w", "WEEKLY"))
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     task_name = models.CharField(max_length=50)
@@ -122,6 +123,11 @@ class Task(models.Model):
     task_date = models.DateTimeField(auto_now_add=True)
     task_content = models.TextField(max_length=4000)
     points = models.PositiveIntegerField(default=0, choices=POINTS)
+    date_last_set = models.DateField(null=True, blank=True)
+    recurring_date = models.DateField(null=True, blank=True)
+    recurrence_interval = models.CharField(max_length=1, choices=REPEATS)
+    no_of_repeats = models.PositiveIntegerField(default=0)
+    max_repeats = models.PositiveIntegerField(default=0)
 
     REQUIRED_FIELDS = ["task_name", "task_content"]
 

@@ -227,18 +227,27 @@ def set_tasks(request):
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
         form = createTaskForm(request.POST, user=request.user)
+        print('check 0.9')
         if form.is_valid():
+            print('check 1')
             task_name = form.cleaned_data.get('task_name')
             table_id = form.cleaned_data.get('table_id')
             task_content = form.cleaned_data.get('task_content')
             points = form.cleaned_data.get('points')
+            recurrence_interval = form.cleaned_data.get('recurrence_interval')
+            max_repeats = form.cleaned_data.get('max_repeats')
+            print('check 2')
             task = Task.objects.create(
                 task_name=task_name,
                 created_by=user,
                 table_id=table_id,
                 task_content=task_content,
-                points=points
+                points=points,
+                date_last_set=datetime.date.today(),
+                recurrence_interval=recurrence_interval,
+                max_repeats=max_repeats
             )
+            print('check 3')
             user.tasks_set_today += 1
             user.save()
 
@@ -265,6 +274,21 @@ def view_tasks(request):
         table_id__in=current_user.cafe_table_ids.values_list('table_id',
                                                              flat=True)
     )
+    print('check 4')
+    recurring_tasks = Task.objects.exclude(max_repeats=0)
+    for task in recurring_tasks:
+        if task.recurrence_interval == "d":
+            recurring_date = task.date_last_set + datetime.timedelta(days=1)
+        elif task.recurrence_interval == "w":
+            recurring_date = task.date_last_set + datetime.timedelta(weeks=1)
+        task.save()
+
+        if recurring_date == datetime.date.today() and task.no_of_repeats <= task.max_repeats:
+            task.completed_by = ''
+            task.no_of_repeats += 1
+            task.date_last_set = datetime.date.today()
+            task.save()
+
     # get the tasks corresponding to these tables that the user hasn't done
     tasks = Task.objects.filter(table_id__in=tables).exclude(completed_by=current_user).exclude(created_by=current_user)
     context = {
