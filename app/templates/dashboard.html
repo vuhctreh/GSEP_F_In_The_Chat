@@ -76,6 +76,7 @@
       <div class="buttons">
         <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
         <button class="otherbutton" onclick="document.location='table_view'" id="table_view">To Cafe</button>
+        {% if can_set_tasks %}
         <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
         {% endif %}
         {% if staff is False %}
