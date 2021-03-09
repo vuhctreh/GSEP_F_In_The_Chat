@@ -24,7 +24,7 @@ def get_number_current_users():
     """ Calculates the number of active users
 
     Returns:
-        active::int 
+        active::int
             The number of users currently using the web app
     """
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
@@ -280,7 +280,7 @@ def dashboard(request):
 # Victoria 04 & 05/03/21
 @login_required(login_url="/")
 def set_tasks(request):
-    """ Retrives the information from the set_tasks page form 
+    """ Retrives the information from the set_tasks page form
         and creates a task for the given table. Checks for the number
         of tasks that have already been created are also made.
 
@@ -304,8 +304,8 @@ def set_tasks(request):
         user.tasks_set_today = 0
         user.save()
 
-    #if user.tasks_set_today >= 2 and not user.is_staff:
-    #    return redirect("dashboard")
+    if user.tasks_set_today >= 2 and not user.is_staff:
+        return redirect("dashboard")
 
     context = {'form': form, 'num_users': get_number_current_users()}
     if request.method == 'POST':
@@ -520,7 +520,7 @@ def table_chat(request, pk):
 
 # Alex 4/3/21
 def upvote(request, pk):
-    """ Increases the upvote count for specific message when 
+    """ Increases the upvote count for specific message when
         upvote button is clicked.
     Args:
         request::HttpRequest
@@ -529,7 +529,7 @@ def upvote(request, pk):
             The id of the message for which the upvote button is clicked.
     Returns:
         redirect::HttpResponse
-            Redirects user to the 'table_chat.html' page and passes as a 
+            Redirects user to the 'table_chat.html' page and passes as a
             parameter the table id for which the liked message is part of
     """
     current_user = request.user
@@ -549,7 +549,7 @@ def edit_info(request):
     """ Displays the edit info form. Collects all information from the edit info form and updates the
         respective fields with the new information. In addition, icons that redirect user
         to external social media are present.
-    
+
     Args:
         request::HttpRequest
             Object that contains metadata about the request.
@@ -730,7 +730,7 @@ def profile_page(request, pk):
             The id of the users profile page
     Returns:
         render::HttpResponse
-            Renders the 'profile_page.html' page and passes as parameter 
+            Renders the 'profile_page.html' page and passes as parameter
             all of the given users information
     """
     # deal with if the requested user doesn't exist
