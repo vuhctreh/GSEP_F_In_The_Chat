@@ -1,9 +1,18 @@
-""" Placeholder """
+""" Functions regarding collectables and how to achieve them """
 
 
 # william
 def check_points_treshold(total_points):
-    """ Placeholder """
+    """ Calculates the users level based on his total points
+    
+    Args:
+        total_points::int
+            The total number of points that the user has gained
+
+    Returns:
+        level::int
+            The users level calculated from his total points
+    """
 
     # This is just a very easy function to mesure the level obtained, proof of
     # concept. to be changed later TODO
@@ -19,7 +28,18 @@ def check_points_treshold(total_points):
 
 # william
 def how_much_to_go(current_level):
-    """ Placeholder """
+    """ Calculates the number of points the user needs to obtain to advance levels 
+        based on his current level
+
+    Args:
+        current_level::int 
+            The users current level
+
+    Returns:
+        to_go_points::int
+            The number of points the user needs to gain in order to move onto
+            the next level
+    """
 
     if current_level < 9:
         # transforming the current_level which is a float into an int
