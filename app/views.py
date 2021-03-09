@@ -82,7 +82,7 @@ def get_msgs(request, table):
 
 
 def check_recurring_tasks():
-    """ Checks whether a reccuring task exists and removes it if found"""
+    """ Checks whether a reccuring task exists and removes it if found """
     recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(
         recurrence_interval="n")
     for task in recurring_tasks:
@@ -96,7 +96,19 @@ def check_recurring_tasks():
 
 # Victoria: 18/2/21
 def index(request):
-    """ Placeholder """
+    """ Checks to see whether login credentials are valid and logs user in if they are
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+
+    Returns:
+        redirect::HttpResponse
+            Redirects user 'table_view.html' if login credentials are valid
+        render::HttpResponse
+            Renders the 'login.html' page and passes the login form as a parameter
+
+    """
     context = {}
 
     # if user is already authenticated they will be redirected to home
@@ -125,7 +137,15 @@ def index(request):
 
 
 def log_out(request):
-    """ Placeholder """
+    """ Logs out the user
+
+    Args:
+        request::HttpRequest
+            Object that contains metadata about the request
+    Returns:
+        redirect::HttpResponse
+            Redirects user to the login page
+    """
     logout(request)
     return redirect('/')
 
@@ -813,26 +833,26 @@ def reporting(request):
 
 
 def health(request):
-    """ Placeholder """
+    """ Checks to see whether the web application is running correctly (its status) """
     state = {"status": "UP"}
     return JsonResponse(state)
 
 
 def handler404(request):
-    """ Placeholder """
+    """ Manages any 404 errors """
     return render(request, '404.html', status=404)
 
 
 def handler500(request):
-    """ Placeholder """
+    """ Manages any 500 errors """
     return render(request, '500.html', status=500)
 
 
 def privacy(request):
-    """ Placeholder """
+    """ Renders the 'privacy.html' page """
     return render(request, 'privacy.html')
 
 
 def terms(request):
-    """ Placeholder """
+    """ Renders the 'terms.html' page """
     return render(request, 'terms.html')
