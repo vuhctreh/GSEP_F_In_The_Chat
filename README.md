@@ -1,5 +1,5 @@
 # Welcome To CoffeeClique
-Student Engagement Tool For Blended Learning.
+Student Engagement Tool For Blended Learning
 
 ### Group F
 
@@ -20,6 +20,14 @@ Our research shows that students miss being in situations where they meet new pe
 
 CoffeeClique is a website to keep students engaged during the pandemic, by creating an online space where students can interact with each other and tackle fun and rewarding tasks together. Students can meet others with shared interests at tables in our 'cafe'; our virtual cafe environment creates a student community space in this era of online learning.
 
+## Motivation
+
+am doing this -izzy
+
+## Features
+
+am doing this -izzy
+
 ## Usage
 
 Link to hosted website: https://python-django-app-coffee.eu-gb.mybluemix.net
@@ -36,10 +44,6 @@ The task system is gamified and students can gain points by completing tasks, pr
 
 Community, connection, and celebrating individual's interests are key to our project. We hope you will enjoy making new friends at CoffeeClique!
 
-## Features
-
-am doing this -izzy
-
 ## Technologies
 
 The web app is built in Python using the Django framework and the associated SQLite database, and is hosted on IBM Cloud. We have also used HTML/CSS for the front end.
@@ -52,7 +56,8 @@ You **do not** need to install anything to use our product; simply navigate to o
 However, if for development and testing purposes you wish to run a copy of this project locally, you can follow these steps:
 1. Clone this repository
 2. Navigate to the directory GSEP_F_In_The_Chat
-3. Ensure all dependencies are satisfied (see requirements.txt)
-4. Run ```python3 manage.py runserver```
-5. Navigate to http://127.0.0.1:8000/ in a web browser
-6. To run tests, run ```python3 manage.py test```
+3. Ensure Python is installed. You can downloaded the latest version of Python at https://www.python.org/downloads/
+4. Ensure all dependencies are satisfied (see requirements.txt). Dependencies can be installed using ```pip install sample-package-name```. 
+5. Run ```python manage.py runserver```
+6. Navigate to http://127.0.0.1:8000/ in a web browser
+7. To run tests, run ```python manage.py test```
