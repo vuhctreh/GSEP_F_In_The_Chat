@@ -22,38 +22,19 @@ CoffeeClique is a website to keep students engaged during the pandemic, by creat
 
 ## Motivation
 
-We surveyed 45 students in different universities, year groups, and across over 25 diverse subjects.
+We surveyed 45 students in different universities, year groups, and across over 25 diverse subjects for their experiences with remote or blended learning at University.
 
-82.2% of students found that in the pandemic, being in situations where you can meet new people is challenging. Students miss 'mixing with different groups of people', 'interacting with many people daily', and 'meeting new people'. Other issues were getting in contact with people via social media (26.7%) and finding common interests with people (20%).
+82.2% of students found that being in situations where you can meet new people is challenging currently. Students miss 'mixing with different groups of people', 'interacting with many people daily', and 'meeting new people'. Other issues were getting in contact with people via social media (26.7%) and finding common interests with people (20%).
 
-Only 15.5% of students currently find a primary support network in course or society friends (primary support networks are primarily with housemates (44.4%) or family (26.7%)). We aim to increase connection and forge friendships particularly in these areas. 88.6% of students said something to facilitate meeting people with common interests would help them feel less isolated in the pandemic. Furthermore, 48.9% actively seek more friends with similar interests.
+Only 15.5% of students currently find a primary support network in course or society friends (primary support networks are primarily with housemates or family). We aim to increase connection and forge friendships particularly between people sharing interests and academic course. 88.6% of students said something to facilitate meeting people with common interests would help them feel less isolated in the pandemic. Furthermore, 48.9% actively seek more friends with similar interests, and one student said they would particularly like to see a feature to 'match people based on common interests' in our app.
 
-** I will edit rest of this section in a min **
-  - One student said they would like to see feature to 'match people based on common interests' in an app connecting students and helping them achieve their academic goals
-
-  COURSEMATES
-  - 20.5% academic peer support would make them feel less isolated
-  - 24.4% seek more fiends and support for course
-  Things people miss academic
-  - 'Classmates'
-  - 'learning together'
-  - 'being able to make new friends [with coursemates] or discuss course related concerns'
-  - 'Better communication with people on my course'
-  - 'Meeting course mates'
-  - 55.6% said a way to be connected with peers would help you to engage more in module content
-  - more: 33.3% way to check of tasks, 28.9% compare progress to peers, 37.8% more frequent interaction with staff
-
-
-  LECTURERS
-  Things people miss academic
-  - 'chat to lecturers'
-  - 'more interaction with lecturers'
+Nearly 1/4 of students reported that they actively seek more friends and support within their course, and that an academic peer support network would make them feel less isolated. Many students miss 'learning together' with classmates, and want 'better communication with people on \[their\] course' so they can 'make new friends' and 'discuss course related concerns'. Over half of students said a way to be connected with peers would help them to engage more with module content. Students also said that a way to check off tasks and compare progress to peers would be helpful. Similarly, 37.8% of students wish for more frequent interaction with staff and miss being able to 'chat to lecturers'.
 
 ## Features
 
 As 95.6% of students surveyed used cafes in some degree for studying and socialising pre-covid, CoffeeClique provides a virtual cafe space. With the responses to our research in mind, CoffeeClique has the following Key Features:
 
-* Dynamically join tables based on your course and interests, where you can interact with similar students and appropriate staff, and chat live.
+* Dynamically join tables based on your course and interests, where you can easily interact with similar students and appropriate staff, and chat live.
 * View the interests and collectables of others you share a table with, and connect on social media.
 * Check the dashboard with leaderboard and feed of notifications to compare your progress with others.
 * Create and complete tasks to earn points, progress through stages, and earn collectables.
