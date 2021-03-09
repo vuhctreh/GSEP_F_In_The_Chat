@@ -10,6 +10,10 @@ body {
     background-color: #291d15;
 }
 
+.darkmode .noinv  {
+    filter: invert(1) hue-rotate(180deg);
+}
+
 .dark-mode-toggle {
     position: absolute;
     z-index: 100;

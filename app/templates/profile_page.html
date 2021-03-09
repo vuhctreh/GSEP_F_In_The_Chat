@@ -73,7 +73,7 @@
 
         Tables:<br>
         {% for table in tables %}
-        {{ table }}, 
+        {{ table }},
         {% endfor %}
       {% endif %}
     </div>
@@ -82,7 +82,7 @@
     Collectables:<br><br>
     <div class="grid_collectables">
       {% for img in collectable_pictures %}
-        <img src="{% static img %}">
+        <img class="noinv" src="{% static img %}">
       {% endfor %}
     </div>
     {% endif %}

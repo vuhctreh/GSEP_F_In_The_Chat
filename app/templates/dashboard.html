@@ -19,7 +19,9 @@
   function convertTZ(date, tzString) {
     return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
   }
+
   </script>
+
 </head>
 
 <body>
@@ -52,7 +54,7 @@
 
       <div class="Collectable">
         <p style=" text-align: center ">
-        <img src='{% static collectable %}' style="width: 200px; height: auto">
+        <img class="noinv" src='{% static collectable %}' style="width: 200px; height: auto">
       </p>
         <p style=" text-align: center "> {{nameCollectable}} </p>
       </div>
@@ -61,11 +63,11 @@
       <div class="grid_collectables">
         {% for img in previousCollectables %}
         {% if forloop.counter > 5%}
-          <img src="{% static img %}" style="grid-column: 2; grid-row: ;" >
+          <img class="noinv" src="{% static img %}" style="grid-column: 2; grid-row: ;" >
         {% endif %}
 
         {% if forloop.counter < 6 %}
-          <img src="{% static img %}" style="grid-column: 1; grid-row: {{forloop.counter}};" >
+          <img class="noinv" src="{% static img %}" style="grid-column: 1; grid-row: {{forloop.counter}};" >
         {% endif %}
         {% endfor %}
 

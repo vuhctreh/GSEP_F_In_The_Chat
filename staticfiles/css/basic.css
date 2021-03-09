@@ -6,7 +6,12 @@ body {
 
 .darkmode {
     filter: invert(1) hue-rotate(180deg);
+    transition: opacity .5s ease-in-out;
     background-color: #291d15;
+}
+
+.darkmode .noinv  {
+    filter: invert(1) hue-rotate(180deg);
 }
 
 .dark-mode-toggle {
