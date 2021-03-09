@@ -1,4 +1,4 @@
-""" Functions regarding collectables and how to achieve them """
+""" Functions regarding the users total points and level (used mainly for unlocking collectables) """
 
 
 # william
