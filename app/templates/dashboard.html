@@ -25,10 +25,7 @@
 <body>
   <div class="top_bar">
     <h6 class="app_name">CoffeeClique</h6>
-    <div class="cafe_data">
-      <button class="goToCafe_button" onclick="document.location='table_view'" id="table_view">Go To Cafe</button>
-      <h6 class="user_count_dash">Users in Cafe: {{ num_users }}</h6>
-    </div>
+    <h6 class="user_count">Users in Cafe: {{ num_users }}</h6>
     <a class="logout" href="{% url 'logout' %}">Logout</a>
   </div>
 
@@ -77,10 +74,8 @@
       {% endif %}
 
       <div class="buttons">
-        <button class="otherbutton" onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
         <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
         <button class="otherbutton" onclick="document.location='table_view'" id="table_view">To Cafe</button>
-        {% if can_set_tasks %}
         <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
         {% endif %}
         {% if staff is False %}
@@ -92,7 +87,7 @@
         {% if studying == False %}
         <form method="post">
           {% csrf_token %}  <!-- security item required for django forms !! -->
-          {{ break_form }}<button type="submit"> Study! </button>
+          {{ break_form }}<button class="otherbutton" type="submit"> Study! </button>
         </form>
         {% endif %}
       </div>
