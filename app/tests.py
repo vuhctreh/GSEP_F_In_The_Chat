@@ -140,7 +140,7 @@ class InTableTests(TestCase):
         self.assertEqual(response_html, render_to_string('denied.html'))
 
     def test_in_table_view_not_exist_table(self):
-        """ Testing to see if non existant table view is correctly identified
+        """ Testing to see if non existent table view is correctly identified
             and handled 
         """
         response = self.client.get('/tables/3')
