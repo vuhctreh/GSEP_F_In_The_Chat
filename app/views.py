@@ -138,6 +138,7 @@ def index(request):
     return render(request, 'login.html', context)
 
 
+# Victoria: 18/2/21
 def log_out(request):
     """ Logs out the user
 
@@ -519,7 +520,7 @@ def complete_task(request, pk):
     completed_task.save()
 
     # Make a notification about the completed task
-    not_text = str(current_user.first_name) + " has completed " + \
+    not_text = "Someone has completed " + \
         str(completed_task.task_name) + " and has earned " + \
         str(completed_task.points) + " points in doing so!"
     notification = Notification(table_id=completed_task.table_id,
