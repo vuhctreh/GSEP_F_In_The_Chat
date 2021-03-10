@@ -23,11 +23,10 @@ body {
     background-color: #dbc1ac;
     text-align: center;
     width: 35%;
+    margin: auto;
     margin-top: 2%;
     margin-bottom: 2%;
-    margin-left: 32.5%;
     padding: 15px;
-    box-shadow: 12px 12px 2px 5px rgb(192, 170, 153, 1);
 }
 
 input {

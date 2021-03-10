@@ -29,25 +29,20 @@ li {
     margin-top: 10%;
 }
 
-#dashboard {
-    width: 8%;
-    margin-left: 46%;
-    margin-top: 2.5%;
-}
-
-
-.button {
+button {
   background-color: whitesmoke;
   color: black;
   border: 1.8px solid #967259;
   transition-duration: 0.4s;
+  width: fit-content;
+  margin-left: 46%;
+  margin-top: 2.5%;
 }
 
-.button:hover {
+button:hover {
   background-color: #967259;
   color: whitesmoke;
 }
-
 
 @media only screen and (max-width: 850px) {
     .tables {

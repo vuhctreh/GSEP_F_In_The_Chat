@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Login</title>
+  <title>Edit</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
@@ -24,18 +24,14 @@
   </div>
 
   <div class="main">
-
-  <br><br>
-
   {{ user.first_name }} {{ user.last_name }} <br>
-  {{ user.university }} <br>
+  {{ user.university }} <br><br>
   {% if user.is_staff is not True %}
   My tables: <br>
   {% for table_name in tables %}
   {{ table_name }} <br>   
   {% endfor %}
-<br>
-{% endif %}
+  {% endif %}
 
   <form method="post">
     {% csrf_token %}  <!-- security item required for django forms !! -->

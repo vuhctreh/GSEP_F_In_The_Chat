@@ -59,14 +59,14 @@
 
   <div class="navigation">
     <button onclick="document.location='/table_view'" id="table_view" inline="true">Back to Cafe</button><br>
-    <h2 class="table_name">{{ table.university }} : {{ table.table_id }}</h2>
+    <h2 class="table_name">{{ table.university }}: {{ table.table_id }}</h2>
   </div>
 
   <div class="row">
     <div class="other">
 
     <div class="users">
-    Group members
+    Group members:
     {% for user in users_studying %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
@@ -76,7 +76,7 @@
     {% for user in other_users %}
     <li>
       <a href="{% url 'profile_page' user.id %}">
-      {{user.first_name}} {{user.last_name}} </a>
+      {{user.first_name}} {{user.last_name}}</a>
       {% if user.is_staff %}
       : STAFF
       {% endif %}
