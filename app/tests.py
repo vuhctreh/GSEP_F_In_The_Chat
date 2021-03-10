@@ -169,6 +169,15 @@ class DashboardTests(TestCase):
         """ Testing whether the status of the dashboard page is OK (if it's reachable) """
         response = self.client.get('/dashboard')
         self.assertEqual(response.status_code, 200)
+    
+    def test_template(self):
+        response = self.client.get('/dashboard')
+        self.assertTemplateUsed(response, 'dashboard.html')
+
+        # Check whether it's displaying the correct user
+        response_html = response.content.decode()
+        self.assertTrue(CoffeeUser.objects.get(email='test@test.com').first_name in response_html)
+        self.assertTrue(CoffeeUser.objects.get(email='test@test.com').last_name in response_html)
 
 
 class EditInfoTests(TestCase):
@@ -207,12 +216,10 @@ class EditInfoTests(TestCase):
         data = {
             'first_name': 'testfirstname',
             'last_name': 'testlastname',
-            'add_table_id': 69,
         }
 
         self.assertEqual(CoffeeUser.objects.get(email='test@test.com').first_name, 'testf')
         self.assertEqual(CoffeeUser.objects.get(email='test@test.com').last_name, 'testl')
-        self.assertContains(CoffeeUser.objects.get(email='test@test.com').cafe_table_ids, 69)
 
         request = self.client.post('/dashboard/edit_info', data)
 
