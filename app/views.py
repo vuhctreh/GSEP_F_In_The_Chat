@@ -175,6 +175,7 @@ def signup(request):
     if request.method == 'POST':
         # validate the form
         form = SignUpForm(request.POST)
+        print(form.errors)
         if form.is_valid() and form.cleaned_data.get('accept_terms'):
             form.save()
             email = form.cleaned_data.get('email')
