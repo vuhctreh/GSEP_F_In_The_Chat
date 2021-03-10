@@ -1,5 +1,6 @@
 """ Functions used for Unit Testing our web application """
 
+from django.http import response
 from django.test import SimpleTestCase, TestCase, Client
 from django.template.loader import render_to_string
 from app.models import CafeTable, CoffeeUser, Message, Report, Task
@@ -19,6 +20,10 @@ class LogInTests(TestCase):
         """ Testing whether a csrf token exists for security """
         response = self.client.get('')
         self.assertContains(response, 'csrfmiddlewaretoken')
+    
+    def test_template(self):
+        response = self.client.get('')
+        self.assertTemplateUsed(response, 'login.html')
 
 
 class SignUpTests(TestCase):
@@ -33,6 +38,10 @@ class SignUpTests(TestCase):
         """ Testing whether a csrf token exists for security """
         response = self.client.get('/signup')
         self.assertContains(response, 'csrfmiddlewaretoken')
+    
+    def test_template(self):
+        response = self.client.get('/signup')
+        self.assertTemplateUsed(response, 'sign_up.html')
 
 
 class PrivacyPolicyTests(TestCase):
