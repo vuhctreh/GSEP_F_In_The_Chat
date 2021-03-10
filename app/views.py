@@ -23,9 +23,9 @@ list_coffee_link = ["images/espresso.PNG", "images/americano.PNG",
                     "images/latte.PNG", "images/mocha.PNG",
                     "images/matcha.PNG", "images/frappuccino.PNG",
                     "images/ice_tea.PNG", "images/bubble_tea.PNG"]
-list_coffee_name = ["espresso", "americano", "cappuccino", "hot chocolate",
-                    "latte", "mocha", "matcha", "frappuccino", "ice tea",
-                    "bubble tea"]
+list_coffee_name = ["Espresso", "Americano", "Cappuccino", "Hot Chocolate",
+                    "Latte", "Mocha", "Matcha Latte", "Frappuccino", "Iced Tea",
+                    "Bubble Tea"]
 
 
 # Isabel 3/3/21
