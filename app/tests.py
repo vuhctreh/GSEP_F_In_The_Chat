@@ -197,6 +197,21 @@ class EditInfoTests(TestCase):
         response = self.client.get('/dashboard/edit_info')
         self.assertTemplateUsed(response, 'edit_info.html')
 
+    def test_changin_info(self):
+        data = {
+            'first_name': 'testfirstname',
+            'last_name': 'testlastname',
+            'course': '',
+        }
+
+        self.assertEqual(CoffeeUser.objects.get(email='test@test.com').first_name, 'testf')
+        self.assertEqual(CoffeeUser.objects.get(email='test@test.com').last_name, 'testl')
+
+        request = self.client.post('/dashboard/edit_info', data)
+
+        self.assertEqual(CoffeeUser.objects.get(email='test@test.com').first_name, 'testfirstname')
+        self.assertEqual(CoffeeUser.objects.get(email='test@test.com').last_name, 'testlastname')
+
 
 class SetTaskTests(TestCase):
     """ Placeholder """
