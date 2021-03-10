@@ -73,3 +73,7 @@ However, if for development and testing purposes you wish to run a copy of this 
 5. Run ```python manage.py runserver```
 6. Navigate to http://127.0.0.1:8000/ in a web browser
 7. To run tests, run ```python manage.py test```
+
+## Developer documentation
+
+The source code provided includes commenting and detailed docstrings.
