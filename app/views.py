@@ -294,8 +294,8 @@ def dashboard(request):
 
         # Notification for points left
         if points_to_go_next_collectable < 10:
-            n_text = user.first_name + \
-                " has less than 10 points to go until their next award!"
+            n_text = user.first_name + user.last_name + \
+                " has less than 10 points to go until their next collectable!"
             notif = Notification(table_id=0, notification_type=1,
                                  text_preview=n_text)
             notif.save()
@@ -412,8 +412,8 @@ def set_tasks(request):
             user.save()
 
             # Add notification
-            task_text = user.first_name + " has added " + task_name + \
-                " as a new task! Check it out!"
+            task_text = user.first_name + user.last_name + " has added '" + task_name + \
+                "' as a new task - go check it out!"
             notification = Notification(table_id=table_id, notification_type=3,
                                         text_preview=task_text)
             notification.save()
@@ -558,8 +558,8 @@ def complete_task(request, pk):
     completed_task.save()
 
     # Make a notification about the completed task
-    not_text = "Someone has completed " + \
-        str(completed_task.task_name) + " and has earned " + \
+    not_text = "Someone has completed the task '" + \
+        str(completed_task.task_name) + "' and has earned " + \
         str(completed_task.points) + " points in doing so!"
     notification = Notification(table_id=completed_task.table_id,
                                 notification_type=3, text_preview=not_text)

@@ -24,13 +24,11 @@ html, body {
 
 .tasks {
     background-color: #967259;
-    height: 50%;
+    height: 47%;
     overflow: scroll;
     padding: 2%;
     margin-top: 4%;
 }
-
-
 
 .button{
   background-color: whitesmoke;
@@ -107,4 +105,30 @@ i {
 
 label {
     width: fit-content;
+}
+
+@media only screen and (max-width: 850px) {
+    .other {
+        width: 98%;
+        height: 30%;
+    }
+
+    .tasks {
+        height: 42%;
+    }
+
+    .users {
+        height: 40%;
+    }
+
+    .messages {
+        width: 98%;
+        margin-left: 1%;
+        float: none;
+        height: 62%;
+    }
+
+    .row {
+        display: inline-block;
+    }
 }

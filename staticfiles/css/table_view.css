@@ -35,7 +35,7 @@ button {
   border: 1.8px solid #967259;
   transition-duration: 0.4s;
   width: fit-content;
-  margin-top: 5%;
+  margin-top: 2.5%;
 }
 
 button:hover {
@@ -46,5 +46,9 @@ button:hover {
 @media only screen and (max-width: 850px) {
     .tables {
         margin-left: 21%;
+    }
+
+    button {
+        margin-top: 5%;
     }
 }
