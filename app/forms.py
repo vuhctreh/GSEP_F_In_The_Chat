@@ -94,6 +94,8 @@ class CUserEditFormStaff(forms.Form):
     first_name = forms.CharField(max_length=50, required=False)
     last_name = forms.CharField(required=False)
     course = forms.CharField(max_length=50, required=False)
+    add_table_id = forms.CharField(max_length=50, required=False)
+    remove_table_id = forms.CharField(max_length=50, required=False)
 
 
 class CreateTaskForm(forms.ModelForm):
@@ -136,9 +138,8 @@ class StudyBreaksForm(forms.Form):
 
 
 class ReportForm(forms.ModelForm):
-    """ Contains the fields that a user needs to input before submitting 
-        a report
-    """
+    """ Contains the fields that a user needs to input before submitting
+        a report """
 
     class Meta:
         """ Data regarding report """

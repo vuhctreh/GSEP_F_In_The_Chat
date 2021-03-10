@@ -697,6 +697,36 @@ def edit_info(request):
                 # add the user to the table
                 user.cafe_table_ids.add(table)
 
+            if form.cleaned_data['add_table_id']:
+                add_table_id = form.cleaned_data['add_table_id'].lower()
+                if not add_table_id.startswith("course:"):
+                    # can't be sneaky and add urself to a course this way
+                    # see if table already exists
+                    try:
+                        table = CafeTable.objects.get(
+                            university=user.university,
+                            table_id=add_table_id
+                        )
+                    except CafeTable.DoesNotExist:
+                        # if that table does not exist, create it
+                        table = CafeTable.objects.create(
+                            table_id=add_table_id,
+                            university=user.university
+                        )
+                    # add the user to the table
+                    user.cafe_table_ids.add(table)
+
+            if form.cleaned_data['remove_table_id']:
+                # if it is actually in their list of tables, remove
+                table_name_to_rm = form.cleaned_data['remove_table_id']
+                # make lower again
+                try:
+                    table = user.cafe_table_ids.get(
+                        table_id=table_name_to_rm)
+                    user.cafe_table_ids.remove(table)
+                except CafeTable.DoesNotExist:
+                    pass
+
             if user.is_staff is False:
                 if form.cleaned_data['facebook_link']:
                     if form.cleaned_data['facebook_link'] == "/":
@@ -732,36 +762,6 @@ def edit_info(request):
                 if form.cleaned_data['year']:
                     if form.cleaned_data['year'] >= 1:
                         user.year = form.cleaned_data['year']
-
-                if form.cleaned_data['add_table_id']:
-                    add_table_id = form.cleaned_data['add_table_id'].lower()
-                    if not add_table_id.startswith("course:"):
-                        # can't be sneaky and add urself to a course this way
-                        # see if table already exists
-                        try:
-                            table = CafeTable.objects.get(
-                                university=user.university,
-                                table_id=add_table_id
-                            )
-                        except CafeTable.DoesNotExist:
-                            # if that table does not exist, create it
-                            table = CafeTable.objects.create(
-                                table_id=add_table_id,
-                                university=user.university
-                            )
-                        # add the user to the table
-                        user.cafe_table_ids.add(table)
-
-                if form.cleaned_data['remove_table_id']:
-                    # if it is actually in their list of tables, remove
-                    table_name_to_rm = form.cleaned_data['remove_table_id']
-                    # make lower again
-                    try:
-                        table = user.cafe_table_ids.get(
-                            table_id=table_name_to_rm)
-                        user.cafe_table_ids.remove(table)
-                    except CafeTable.DoesNotExist:
-                        pass
 
             user.save()
 

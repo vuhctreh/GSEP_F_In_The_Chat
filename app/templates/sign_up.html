@@ -10,6 +10,7 @@
   <title>Sign Up</title>
   {% load static %}
   <link rel="shortcut icon" href="{% static 'images/favicon.png' %}"></link>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/basic.css' %}"></link>
   <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}"></link>
   <link rel="preconnect" href="https://fonts.gstatic.com"></link>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"></link>
@@ -34,12 +35,16 @@
         </p>
       {% endfor %}
 
-      Under GDPR, we are required to ask for your express permission to collect and process your data. By clicking 'Sign Up', you agree to our <a href="privacy" target="_blank">Privacy Policy </a> and<a href="terms" target="_blank"> Terms of Use</a>.
+      <br>
+      If your University is not currently listed, please contact igs205@exeter.ac.uk.<br><br>
+
+      Under GDPR, we are required to ask for your express permission to collect and process your data. By clicking 'Sign Up', you agree to our <a href="privacy" target="_blank">Privacy Policy</a> and <a href="terms" target="_blank">Terms of Use</a>.
       <br><br>
 
       <button type="submit"> Sign Up </button>
     </form><br>
 
+    Already have an account? <br>
 
     <button onclick="document.location='/'" id="login">Login</button><br>
   </div>
