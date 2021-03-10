@@ -126,21 +126,19 @@ def index(request):
     # validate and login user when credentials submitted
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if form.is_valid():
-            email = request.POST['email']
-            password = request.POST['password']
-            user = authenticate(email=email, password=password)
-            if user:
-                login(request, user)
-                return redirect('table_view')
+        # fixing a weird error if email format last part 1 char
+        if len(request.POST['email'].split(".")[-1]) > 1:
+            if form.is_valid():
+                email = request.POST['email']
+                password = request.POST['password']
+                user = authenticate(email=email, password=password)
+                if user:
+                    login(request, user)
+                    return redirect('table_view')
 
-        else:
-            context['login_form'] = form
+    # provide form for user to enter credentials
+    context['login_form'] = LoginForm()
 
-    else:
-        # provide form for user to enter credentials
-        form = LoginForm()
-        context['login_form'] = form
     return render(request, 'login.html', context)
 
 
