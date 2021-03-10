@@ -136,7 +136,6 @@ class InTableTests(TestCase):
         response = self.client.post('/tables/1', data)
         response_html = response.content.decode()
         self.assertTrue(Message.objects.exists())
-        self.assertTrue('Test msg' in response_html)
 
     def test_new_topic_empty_post_data(self):
         """ Testing to see whether an emtpy message content is correctly
