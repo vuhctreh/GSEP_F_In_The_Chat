@@ -96,9 +96,12 @@
     <h2 class="board_title">Notification Feed: </h2>
     {% for notification in notifications %}
       <div class='notification'>
-      <div>
-      {{notification.date}}
-      </div>
+      <span id="notifDate{{ notification.id }}"></span>
+      <script>
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      var date = "{{ notification.date }}"
+      document.getElementById("notifDate{{ notification.id }}").innerHTML = convertTZ(date, tz).toLocaleString()
+      </script>
       <div>
       {{notification.text_preview}}
       </div>

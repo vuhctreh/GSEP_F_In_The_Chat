@@ -244,8 +244,11 @@ def dashboard(request):
                                                      flat=True)
     )
 
-    # Get all notifications pertaining to the user
-    notifications = Notification.objects.filter(table_id__in=tables)
+    # Get last 10 notifications pertaining to the user
+    notifications = Notification.objects.filter(table_id__in=tables)[:9]
+    # format the times so they can be processed in JS for timezone conversion
+    for notif in notifications:
+        notif.date = pytz.utc.localize(notif.date).isoformat()
 
     # 10 highest scoring students for the leaderboard
     users = CoffeeUser.objects.filter(is_staff=False)
