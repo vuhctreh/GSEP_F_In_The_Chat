@@ -32,7 +32,7 @@
       <li>
         <a href="{% url 'table_chat' table.pk %}">
         <img alt="Table" src="{% static 'images/table.png' %}" width=200 height=200></a>
-        <p class="table_names">{{table.table_id}}</p>
+        <p class="table_names" style="text-transform: capitalize">{{table.table_id}}</p>
       </li>
       {% endfor %}
     </div>

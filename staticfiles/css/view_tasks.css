@@ -8,9 +8,7 @@ body, html {
     margin-top: 2.5%;
 }
 
-
-
-.button {
+button {
   width: fit-content;
   background-color: whitesmoke;
   color: black;
@@ -18,7 +16,7 @@ body, html {
   transition-duration: 0.4s;
 }
 
-.button:hover {
+button:hover {
   background-color: #967259;
   color: whitesmoke;
 }
