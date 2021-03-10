@@ -29,6 +29,7 @@ urlpatterns = [
                     name='profile_page'),
                path('favicon.ico',
                     RedirectView.as_view(
-                        url=staticfiles_storage.url('static/images/favicon.ico'))
+                        url=staticfiles_storage.url(
+                            'static/images/favicon.ico'))
                     ),
                ]

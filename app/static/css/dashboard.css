@@ -3,7 +3,7 @@
     margin: 2%;
 }
 
-.user_info {
+.user_info, .notifs {
     background-color: #dbc1ac;
     width: 25%;
     margin-right: 1%;
@@ -44,6 +44,7 @@
 
 .set_study_break {
     padding-top: 5%;
+    padding-bottom: 5%;
 }
 
 #id_minutes_studying_for {
@@ -78,16 +79,14 @@ li {
 
 .grid_collectables {
     display: grid;
-    justify-content: center;
-    align-content: center;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(6, 5vw);
-    grid-gap: 15px;
+    grid-template-rows: repeat(5, 1fr);
 }
 
 .grid_collectables img {
     width: 80px;
     height: auto;
+    margin: auto;
 }
 
 
@@ -106,3 +105,31 @@ li {
     text-overflow: ellipsis;
     background-color: #967259;
 }
+
+.collectables {
+    text-align: center;
+    border-top: 1px solid black;
+    padding-top: 5%;
+}
+  }
+
+@media only screen and (max-width: 850px) {
+    .main {
+      display: inline-block;
+    }
+  
+    .user_info, .notifs {
+      width: 90%;
+      margin: auto;
+      margin-top: 5%;
+    }
+  
+    .leaderboard {
+    width: 90%;
+    margin: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    padding: 1%;
+    }
+  }
+  

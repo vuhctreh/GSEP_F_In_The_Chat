@@ -39,7 +39,7 @@
         <button class="edit_button" onclick="document.location='dashboard/edit_info'" id="edit_info">Edit Info</button>
       </div>
 
-        Date Joined:
+        <br>Date Joined:
         <div id="joinDate"></div>
         <script>
         var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -50,25 +50,19 @@
 
       {% if staff is False %}
       <p> Points: {{ points }} </p>
-      <p> Points to go before next collectable: {{ pointsToGo }} </p>
+      <p> Points till next collectable: {{ pointsToGo }} </p>
 
       <div class="Collectable">
         <p style=" text-align: center ">
-        <img class="noinv" src='{% static collectable %}' style="width: 200px; height: auto">
+        <img class="noinv" src='{% static collectable %}' style="width: 150px; height: auto">
       </p>
         <p style=" text-align: center "> {{nameCollectable}} </p>
       </div>
-      <p> _______________________________________ </p>
-      <p> Previous collectables: </p>
+
+      <p class="collectables">Previous Collectables</p>
       <div class="grid_collectables">
         {% for img in previousCollectables %}
-        {% if forloop.counter > 5%}
-          <img class="noinv" src="{% static img %}" style="grid-column: 2; grid-row: ;" >
-        {% endif %}
-
-        {% if forloop.counter < 6 %}
-          <img class="noinv" src="{% static img %}" style="grid-column: 1; grid-row: {{forloop.counter}};" >
-        {% endif %}
+          <img class="noinv" src="{% static img %}">
         {% endfor %}
 
       </div>
@@ -98,13 +92,16 @@
 
     </div>
 
-    <div class="user_info">
+    <div class="notifs">
     <h2 class="board_title">Notification Feed: </h2>
     {% for notification in notifications %}
       <div class='notification'>
-      <div>
-      {{notification.date}}
-      </div>
+      <span id="notifDate{{ notification.id }}"></span>
+      <script>
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      var date = "{{ notification.date }}"
+      document.getElementById("notifDate{{ notification.id }}").innerHTML = convertTZ(date, tz).toLocaleString()
+      </script>
       <div>
       {{notification.text_preview}}
       </div>

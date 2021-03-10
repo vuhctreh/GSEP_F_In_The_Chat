@@ -8,7 +8,7 @@ from app.models import CafeTable, CoffeeUser, Task, Message, Report
 
 
 class CoffeeUserAdmin(UserAdmin):
-    """ Placeholder docstring """
+    """ Allows custom user model (CoffeeUser) to be used with Django admin."""
     add_form = AdminSignUpForm
     form = AdminCUserEditForm
     list_display = ('email', 'first_name', 'last_name', 'university',
