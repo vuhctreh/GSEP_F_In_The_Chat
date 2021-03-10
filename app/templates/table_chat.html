@@ -69,13 +69,13 @@
     Group members:
     {% for user in users_studying %}
     <li>
-      <a href="{% url 'profile_page' user.id %}">
+      <a class="link_table" href="{% url 'profile_page' user.id %}">
       {{user.first_name}} {{user.last_name}}</a> studying until {{user.studying_until}}
     </li>
     {% endfor %}
     {% for user in other_users %}
     <li>
-      <a href="{% url 'profile_page' user.id %}">
+      <a class="link_table" href="{% url 'profile_page' user.id %}">
       {{user.first_name}} {{user.last_name}}</a>
       {% if user.is_staff %}
       : STAFF
@@ -88,7 +88,7 @@
       Tasks set today:
       {% for task in tasks %}
       <li>
-       <a href="/view_tasks">{{task.task_name}}</a> set by {{task.created_by.first_name}} {{task.created_by.last_name}}
+       <a class="link_table" href="/view_tasks">{{task.task_name}}</a> set by {{task.created_by.first_name}} {{task.created_by.last_name}}
       </li>
       {% endfor %}
     </div>

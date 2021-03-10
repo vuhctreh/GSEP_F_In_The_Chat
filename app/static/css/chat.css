@@ -94,6 +94,31 @@ label {
     width: fit-content;
 }
 
+.link_table:link {
+  color: #e1ceb7;
+  background-color: transparent;
+  text-decoration: none;
+  transition-duration: 0.3s;
+}
+
+.link_table:visited {
+  color: #e1ceb7;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.link_table:hover {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.link_table:active {
+  color: #e1ceb7;
+  background-color: transparent;
+  text-decoration: none;
+}
+
 
 button{
   background-color: whitesmoke;

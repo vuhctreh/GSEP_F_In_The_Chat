@@ -79,7 +79,7 @@ body {
     text-align: right;
     font-size: small;
     vertical-align: middle;
-    transition-duration: 0.4s;
+    transition-duration: 0.3s;
     flex: 1 1 auto;
 }
 
@@ -93,6 +93,7 @@ a:link {
   color: #705644;
   background-color: transparent;
   text-decoration: none;
+  transition-duration: 0.3s;
 }
 
 a:visited {
@@ -104,13 +105,13 @@ a:visited {
 a:hover {
   color: red;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:active {
   color: #705644;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 850px) {

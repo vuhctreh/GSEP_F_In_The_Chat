@@ -103,6 +103,33 @@ i {
     display: block;
 }
 
+.link_table:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+  transition-duration: 0.3s;
+}
+
+.link_table:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.link_table:hover {
+  color: #dac2a4;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.link_table:active {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+
+
 label {
     width: fit-content;
 }

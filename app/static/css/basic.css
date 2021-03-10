@@ -85,13 +85,13 @@ a:visited {
 a:hover {
   color: red;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:active {
   color: #705644;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 850px) {
