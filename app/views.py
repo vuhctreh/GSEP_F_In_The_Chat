@@ -246,6 +246,7 @@ def dashboard(request):
 
     # Get last 10 notifications pertaining to the user
     notifications = Notification.objects.filter(table_id__in=tables)[:9]
+    notifications = sorted(notifications, key=attrgetter("date"), reverse=True)
     # format the times so they can be processed in JS for timezone conversion
     for notif in notifications:
         notif.date = pytz.utc.localize(notif.date).isoformat()
