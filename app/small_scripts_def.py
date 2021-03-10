@@ -1,10 +1,11 @@
-""" Functions regarding the users total points and level (used mainly for unlocking collectables) """
+""" Functions regarding the users total points and level (used mainly for
+unlocking collectables) """
 
 
 # william
 def check_points_treshold(total_points):
-    """ Calculates the users level based on his total points
-    
+    """ Calculates the users level based on their total points
+
     Args:
         total_points::int
             The total number of points that the user has gained
@@ -28,11 +29,11 @@ def check_points_treshold(total_points):
 
 # william
 def how_much_to_go(current_level):
-    """ Calculates the number of points the user needs to obtain to advance levels 
-        based on his current level
+    """ Calculates the number of points the user needs to obtain to advance
+        levels based on their current level
 
     Args:
-        current_level::int 
+        current_level::int
             The users current level
 
     Returns:

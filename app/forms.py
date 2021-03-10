@@ -1,4 +1,4 @@
-""" All the required forms that users can complete and submit are located here """
+""" All the forms that users can complete and submit are located here """
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
@@ -53,7 +53,7 @@ class LoginForm(forms.ModelForm):
         fields = ('email', 'password')
 
     def clean(self):
-        """ Contains login data that have passed the validation tests """
+        """ Authenticates login data that have passed the validation tests """
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
@@ -103,8 +103,7 @@ class CreateTaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """ Checking how many points the specific user can put for a task
-            depending on if he/she is a staff user or not
-        """
+            depending on if he/she is a staff user or not"""
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         if not user.is_staff:

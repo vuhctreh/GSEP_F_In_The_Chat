@@ -60,7 +60,8 @@ class TermsTests(TestCase):
     """ Unit tests for the terms and conditions page """
 
     def test_tandc_view_status_code(self):
-        """ Testing the status of the terms and conditions page (if it's 200) """
+        """ Testing the status of the terms and conditions page
+        (if it's 200) """
         response = self.client.get('/terms')
         self.assertEqual(response.status_code, 200)
 
@@ -127,7 +128,8 @@ class InTableTests(TestCase):
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
-        """ Adding new message content and testing to see if it's correctly read """
+        """ Adding new message content and testing to see if it's correctly
+        read """
         data = {
             'message_content': 'Test msg',
         }
@@ -137,7 +139,8 @@ class InTableTests(TestCase):
         self.assertTrue('Test msg' in response_html)
 
     def test_new_topic_empty_post_data(self):
-        """ Testing to see whether an emtpy message content is correctly identified """
+        """ Testing to see whether an emtpy message content is correctly
+        identified """
         data = {
             'message_content': '',
         }

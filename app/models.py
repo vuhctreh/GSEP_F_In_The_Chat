@@ -1,4 +1,5 @@
-""" Classes for all objects that are used throughout the application """
+""" Classes for all objects that are used throughout the application, defining
+the database schema. """
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
@@ -7,7 +8,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CafeTable(models.Model):
-    """ Contains the information for each table (group) """
+    """ Defines the information for each table (group) """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.CharField(max_length=50)
@@ -33,20 +34,20 @@ class CoffeeUserManager(BaseUserManager):
 
         Args:
             email::string
-                Users email address
+                User email address
             first_name::string
-                Users first name 
+                User first name
             last_name::string
-                Users last name
+                User last name
             university::string
-                Users inputted university
+                User inputted university
             is_staff::boolean
                 Boolean value to confirm whether user is a staff member
             password::string
                 User password
 
         Returns:
-            user::CoffeeUserManager
+            user::CoffeeUser
                 A coffee user object is returned
         """
         if not email:
@@ -78,7 +79,7 @@ class CoffeeUserManager(BaseUserManager):
             email::string
                 Users email address
             first_name::string
-                Users first name 
+                Users first name
             last_name::string
                 Users last name
             university::string
@@ -89,7 +90,7 @@ class CoffeeUserManager(BaseUserManager):
                 User password
 
         Returns:
-            user::CoffeeUserManager
+            user::CoffeeUser
                 A coffee user object is returned
         """
         user = self.create_user(
@@ -108,7 +109,7 @@ class CoffeeUserManager(BaseUserManager):
 
 
 class CoffeeUser(AbstractBaseUser):
-    """ Contains all possible information for a user """
+    """ Defines all possible information for a user """
 
     AVAILABLE_UNIS = (
         ("University of Exeter", "University of Exeter"),
@@ -151,20 +152,20 @@ class CoffeeUser(AbstractBaseUser):
 
     # Required functions for custom user model
     def __str__(self):
-        """ Returns the specific users email address """
+        """ Returns the specific user's email address """
         return self.email
 
     def has_perm(self, perm, obj=None):
-        """ Returns a boolean value depending on if user has admin permissions """
+        """ Returns a boolean value for if user has admin permissions """
         return self.is_admin
 
     def has_module_perms(self, app_label):
-        """ Returns a boolean value depending on if user has module permissions """
+        """ Returns a boolean value for if user has module permissions """
         return True
 
 
 class Task(models.Model):
-    """ Contains all fields for a task """
+    """ Defines all fields for a task """
     POINTS = ((1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5"),
               (10, "10"), (15, "15"), (20, "20"), (25, "25"), (30, "30"))
     REPEATS = (("n", "NONE"), ("d", "DAILY"), ("w", "WEEKLY"))
@@ -194,19 +195,21 @@ class Task(models.Model):
         """ Returns the number of users who've completed a specific task
 
         Returns:
-            result::int
+            result[0]::int
                 Number of people who've completed task
+            result[1]::int
+                Total number of people who can complete this task
         """
         out_of = self.table_id.coffeeuser_set.exclude(is_staff=1).count()
         if self.created_by.is_staff:
             result = (self.completed_by.count(), out_of)
         else:
             result = (self.completed_by.count(), out_of - 1)
-        return result
+        return result[0], result[1]
 
 
 class Message(models.Model):
-    """ Contains all the information for a message """
+    """ Defines all the information for a message """
     # please note Django implicitly gives an auto incrementing primary
     # key field id = models.AutoField(primary_key=True)
     table_id = models.ForeignKey(CafeTable, related_name="messages",
@@ -220,7 +223,7 @@ class Message(models.Model):
 
 
 class Report(models.Model):
-    """ Contains all the information that a report may have """
+    """ Defines all the information that a report may have """
 
     REPORT_CLASSES = (
         ("Table (general)", "Table (general)"),
@@ -239,7 +242,7 @@ class Report(models.Model):
 
 
 class Notification(models.Model):
-    """ Contains the contents of a notification """
+    """ Defines the contents of a notification """
     NOTIFICATION_TYPES = ((1, 'Award'), (2, 'Points'), (3, 'Task'))
 
     table_id = models.ForeignKey(CafeTable, on_delete=models.CASCADE,
