@@ -118,5 +118,7 @@ a:active {
         width: 35%;
     }
 
-
+    .app_name {
+        width: 26%;
+    }
 }
