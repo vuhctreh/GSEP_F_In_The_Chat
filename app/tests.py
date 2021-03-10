@@ -192,6 +192,10 @@ class EditInfoTests(TestCase):
         """ Placeholder """
         response = self.client.get('/dashboard/edit_info')
         self.assertContains(response, 'csrfmiddlewaretoken')
+    
+    def test_template(self):
+        response = self.client.get('/dashboard/edit_info')
+        self.assertTemplateUsed(response, 'edit_info.html')
 
 
 class SetTaskTests(TestCase):
@@ -235,10 +239,12 @@ class SetTaskTests(TestCase):
             'max_repeats': '',
         }
 
+        self.assertTrue(Task.objects.count(), 0)
+
         response = self.client.post('/set_tasks', data)
 
+        self.assertTrue(Task.objects.count(), 1)
         self.assertTrue(Task.objects.filter(task_name='Test-213943').exists())
-
 
 class ViewTaskTests(TestCase):
     """ Placeholder """
