@@ -131,9 +131,13 @@ button{
 }
 
 @media only screen and (max-width: 850px) {
+    .navigation {
+        width: 98%;
+    }
+
     .other {
         width: 98%;
-        height: 30%
+        height: 30%;
     }
 
     .tasks {
@@ -153,5 +157,15 @@ button{
 
     .row {
         display: inline-block;
+        width: 98%;
+        margin: 1%;
+    }
+
+    .table_name {
+        width: 77%;
+    }
+
+    #table_view {
+        width: 20%;
     }
 }

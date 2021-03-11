@@ -59,7 +59,7 @@
         <p style=" text-align: center "> {{nameCollectable}} </p>
       </div>
 
-      <p class="collectables">Previous Collectables</p>
+      <p class="collectables">Previous Collectibles</p>
       <div class="grid_collectables">
         {% for img in previousCollectables %}
           <img class="noinv" src="{% static img %}">
@@ -70,7 +70,7 @@
       {% endif %}
 
       <div class="buttons">
-        <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My profile</button>
+        <button class="otherbutton" onclick="document.location='profile_page/{{ pk }}'" id="profile_page">My Profile</button>
         <button class="otherbutton" onclick="document.location='table_view'" id="table_view">To Cafe</button>
         {% if can_set_tasks %}
         <button class="otherbutton" onclick="document.location='set_tasks'" id="set_tasks">Set Tasks</button>
@@ -94,19 +94,21 @@
 
     <div class="notifs">
     <h2 class="board_title">NOTIFICATIONS </h2>
-    {% for notification in notifications %}
-      <div class='notification'>
-      <span id="notifDate{{ notification.id }}"></span>
-      <script>
-      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
-      var date = "{{ notification.date }}"
-      document.getElementById("notifDate{{ notification.id }}").innerHTML = convertTZ(date, tz).toLocaleString()
-      </script>
-      <div>
-      {{notification.text_preview}}
-      </div>
-      </div>
-    {% endfor %}
+    <div class="notif_msgs">
+      {% for notification in notifications %}
+        <div class='notification'>
+        <span id="notifDate{{ notification.id }}"></span>
+        <script>
+        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+        var date = "{{ notification.date }}"
+        document.getElementById("notifDate{{ notification.id }}").innerHTML = convertTZ(date, tz).toLocaleString()
+        </script>
+        <div>
+        {{notification.text_preview}}
+        </div>
+        </div>
+      {% endfor %}
+    </div>  
     </div>
 
     <div class="leaderboard">

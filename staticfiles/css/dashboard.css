@@ -1,6 +1,16 @@
+html, body {
+  height: 130%;
+}
+
 .main {
     display: flex;
     margin: 2%;
+    height: 100%;
+}
+
+.notif_msgs {
+  overflow: scroll;
+  height: 94%
 }
 
 .user_info, .notifs {
@@ -180,12 +190,24 @@ li {
 @media only screen and (max-width: 850px) {
   .main {
     display: inline-block;
+    width: 96%;
   }
 
-  .user_info, .notifs {
+  .user_info {
     width: 90%;
     margin: auto;
     margin-top: 5%;
+  }
+
+  .notifs {
+    width: 90%;
+    margin: auto;
+    margin-top: 5%;
+    height: 50%;
+  }
+
+  .notif_msgs {
+    height: 87%;
   }
 
   .leaderboard {
@@ -194,5 +216,9 @@ li {
     margin-top: 5%;
     margin-bottom: 5%;
     padding: 1%;
+  }
+
+  center {
+    margin-top: 7%;
   }
 }

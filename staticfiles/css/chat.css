@@ -135,6 +135,10 @@ label {
 }
 
 @media only screen and (max-width: 850px) {
+    .navigation {
+        width: 98%;
+    }
+
     .other {
         width: 98%;
         height: 30%;
@@ -157,5 +161,15 @@ label {
 
     .row {
         display: inline-block;
+        width: 98%;
+        margin: 1%;
+    }
+
+    .table_name {
+        width: 77%;
+    }
+
+    #table_view {
+        width: 20%;
     }
 }
