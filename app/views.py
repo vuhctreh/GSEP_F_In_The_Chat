@@ -84,7 +84,7 @@ def get_msgs(request, table):
 
 
 def check_recurring_tasks():
-    """ Checks whether a reccuring task exists and removes it if found """
+    """ Checks whether a recurring task exists and repeat if necessary"""
     # get recurring tasks that still must be repeated
     recurring_tasks = Task.objects.exclude(max_repeats=0).exclude(
         recurrence_interval="n")
@@ -412,8 +412,8 @@ def set_tasks(request):
             user.save()
 
             # Add notification
-            task_text = user.first_name + user.last_name + " has added '" + task_name + \
-                "' as a new task - go check it out!"
+            task_text = user.first_name + user.last_name + " has added '" + \
+                task_name + "' as a new task - go check it out!"
             notification = Notification(table_id=table_id, notification_type=3,
                                         text_preview=task_text)
             notification.save()
@@ -851,7 +851,7 @@ def profile_page(request, pk):
     try:
         viewing_user = CoffeeUser.objects.get(id=pk)
     except CoffeeUser.DoesNotExist:
-        return redirect('/handler404')
+        return render(request, 'profile_nonexistent.html')
 
     context = {
         'year_entered': False,
@@ -913,6 +913,7 @@ def reporting(request):
     if request.method == 'POST':
         # register the report so it can be accessed on admin view
         form = ReportForm(request.POST)
+
         if form.is_valid():
             title = form.cleaned_data.get('title')
             category = form.cleaned_data.get('category')
@@ -938,12 +939,12 @@ def health(request):
 
 def handler404(request):
     """ Manages any 404 errors """
-    return render(request, '404.html', status=404)
+    return render(request, '404.html')
 
 
 def handler500(request):
     """ Manages any 500 errors """
-    return render(request, '500.html', status=500)
+    return render(request, '500.html')
 
 
 def privacy(request):

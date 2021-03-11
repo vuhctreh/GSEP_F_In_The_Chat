@@ -218,7 +218,8 @@ class Message(models.Model):
                                    on_delete=models.CASCADE)
     message_date = models.DateTimeField(auto_now_add=True)
     message_content = models.TextField(max_length=4000)
-    message_upvote = models.ManyToManyField(CoffeeUser, related_name="message_upvote")
+    message_upvote = models.ManyToManyField(CoffeeUser,
+                                            related_name="message_upvote")
     total_upvotes = models.PositiveIntegerField(default=0)
 
 

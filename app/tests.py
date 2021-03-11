@@ -127,7 +127,7 @@ class InTableTests(TestCase):
         resp = self.client.get('/tables/1')
         self.assertContains(resp, 'csrfmiddlewaretoken')
 
-    def test_new_topic_valid_post_data(self):
+    def test_new_message_valid_post_data(self):
         """ Testing to see whether the inputted message content is correctly
         identified """
         data = {
@@ -135,8 +135,11 @@ class InTableTests(TestCase):
         }
         self.client.post('/tables/1', data)
         self.assertTrue(Message.objects.exists())
+        resp = self.client.get('/get_msgs/1')
+        response_html = resp.content.decode()
+        self.assertTrue('Test msg' in response_html)
 
-    def test_new_topic_empty_post_data(self):
+    def test_new_message_empty_post_data(self):
         """ Testing to see if a message with no content is correctly
         identified """
         data = {
@@ -145,6 +148,19 @@ class InTableTests(TestCase):
         resp = self.client.post('/tables/1', data)
         self.assertEqual(resp.status_code, 200)
         self.assertFalse(Message.objects.exists())
+
+    def test_upvote(self):
+        """ Testing to see whether the inputted message content is correctly
+        identified """
+        data = {
+            'message_content': 'Test msg',
+        }
+        self.client.post('/tables/1', data)
+        msg = Message.objects.get(message_content='Test msg')
+        self.client.get('/upvote/' + str(msg.id))
+        resp = self.client.get('/get_msgs/1')
+        response_html = resp.content.decode()
+        self.assertTrue('1 Likes' in response_html)
 
     def test_in_table_view_not_part_table(self):
         """ Testing to see if incorrect table view is correctly identified
@@ -196,6 +212,13 @@ class DashboardTests(TestCase):
             email='test@test.com').first_name in response_html)
         self.assertTrue(CoffeeUser.objects.get(
             email='test@test.com').last_name in response_html)
+
+    def test_check_collectables(self):
+        """ Testing the correct collectable is calculated """
+        resp = self.client.get('/dashboard')
+        response_html = resp.content.decode()
+        self.assertTrue('Espresso' in response_html)
+        self.assertTrue('Points till next collectable: 50' in response_html)
 
 
 class EditInfoTests(TestCase):
@@ -283,24 +306,23 @@ class SetTaskTests(TestCase):
         resp = self.client.get('/set_tasks')
         self.assertTemplateUsed(resp, 'set_tasks.html')
 
-    def task_in_db_test(self):
+    def test_task_in_db(self):
         """ Testing to see if setting a new task is correctly registered """
+        table = CafeTable.objects.get(id=1)
         data = {
-            'task_name': 'Test-213943',
-            'created_by': '',
-            'table_id': '',
-            'task_content': '',
-            'points': '',
-            'recurrence_interval': '',
-            'max_repeats': '',
+            'task_name': 'f',
+            'table_id': str(table.id),
+            'task_content': 'fff',
+            'points': 1,
+            'recurrence_interval': 'n',
+            'max_repeats': 0,
         }
 
-        self.assertTrue(Task.objects.count(), 0)
+        self.assertTrue(Task.objects.count() == 0)
 
         self.client.post('/set_tasks', data)
 
-        self.assertTrue(Task.objects.count(), 1)
-        self.assertTrue(Task.objects.filter(task_name='Test-213943').exists())
+        self.assertTrue(Task.objects.count() == 1)
 
 
 class ViewTaskTests(TestCase):
@@ -316,12 +338,18 @@ class ViewTaskTests(TestCase):
             email='test@test.com', first_name='testf', last_name='testl',
             university='Test uni', is_staff=False, password='123'
         )
+        user2 = CoffeeUser.objects.create_user(
+            email='test2@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=True, password='123'
+        )
+        Task.objects.create(task_name="tasktest", table_id=table,
+                            created_by=user2, task_content="lol", points=1)
+        Task.objects.create(task_name="tasktestNTable", table_id=table2,
+                            created_by=user2, task_content="lol", points=1)
+        Task.objects.create(task_name="tasktestNUser", table_id=table2,
+                            created_by=user, task_content="lol", points=1)
         user.cafe_table_ids.add(table)
         self.client.login(email='test@test.com', password='123')
-        Task.objects.create(task_name="tasktest", table_id=table,
-                            created_by=user, task_content="lol", points=1)
-        Task.objects.create(task_name="tasktestNO", table_id=table2,
-                            created_by=user, task_content="lol", points=1)
 
     def test_status_code(self):
         """ Testing whether the status of the view tasks page is OK
@@ -329,22 +357,34 @@ class ViewTaskTests(TestCase):
         resp = self.client.get('/view_tasks')
         self.assertEqual(resp.status_code, 200)
 
-    def task_exists_in_db_test(self):
+    def test_task_exists_in_db(self):
         """ Testing database to see if created task is correctly registered """
-        self.assertTrue(Report.objects.count(), 1)
+        self.assertTrue(Task.objects.count(), 1)
 
-    def template_connection_test(self):
+    def test_template_connection(self):
         """ Testing whether view tasks page template is used """
         resp = self.client.get('/view_tasks')
         self.assertTemplateUsed(resp, 'view_tasks.html')
 
-    def right_tasks_displayed_test(self):
+    def test_right_tasks_displayed(self):
         """ Testing to see if only the tasks for the specific table are
         displayed """
         resp = self.client.get('/view_tasks')
-        self.assertContains(resp, 'tasktest')
-        self.assertNotContains(resp, 'tasktestNO')
-        # Tasks only from the correct tables are displayed
+        response_html = resp.content.decode()
+        self.assertTrue('tasktest' in response_html)
+        self.assertFalse('tasktestNTable' in response_html)
+        self.assertFalse('tasktestNUser' in response_html)
+        # Tasks only from the correct tables are displayed + cannot see own
+        # tasks
+
+    def test_complete_task(self):
+        """ Tests points earn when task completed """
+        self.client.get('/complete/1')
+        resp = self.client.get('/view_tasks')
+        response_html = resp.content.decode()
+        user = CoffeeUser.objects.get(id=1)
+        self.assertTrue(user.points == 3)
+        self.assertFalse('tasktest' in response_html)
 
 
 class ReportingTests(TestCase):
@@ -354,8 +394,6 @@ class ReportingTests(TestCase):
         """ Setting up test tables with content for testing """
         table = CafeTable.objects.create(table_id='Test',
                                          university='Test uni')
-        table2 = CafeTable.objects.create(table_id='Test 2',
-                                          university='Test uni')
         self.user = CoffeeUser.objects.create_user(
             email='test@test.com', first_name='testf', last_name='testl',
             university='Test uni', is_staff=False, password='123'
@@ -375,17 +413,21 @@ class ReportingTests(TestCase):
         resp = self.client.get('/report')
         self.assertContains(resp, 'csrfmiddlewaretoken')
 
-    def create_report_test(self):
+    def test_create_report(self):
         """ Testing whether a created report is managed correctly """
+
+        table = CafeTable.objects.get(id=1)
+
+        self.client.get('/report')
+
         data = {
             'title': 'TestReport-213943',
-            'category': '',
-            'detail': '',
-            'table_id': '',
-            'flagged_by': '',
+            'category': "Other",
+            'detail': 'fff',
+            'table_id': str(table.id),
         }
 
-        self.assertTrue(Report.objects.count(), 0)
+        self.assertEqual(Report.objects.count(), 0)
 
         resp = self.client.post('/report', data)
 
@@ -393,9 +435,52 @@ class ReportingTests(TestCase):
         self.assertTrue(resp.status_code, 200)
 
         # Check object created in database
-        self.assertTrue(Report.objects.count(), 1)
-        self.assertTrue(Report.objects.filter(
-            title='TestReport-213943').exists())
+        self.assertEqual(Report.objects.count(), 1)
+
+
+class ProfileTests(TestCase):
+    """ Unit tests for profile page """
+
+    def setUp(self):
+        """ Setting up test tables with content for testing """
+        table = CafeTable.objects.create(table_id='Test',
+                                         university='Test uni')
+        table2 = CafeTable.objects.create(table_id='Test 2',
+                                          university='Test uni')
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
+        user.cafe_table_ids.add(table)
+        self.client.login(email='test@test.com', password='123')
+
+    def test_status_code(self):
+        """ Testing whether the status of the profile page is OK
+        (if it's reachable) """
+        resp = self.client.get('/profile_page/1')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_profile_not_exist_user(self):
+        """ Testing to see if non existent user is correctly identified
+            and handled"""
+        resp = self.client.get('/profile_page/8')
+        response_html = resp.content.decode()
+        self.assertEqual(response_html, render_to_string(
+            'profile_nonexistent.html'))
+
+    def test_template(self):
+        """ Testing the correct template is rendered """
+        resp = self.client.get('/profile_page/1')
+        self.assertTemplateUsed(resp, 'profile_page.html')
+
+    def test_profile_content(self):
+        """ Testing correct user is displayed """
+        resp = self.client.get('/profile_page/1')
+        response_html = resp.content.decode()
+        self.assertTrue(CoffeeUser.objects.get(
+            email='test@test.com').first_name in response_html)
+        self.assertTrue(CoffeeUser.objects.get(
+            email='test@test.com').last_name in response_html)
 
 
 class HealthEndpointTests(SimpleTestCase):
@@ -408,17 +493,19 @@ class HealthEndpointTests(SimpleTestCase):
         self.assertContains(resp, '{"status": "UP"}')
 
 
-class PrivacyAndTermsTests(SimpleTestCase):
-    """ Unit tests for privacy, terms and conditions page """
+class ActiveUsersTest(TestCase):
+    """ Unit test for function calculating number of active users."""
 
-    def privacy_policy_status_is_up(self):
-        """ Testing whether the status of the privacy policy is OK
-        (if it is reachable)"""
-        resp = self.client.get('/privacy')
-        self.assertEqual(resp.status_code, 200)
+    def setUp(self):
+        """ Setting up test tables with content for testing """
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
+        self.client.login(email='test@test.com', password='123')
 
-    def tos_status_is_up(self):
-        """ Testing whether the status of the terms of service pages is OK
-        (if it is reachable)"""
-        resp = self.client.get('/terms')
-        self.assertEqual(resp.status_code, 200)
+    def test_active_users(self):
+        """ Testing to see if number of active users is correct """
+        resp = self.client.get('/table_view')
+        response_html = resp.content.decode()
+        self.assertTrue('Users in Cafe: 1' in response_html)
