@@ -113,7 +113,7 @@ class CoffeeUser(AbstractBaseUser):
 
     AVAILABLE_UNIS = (
         ("University of Exeter", "University of Exeter"),
-        ("Test uni", "Test uni")
+        ("University of Exeter (Cornwall)", "University of Exeter (Cornwall)")
     )
 
     email = models.EmailField(verbose_name="email", unique=True)
