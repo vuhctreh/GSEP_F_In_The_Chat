@@ -9,6 +9,12 @@ client = Client()
 
 class LogInTests(TestCase):
     """ Unit tests for login page """
+    def setUp(self):
+        """ Setting up test user"""
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
 
     def test_login_view_status_code(self):
         """ Testing whether the status of the login page is OK
@@ -26,9 +32,45 @@ class LogInTests(TestCase):
         resp = self.client.get('')
         self.assertTemplateUsed(resp, 'login.html')
 
+    def test_login_correct(self):
+        """ Testing correct login """
+        data = {'email': 'test@test.com', 'password': '123'}
+        resp = self.client.post('', data)  # login page
+        self.assertEqual(resp.status_code, 302)
+
+    def test_login_blank(self):
+        """ Testing with blank login details """
+        data = {'email': '', 'password': ''}
+        resp = self.client.post('', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_login_bad_email(self):
+        """ Testing with incorrect email format """
+        data = {'email': 'a', 'password': 'ABCabc123!'}
+        resp = self.client.post('', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_login_wrong_psw(self):
+        """ Testing with wrong password """
+        data = {'email': 'test@test.com', 'password': 'a'}
+        resp = self.client.post('', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_login_nonexistent_user(self):
+        """ Testing with user that doesn't exist """
+        data = {'email': 'test2@test.com', 'password': 'a'}
+        resp = self.client.post('', data)
+        self.assertEqual(resp.status_code, 200)
+
 
 class SignUpTests(TestCase):
     """ Unit tests for signup page """
+    def setUp(self):
+        """ Setting up test user"""
+        user = CoffeeUser.objects.create_user(
+            email='test@test.com', first_name='testf', last_name='testl',
+            university='Test uni', is_staff=False, password='123'
+        )
 
     def test_signup_view_status_code(self):
         """ Testing whether the status of the signup page is OK
@@ -45,6 +87,67 @@ class SignUpTests(TestCase):
         """ Testing the correct template is rendered """
         resp = self.client.get('/signup')
         self.assertTemplateUsed(resp, 'sign_up.html')
+
+    def test_signup_valid_form(self):
+        """ Testing signing up a valid user """
+        data = {'email': 'test2@test.com', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'ABCabc123!', 'password2': 'ABCabc123!',
+                'accept_terms': True}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 302)
+
+    def test_signup_repeat_email(self):
+        """ Testing signing up a user email that already exists"""
+        data = {'email': 'test@test.com', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'ABCabc123!', 'password2': 'ABCabc123!',
+                'accept_terms': True}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_signup_pswd_different(self):
+        """ Testing signing up when passwords don't match"""
+        data = {'email': 'test2@test.com', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'ABCabc123!!', 'password2': 'ABCabc123!',
+                'accept_terms': True}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_signup_no_terms(self):
+        """ Testing signing up when terms not agreed to"""
+        data = {'email': 'test2@test.com', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'ABCabc123!!', 'password2': 'ABCabc123!',
+                'accept_terms': False}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_signup_bad_psw(self):
+        """ Testing signing up when password is too bad"""
+        data = {'email': 'test2@test.com', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'a', 'password2': 'a',
+                'accept_terms': False}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_signup_not_an_email(self):
+        """ Testing signing up when terms not agreed to"""
+        data = {'email': 'fish', 'first_name': 'a', 'last_name': 'b',
+                'is_staff': False, 'university': "Test uni",
+                'password1': 'a', 'password2': 'a',
+                'accept_terms': False}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_signup_blank(self):
+        """ Testing signing up when blank fields"""
+        data = {'email': 'fish', 'password1': 'ABCabc123!',
+                'password2': 'ABCabc123!', 'accept_terms': False}
+        resp = self.client.post('/signup', data)
+        self.assertEqual(resp.status_code, 200)
 
 
 class PrivacyPolicyTests(TestCase):
