@@ -292,10 +292,10 @@ def dashboard(request):
         points_to_go_next_collectable = int(how_much_to_go(points_level))
 
         # Notification for points left
-        if points_to_go_next_collectable < 10:
-            n_text = user.first_name + user.last_name + \
+        if (0 < points_to_go_next_collectable < 10):
+            n_text = user.first_name + " " + user.last_name + \
                 " has less than 10 points to go until their next collectable!"
-            notif = Notification(table_id=0, notification_type=1,
+            notif = Notification(table_id=tables[0], notification_type=1,
                                  text_preview=n_text)
             notif.save()
 
